@@ -10,6 +10,7 @@ if (!class_exists("ChatBroPlugin")) {
         const checkbox = 'checkbox';
         const text = 'text';
         const select = 'select';
+        const textarea = 'textarea';
     };
 
     class ChatBroPlugin {
@@ -20,23 +21,24 @@ if (!class_exists("ChatBroPlugin")) {
         const hash_setting = "chatbro_chat_hash";
         const display_to_guests_setting = "chatbro_chat_diplay_to_guests";
         const display_setting = "chatbro_chat_display";
+        const selected_pages_setting = 'chatbro_chat_selected_pages';
 
         const options = array(
             ChatBroPlugin::guid_setting => array(
                 'id' => ChatBroPlugin::guid_setting,
-                'type' => 'text',
+                'type' => InputType::text,
                 'label' => 'Chat Id'
             ),
 
             ChatBroPlugin::display_to_guests_setting => array(
                 'id' => ChatBroPlugin::display_to_guests_setting,
-                'type' => 'checkbox',
-                'label' => 'Display chat to not logged-in users'
+                'type' => InputType::checkbox,
+                'label' => 'Display chat to guests'
             ),
 
             ChatBroPlugin::display_setting => array(
                 'id' => ChatBroPlugin::display_setting,
-                'type' => 'select',
+                'type' => InputType::select,
                 'label' => 'Show popup chat',
                 'options' => array(
                     'everywhere' =>    'Everywhere',
@@ -45,6 +47,12 @@ if (!class_exists("ChatBroPlugin")) {
                     'only_listed' =>   'Only the listed pages',
                     'disable' =>       'Disable'
                 )
+            ),
+
+            ChatBroPlugin::selected_pages_setting => array(
+                'id' => ChatBroPlugin::selected_pages_setting,
+                'type' => InputType::textarea,
+                'label' => "Specify pages by using their paths. Enter one path per line. The '*' character is a wildcard. Example paths are /2012/10/my-post for a single post and /2012/* for a group of posts. The path should always start with a forward slash(/)."
             )
         );
 
@@ -101,9 +109,11 @@ if (!class_exists("ChatBroPlugin")) {
         }
 
         function constructor_page() {
-            $guid = ChatBroPlugin::get_option(ChatBroPlugin::guid_setting);
+            wp_enqueue_script( 'chatbro-admin', plugin_dir_url( __FILE__ ) . 'js/chatbro.admin.js', array('jquery'));
 
+            $guid = ChatBroPlugin::get_option(ChatBroPlugin::guid_setting);
             $active_tab = isset($_GET['tab']) ? $_GET['tab'] : 'constructor';
+
             ?>
             <div class="wrap">
                 <h1><?php __('Plugin Settings', 'chatbro_plugin'); ?></h1>
@@ -167,16 +177,18 @@ if (!class_exists("ChatBroPlugin")) {
 
         function render_field($args) {
 
-            $tag = $args['type'] == InputType::select ? 'select' : 'input';
+            $tag = $args['type'] == InputType::select || $args['type'] == InputType::textarea ? $args['type'] : 'input';
             $class = $args['type'] == 'text' ? 'class="regular-text" ' : '';
 
             $value = $this->get_option($args['id']);
             $valueAttr = $args['type'] == InputType::text ? "value=\"{$value}\" " : "";
             $checked = $args['type'] == InputType::checkbox && isset($value) ? 'checked="checked"' : '';
+            $textarea_attrs = $args['type'] == InputType::textarea ? 'cols="80" rows="6"' : '';
 
-            echo "<{$tag} id=\"${args[id]}\" name=\"{$args[id]}\" {$class} type=\"{$args[type]}\" {$valueAttr} {$checked}>";
+            echo "<{$tag} id=\"${args[id]}\" name=\"{$args[id]}\" {$class} type=\"{$args[type]}\" {$textarea_attrs} {$valueAttr} {$checked}>";
 
-            if ($args['type'] == InputType::select) {
+            switch($args['type']) {
+            case InputType::select:
                 if (!$value)
                     $value = array_keys($args['options'])[0];
 
@@ -186,12 +198,17 @@ if (!class_exists("ChatBroPlugin")) {
                 }
 
                 echo "</select>";
+                break;
+
+            case InputType::textarea:
+                echo "</textarea>";
+                break;
             }
         }
 
         function add_menu_option() {
             add_menu_page("ChatBro", "ChatBro", "manage_options", "chatbro_settings", array(&$this, 'constructor_page'), plugins_url()."/chatbro2/favicon_small.png");
-        }
+            }
 
         function chat() {
             $hash = chatbro_get_option("chatbro_chat_hash");
