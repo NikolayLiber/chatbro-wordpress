@@ -27,7 +27,8 @@ if (!class_exists("ChatBroPlugin")) {
             ChatBroPlugin::guid_setting => array(
                 'id' => ChatBroPlugin::guid_setting,
                 'type' => InputType::text,
-                'label' => 'Chat Id'
+                'label' => 'Chat Id',
+                'sanitize_callback' => array('ChatBroPlugin', 'sanitize_guid')
             ),
 
             ChatBroPlugin::display_to_guests_setting => array(
@@ -108,6 +109,26 @@ if (!class_exists("ChatBroPlugin")) {
             }
         }
 
+        public static function sanitize_guid($guid) {
+            $guid = trim(strtoupper($guid));
+
+            if (!preg_match('/^[\dA-F]{8}-[\dA-F]{4}-[\dA-F]{4}-[\dA-F]{4}-[\dA-F]{12}$/', $guid)) {
+                add_settings_error(ChatBroPlugin::guid_setting, "invalid-guid", __("Invalid Chat Id", 'chatbro_plugin'), "error");
+                return ChatBroPlugin::get_option(ChatBroPlugin::guid_setting);
+            }
+
+            return $guid;
+        }
+
+        public static function sanitize_display($val) {
+            if (!in_array($val, array_keys($options['display_setting']['options']))) {
+                add_settings_error(ChatBroPlugin::display_setting, "invalid-display", __("Invalid show popup chat option value", "chatbro_plugin"));
+                return ChatBroPlugin::get_option(ChatBroPlugin::display_setting);
+            }
+
+            return val;
+        }
+
         function constructor_page() {
             wp_enqueue_script( 'chatbro-admin', plugin_dir_url( __FILE__ ) . 'js/chatbro.admin.js', array('jquery'));
 
@@ -127,6 +148,7 @@ if (!class_exists("ChatBroPlugin")) {
 
                 <?php
                 if ($active_tab == "plugin_settings") {
+                    settings_errors();
                     ?>
                     <form method="post" action="options.php">
                         <?php
@@ -153,7 +175,7 @@ if (!class_exists("ChatBroPlugin")) {
         function init_settings() {
             add_settings_section("chbro_plugin_settings", "", "", ChatBroPlugin::page);
             foreach(ChatBroPlugin::options as $name => $args) {
-                register_setting(ChatBroPlugin::settings, $name);
+                register_setting(ChatBroPlugin::settings, $name, $args['sanitize_callback']);
                 add_settings_field($name, __($args['label'], 'chatbro_plugin'), array(&$this, "render_field"), ChatBroPlugin::page, "chbro_plugin_settings", $args);
             }
 
