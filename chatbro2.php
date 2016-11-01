@@ -34,7 +34,8 @@ if (!class_exists("ChatBroPlugin")) {
             ChatBroPlugin::display_to_guests_setting => array(
                 'id' => ChatBroPlugin::display_to_guests_setting,
                 'type' => InputType::checkbox,
-                'label' => 'Display chat to guests'
+                'label' => 'Display chat to guests',
+                'sanitize_callback' => array('ChatBroPlugin', 'sanitize_checkbox')
             ),
 
             ChatBroPlugin::display_setting => array(
@@ -43,7 +44,7 @@ if (!class_exists("ChatBroPlugin")) {
                 'label' => 'Show popup chat',
                 'options' => array(
                     'everywhere' =>    'Everywhere',
-                    'frontend_only' => 'Frontend only',
+                    'frontpage_only' => 'Front page only',
                     'except_listed' => 'Everywhere except those listed',
                     'only_listed' =>   'Only the listed pages',
                     'disable' =>       'Disable'
@@ -126,7 +127,51 @@ if (!class_exists("ChatBroPlugin")) {
                 return ChatBroPlugin::get_option(ChatBroPlugin::display_setting);
             }
 
-            return val;
+            return $val;
+        }
+
+        public static function sanitize_checkbox($val) {
+            return $val == "on";
+        }
+
+        static function match_path($path, $patterns)
+        {
+            $to_replace = array(
+                '/(\r\n?|\n)/',
+                '/\\\\\*/',
+            );
+            $replacements = array(
+                '|',
+                '.*',
+            );
+            $patterns_quoted = preg_quote($patterns, '/');
+            $regexps = '/^(' . preg_replace($to_replace, $replacements, $patterns_quoted) . ')$/';
+            return (bool)preg_match($regexps, $path);
+        }
+
+
+        static function check_path()
+        {
+            $page_match = FALSE;
+            $selected_pages = trim(ChatBroPlugin::get_option(ChatBroPlugin::selected_pages_setting));
+            $display = ChatBroPlugin::get_option(ChatBroPlugin::display_setting);
+
+            if ($selected_pages != '') {
+                if (function_exists('mb_strtolower')) {
+                    $pages = mb_strtolower($selected_pages);
+                    $path = mb_strtolower($_SERVER['REQUEST_URI']);
+                } else {
+                    $pages = strtolower($selected_pages);
+                    $path = strtolower($_SERVER['REQUEST_URI']);
+                }
+
+                $page_match = ChatBroPlugin::match_path($path, $pages);
+
+                if($display == 'except_listed')
+                    $page_match = !$page_match;
+            }
+
+            return $page_match;
         }
 
         function constructor_page() {
@@ -185,26 +230,21 @@ if (!class_exists("ChatBroPlugin")) {
 
         function set_default_settings() {
             $guid = $this->gen_uuid();
-            $hash = md5($guid);
 
             if (!ChatBroPlugin::add_option(ChatBroPlugin::guid_setting, $guid))
                 ChatBroPlugin::update_option(ChatBroPlugin::guid_setting, $guid);
-
-            if (!ChatBroPlugin::add_option(ChatBroPlugin::hash_setting, $hash))
-                ChatBroPlugin::update_option(ChatBroPlugin::hash_setting, $hash);
 
             if (!ChatBroPlugin::add_option(ChatBroPlugin::display_to_guests_setting, true))
                 ChatBroPlugin::update_option(ChatBroPlugin::display_to_guests_setting, true);
         }
 
         function render_field($args) {
-
             $tag = $args['type'] == InputType::select || $args['type'] == InputType::textarea ? $args['type'] : 'input';
             $class = $args['type'] == 'text' ? 'class="regular-text" ' : '';
 
             $value = $this->get_option($args['id']);
             $valueAttr = $args['type'] == InputType::text ? "value=\"{$value}\" " : "";
-            $checked = $args['type'] == InputType::checkbox && isset($value) ? 'checked="checked"' : '';
+            $checked = $args['type'] == InputType::checkbox && $value ? 'checked="checked"' : '';
             $textarea_attrs = $args['type'] == InputType::textarea ? 'cols="80" rows="6"' : '';
 
             echo "<{$tag} id=\"${args[id]}\" name=\"{$args[id]}\" {$class} type=\"{$args[type]}\" {$textarea_attrs} {$valueAttr} {$checked}>";
@@ -223,6 +263,7 @@ if (!class_exists("ChatBroPlugin")) {
                 break;
 
             case InputType::textarea:
+                echo $value;
                 echo "</textarea>";
                 break;
             }
@@ -230,13 +271,43 @@ if (!class_exists("ChatBroPlugin")) {
 
         function add_menu_option() {
             add_menu_page("ChatBro", "ChatBro", "manage_options", "chatbro_settings", array(&$this, 'constructor_page'), plugins_url()."/chatbro2/favicon_small.png");
-            }
+        }
 
         function chat() {
-            $hash = chatbro_get_option("chatbro_chat_hash");
+            $guid = ChatBroPlugin::get_option(ChatBroPlugin::guid_setting);
 
-            if (!$hash)
+            if (!$guid)
                 return;
+
+            $display_to_guests = ChatBroPlugin::get_option(ChatBroPlugin::display_to_guests_setting);
+            echo "<h1>display_to_guests: " . $display_to_guests . " wp_is_user_logged_in: " . is_user_logged_in() . "</h1>";
+
+            if (!$display_to_guests && !is_user_logged_in())
+                // Don't show the chat to unregistered users
+                return;
+
+            $where_to_display = ChatBroPlugin::get_option(ChatBroPlugin::display_setting);
+
+            switch($where_to_display) {
+                case 'everywhere':
+                    break;
+
+                case 'frontpage_only':
+                    if (!is_front_page())
+                        return;
+                    break;
+
+                case 'except_listed':
+                case 'only_listed':
+                    if (!ChatBroPlugin::check_path())
+                        return;
+                    break;
+
+                default:
+                    return;
+            }
+
+            $hash = md5($guid);
             ?>
             <script id="chatBroEmbedCode">
             /* Chatbro Widget Embed Code Start */
