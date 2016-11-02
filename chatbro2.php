@@ -228,6 +228,11 @@ if (!class_exists("ChatBroPlugin")) {
                 $this->set_default_settings();
         }
 
+        public static clenup_settings() {
+            foreach (array_keys($options) as $name)
+                delete_option($name);
+        }
+
         function set_default_settings() {
             $guid = $this->gen_uuid();
 
@@ -321,3 +326,67 @@ if (!class_exists("ChatBroPlugin")) {
 }
 
 new ChatBroPlugin();
+
+//----------------------TEMPLATE------------------------//
+if (!class_exists(ChatbroTemplater)) {
+    class ChatbroTemplater {
+        private static $instance;
+        protected $templates;
+        public static function get_instance() {
+            if( null == self::$instance ) {
+                self::$instance = new ChatbroTemplater();
+            }
+            return self::$instance;
+        }
+        private function __construct() {
+            $this->templates = array();
+            add_filter(
+                'page_attributes_dropdown_pages_args',
+                array( $this, 'register_project_templates' )
+                );
+            add_filter(
+                'wp_insert_post_data',
+                array( $this, 'register_project_templates' )
+                );
+            add_filter(
+                'template_include',
+                array( $this, 'view_project_template')
+                );
+            $this->templates = array(
+                'chatbro_history_template.php'     => 'Chat history',
+                );
+        }
+        public function register_project_templates( $atts ) {
+            $cache_key = 'page_templates-' . md5( get_theme_root() . '/' . get_stylesheet() );
+
+            $templates = wp_get_theme()->get_page_templates();
+            if ( empty( $templates ) ) {
+                $templates = array();
+            }
+            wp_cache_delete( $cache_key , 'themes');
+            $templates = array_merge( $templates, $this->templates );
+            wp_cache_add( $cache_key, $templates, 'themes', 1800 );
+            return $atts;
+        }
+        public function view_project_template( $template ) {
+            global $post;
+            $file = '';
+            if (isset($post->ID)) {
+                if (!isset($this->templates[get_post_meta($post->ID, '_wp_page_template', true)] ) ) {
+                    return $template;
+                }
+
+                $file = plugin_dir_path(__FILE__). get_post_meta(
+                    $post->ID, '_wp_page_template', true
+                    );
+            }
+            if( file_exists( $file ) ) {
+                return $file;
+            }
+            else { echo $file; }
+            return $template;
+        }
+    }
+}
+
+add_action( 'plugins_loaded', array( 'ChatbroTemplater', 'get_instance' ) );
