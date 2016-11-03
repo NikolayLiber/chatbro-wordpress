@@ -228,7 +228,7 @@ if (!class_exists("ChatBroPlugin")) {
                 $this->set_default_settings();
         }
 
-        public static clenup_settings() {
+        public static function clenup_settings() {
             foreach (array_keys($options) as $name)
                 delete_option($name);
         }
@@ -284,8 +284,39 @@ if (!class_exists("ChatBroPlugin")) {
             if (!$guid)
                 return;
 
+            $hash = md5($guid);
+            $user = wp_get_current_user();
+            $siteurl = ChatBroPlugin::get_option('siteurl');
+
+            $site_user_avatar_url = "";
+            preg_match("/src='(.*)' alt/i", get_avatar($userid, 120), $avatar_path);
+                if(count($avatar_path)!=0)
+                    $site_user_avatar_url = $avatar_path[1];
+            if($site_user_avatar_url == "")
+                $site_user_avatar_url = get_avatar_url($userid);
+
+            $site_user_avatar_url = strpos($site_user_avatar_url, 'wp_user_avatar') == FALSE ? $site_user_avatar_url : '';
+
+            $profile_url = '';
+
+            $params = "encodedChatGuid: '{$hash}'";
+            if (is_user_logged_in()) {
+                $signature = md5($siteurl . $user->ID . $user->display_name . $site_user_avatar_url . $profile_url . $guid);
+                $params .= ", siteUserFullName: '{$user->display_name}', siteUserExternalId: '{$user->ID}'";
+
+                if ($site_user_avatar_url != "")
+                    $params .= ", siteUserAvatarUrl: '{$site_user_avatar_url}'";
+
+                if ($profile_url != '')
+                    $params .= ", siteUserProfileUrl: '{$profile_url}'";
+            }
+            else {
+                $signature = md5($siteurl . $guid);
+            }
+
+            $params .= ", signature: '{$signature}'";
+
             $display_to_guests = ChatBroPlugin::get_option(ChatBroPlugin::display_to_guests_setting);
-            echo "<h1>display_to_guests: " . $display_to_guests . " wp_is_user_logged_in: " . is_user_logged_in() . "</h1>";
 
             if (!$display_to_guests && !is_user_logged_in())
                 // Don't show the chat to unregistered users
@@ -318,7 +349,7 @@ if (!class_exists("ChatBroPlugin")) {
             /* Chatbro Widget Embed Code Start */
             function ChatbroLoader(chats,async) {async=async!==false;var params={embedChatsParameters:chats instanceof Array?chats:[chats],needLoadCode:typeof Chatbro==='undefined'};var xhr=new XMLHttpRequest();xhr.onload=function(){eval(xhr.responseText)};xhr.onerror=function(){console.error('Chatbro loading error')};xhr.open('POST','//www.chatbro.com/embed_chats/',async);xhr.setRequestHeader('Content-Type','application/x-www-form-urlencoded');xhr.send('parameters='+encodeURIComponent(JSON.stringify(params)))}
             /* Chatbro Widget Embed Code End */
-            ChatbroLoader({encodedChatGuid: "<?php echo $hash ?>"});
+            ChatbroLoader({<?php echo $params; ?>});
             </script>
             <?php
         }
