@@ -22,6 +22,7 @@ if (!class_exists("ChatBroPlugin")) {
         const display_to_guests_setting = "chatbro_chat_diplay_to_guests";
         const display_setting = "chatbro_chat_display";
         const selected_pages_setting = 'chatbro_chat_selected_pages';
+        const user_profile_path = 'chatbro_chat_user_profile_url';
 
         const options = array(
             ChatBroPlugin::guid_setting => array(
@@ -55,6 +56,12 @@ if (!class_exists("ChatBroPlugin")) {
                 'id' => ChatBroPlugin::selected_pages_setting,
                 'type' => InputType::textarea,
                 'label' => "Specify pages by using their paths. Enter one path per line. The '*' character is a wildcard. Example paths are /2012/10/my-post for a single post and /2012/* for a group of posts. The path should always start with a forward slash(/)."
+            ),
+
+            ChatBroPlugin::user_profile_path => array(
+                'id' => ChatBroPlugin::user_profile_path,
+                'type' => InputType::text,
+                'label' => 'User profile path'
             )
         );
 
@@ -241,6 +248,9 @@ if (!class_exists("ChatBroPlugin")) {
 
             if (!ChatBroPlugin::add_option(ChatBroPlugin::display_to_guests_setting, true))
                 ChatBroPlugin::update_option(ChatBroPlugin::display_to_guests_setting, true);
+
+            if (!ChatBroPlugin::add_option(ChatBroPlugin::user_profile_path, '/authors/{$username}'))
+                ChatBroPlugin::update_option(ChatBroPlugin::user_profile_path, '/authors/{$username}');
         }
 
         function render_field($args) {
@@ -297,7 +307,12 @@ if (!class_exists("ChatBroPlugin")) {
 
             $site_user_avatar_url = strpos($site_user_avatar_url, 'wp_user_avatar') == FALSE ? $site_user_avatar_url : '';
 
+            $profile_path = ChatBroPlugin::get_option(ChatBroPlugin::user_profile_path);
+
             $profile_url = '';
+
+            if ($profile_path)
+                $profile_url = str_ireplace('{$username}', $user->user_login, $siteurl . $profile_path);
 
             $params = "encodedChatGuid: '{$hash}'";
             if (is_user_logged_in()) {
