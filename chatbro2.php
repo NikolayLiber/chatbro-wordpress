@@ -23,12 +23,13 @@ if (!class_exists("ChatBroPlugin")) {
         const display_setting = "chatbro_chat_display";
         const selected_pages_setting = 'chatbro_chat_selected_pages';
         const user_profile_path = 'chatbro_chat_user_profile_url';
+        const old_options = 'chatbro_options';
 
         const options = array(
             ChatBroPlugin::guid_setting => array(
                 'id' => ChatBroPlugin::guid_setting,
                 'type' => InputType::text,
-                'label' => 'Chat Id',
+                'label' => 'Chat secret key',
                 'sanitize_callback' => array('ChatBroPlugin', 'sanitize_guid')
             ),
 
@@ -181,7 +182,33 @@ if (!class_exists("ChatBroPlugin")) {
             return $page_match;
         }
 
+        function convert_from_old_page($chatPath) {
+            ?>
+            <form method="post" action="options.php">
+                <?php settings_fields(ChatBroPlugin::settings); ?>
+                <table class="form-table">
+                    <tr>
+                        <th scope="row"><?php echo __(ChatBroPlugin::options[ChatBroPlugin::guid_setting]['label'], 'chatbro_plugin'); ?></th>
+                        <td><input type="text" class="regular-text" id="<?php echo ChatBroPlugin::guid_setting; ?>" name="<?php echo ChatBroPlugin::guid_setting; ?>">
+                        <p>Пожалуйста войдите в свой аккаунт на chatbro.com. Скопируйте секретный ключ беседы и вставьте в соответсвующее поле.</p>
+                        </td>
+                    </tr>
+                </table>
+                <p class="submit">
+                    <input type="submit" class="button-primary" value="<?php _e('Save secret key') ?>" />
+                </p>
+            </form>
+            <iframe src="<?php echo "http://www.chatbro.com/get_secretkey_by_path?chatPath={$chatPath}"; ?>" style="width: 100%;"></iframe>
+            <?php
+        }
+
         function constructor_page() {
+            $old = ChatBroPlugin::get_option(ChatBroPlugin::old_options);
+            if (ChatBroPlugin::get_option(ChatBroPlugin::guid_setting) == false && $old != false && $old['chatPath']) {
+                $this->convert_from_old_page($old['chatPath']);
+                return;
+            }
+
             wp_enqueue_script( 'chatbro-admin', plugin_dir_url( __FILE__ ) . 'js/chatbro.admin.js', array('jquery'));
 
             $guid = ChatBroPlugin::get_option(ChatBroPlugin::guid_setting);
@@ -231,7 +258,7 @@ if (!class_exists("ChatBroPlugin")) {
                 add_settings_field($name, __($args['label'], 'chatbro_plugin'), array(&$this, "render_field"), ChatBroPlugin::page, "chbro_plugin_settings", $args);
             }
 
-            if ($this->get_option(ChatBroPlugin::guid_setting) == false)
+            if (ChatBroPlugin::get_option(ChatBroPlugin::guid_setting) == false && ChatBroPlugin::get_option(ChatBroPlugin::old_options) == false)
                 $this->set_default_settings();
         }
 
