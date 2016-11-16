@@ -19,7 +19,7 @@ if (!class_exists("ChatBroPlugin")) {
 
         const guid_setting = "chatbro_chat_guid";
         const hash_setting = "chatbro_chat_hash";
-        const display_to_guests_setting = "chatbro_chat_diplay_to_guests";
+        const display_to_guests_setting = "chatbro_chat_display_to_guests";
         const display_setting = "chatbro_chat_display";
         const selected_pages_setting = 'chatbro_chat_selected_pages';
         const user_profile_path = 'chatbro_chat_user_profile_url';
@@ -182,15 +182,23 @@ if (!class_exists("ChatBroPlugin")) {
             return $page_match;
         }
 
-        function convert_from_old_page($chatPath) {
+        function convert_from_old_page($old) {
+            $chatPath = $old['chatPath'];
+            $showGuests = $old['showGuests'];
             ?>
+            <p><div class="error"><?php echo __('To manage chat settings in the new version of the plugin, you should submit a chat secret key. Please, log in to your account at <a href="https://www.chatbro.com/account">chatbro.com</a> (use login button below), copy the chat secret key and insert it into the respective field.', 'chatbro_plugin'); ?></div></p>
             <form method="post" action="options.php">
-                <?php settings_fields(ChatBroPlugin::settings); ?>
+                <?php
+                settings_fields(ChatBroPlugin::settings);
+
+                if ($showGuests)
+                    echo '<input type="hidden" id="' . ChatBroPlugin::display_to_guests_setting . '" name="' . ChatBroPlugin::display_to_guests_setting . '" value="on">';
+                ?>
+                <input type="hidden" id="<?php echo ChatBroPlugin::display_setting ?>" name="<?php echo ChatBroPlugin::display_setting ?>" value="everywhere">
                 <table class="form-table">
                     <tr>
                         <th scope="row"><?php echo __(ChatBroPlugin::options[ChatBroPlugin::guid_setting]['label'], 'chatbro_plugin'); ?></th>
                         <td><input type="text" class="regular-text" id="<?php echo ChatBroPlugin::guid_setting; ?>" name="<?php echo ChatBroPlugin::guid_setting; ?>">
-                        <p>Пожалуйста войдите в свой аккаунт на chatbro.com. Скопируйте секретный ключ беседы и вставьте в соответсвующее поле.</p>
                         </td>
                     </tr>
                 </table>
@@ -205,7 +213,7 @@ if (!class_exists("ChatBroPlugin")) {
         function constructor_page() {
             $old = ChatBroPlugin::get_option(ChatBroPlugin::old_options);
             if (ChatBroPlugin::get_option(ChatBroPlugin::guid_setting) == false && $old != false && $old['chatPath']) {
-                $this->convert_from_old_page($old['chatPath']);
+                $this->convert_from_old_page($old);
                 return;
             }
 
@@ -315,12 +323,125 @@ if (!class_exists("ChatBroPlugin")) {
             add_menu_page("ChatBro", "ChatBro", "manage_options", "chatbro_settings", array(&$this, 'constructor_page'), plugins_url()."/chatbro2/favicon_small.png");
         }
 
+        function chat_old($o) {
+            $current_user = wp_get_current_user();
+            $display_name = $current_user->display_name;
+            $userid = $current_user->ID;
+            $siteUrl = get_option('siteurl');
+
+            $siteUserAvatarUrl = "";
+            preg_match("/src='(.*)' alt/i", get_avatar($userid, 120), $avatarPath);
+                if(count($avatarPath)!=0)
+                    $siteUserAvatarUrl = $avatarPath[1];
+            if($siteUserAvatarUrl == "")
+                $siteUserAvatarUrl =  get_avatar_url($userid);
+
+            $username = $current_user->user_login;
+
+            $param = array(
+                'chatPath' =>                 $o['chatPath'],
+                'containerDivId' =>           $o['containerDivId'],
+                'chatLanguage'=>              $o['chatLanguage'],
+                'chatState'=>                 $o['chatState'],
+                'chatTop'=>                   $o['chatTop'],
+                'chatLeft'=>                  $o['chatLeft'],
+                'chatWidth'=>                 $o['chatWidth'],
+                'chatHeight'=>                $o['chatHeight'],
+                'siteDomain'=>                $o['siteDomain'],
+                'chatHeaderTextColor'=>       $o['chatHeaderTextColor'],
+                'chatHeaderBackgroundColor'=> $o['chatHeaderBackgroundColor'],
+                'chatBodyBackgroundColor'=>   $o['chatBodyBackgroundColor'],
+                'chatBodyTextColor'=>         $o['chatBodyTextColor'],
+                'chatInputBackgroundColor'=>  $o['chatInputBackgroundColor'],
+                'chatInputTextColor'=>        $o['chatInputTextColor'],
+                'allowSendMessages'=>         isset($o['allowSendMessages']),
+                'allowMoveChat'=>             isset($o['allowMoveChat']),
+                'allowUploadMessages'=>       isset($o['allowUploadMessages']),
+                'allowResizeChat'=>           isset($o['allowResizeChat']),
+                'showChatHeader'=>            isset($o['showChatHeader']),
+                'allowMinimizeChat'=>         isset($o['allowMinimizeChat']),
+                'showChatMenu'=>              isset($o['showChatMenu']),
+                'showChatParticipants'=>      isset($o['showChatParticipants']),
+                'showGuests'=>                isset($o['showGuests']),
+                );
+
+            $json_param = json_encode($param);
+            $signature ="";
+            if( $o['siteDomain'] && isset($o['secretKey']) )
+                $signature  = md5($o['siteDomain'].$userid.$display_name.$siteUserAvatarUrl.$o['secretKey']);
+            $chatBroCode ='<script>
+            /* Chatbro Widget Embed Code Start*/
+            function ChatbroLoader(chats, async) {
+                async = async || true;
+                var params = {
+                    embedChatsParameters: chats instanceof Array ? chats : [chats],
+                    needLoadCode: typeof Chatbro === "undefined"
+                };
+                var xhr = new XMLHttpRequest();
+                xhr.onload = function () {
+                    eval(xhr.responseText);
+                };
+                xhr.onerror = function () {
+                    console.error("Chatbro loading error");
+                };
+                xhr.open("POST", "http://www.chatbro.com/embed_chats", async);
+                xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+                xhr.send("parameters=" + encodeURIComponent(JSON.stringify(params)));
+            }
+            /* Chatbro Widget Embed Code End*/
+            var param={};
+            var json_param= '.$json_param.'
+            for (var p in json_param) {
+                if (json_param[p]!=null)
+                    param[p]=json_param[p];
+            }
+            if("'.is_user_logged_in().'") {
+                param.siteUserFullName   = "'.$display_name.'";
+                param.siteUserExternalId = "'.$userid.'";
+                if("'.$siteUserAvatarUrl.'".indexOf("wp_user_avatar"==-1))
+                    param.siteUserAvatarUrl  = "'.$siteUserAvatarUrl.'";
+                if( "'.$signature.'" )
+                    param.signature = "'.$signature.'";
+            }
+                ChatbroLoader(param);
+            </script>';
+                if(isset($o['showGuests']) || is_user_logged_in()) {
+                    $systemMessage='';
+                if( isset($o['showSystemMessage']) && !is_user_logged_in()) {
+                        $registerMessage = __('Only for registered members! ', 'chatbro');
+                    if( $o['registerLink'] ) {
+                            $registerTitle =__('Register', 'chatbro');
+                            $registerMessage.='<link><a href='.addslashes($o['registerLink']).'>'.$registerTitle.'</a></link>';
+                        }
+                        $systemMessage = '<script>
+                            document.addEventListener("chatLoaded", function () {
+                            document.addEventListener("chatInputClick", function (event) {
+                                var chat = event.chat;
+                                chat.lockSendMessage();
+                                chat.showSystemMessage("'.$registerMessage.'");
+                            });
+                        });
+                    </script>';
+                }
+                echo $chatBroCode.$systemMessage;
+            }
+
+        }
+
         function chat() {
+            echo "<h1>chat()</h1>";
             $guid = ChatBroPlugin::get_option(ChatBroPlugin::guid_setting);
 
-            if (!$guid)
-                return;
+            if (!$guid) {
+                $opts = ChatBroPlugin::get_option(ChatBroPlugin::old_options);
 
+                if ($opts != false)
+                    $this->chat_old($opts);
+
+                return;
+            }
+
+            echo "<h1>NEW CHAT!</h1>";
             $hash = md5($guid);
             $user = wp_get_current_user();
             $siteurl = ChatBroPlugin::get_option('siteurl');
@@ -382,6 +503,7 @@ if (!class_exists("ChatBroPlugin")) {
                     break;
 
                 default:
+                    echo "<h1>NO DISPLAY 1</h1>";
                     return;
             }
 
@@ -401,13 +523,13 @@ if (!class_exists("ChatBroPlugin")) {
 new ChatBroPlugin();
 
 //----------------------TEMPLATE------------------------//
-if (!class_exists(ChatbroTemplater)) {
-    class ChatbroTemplater {
+if (!class_exists(ChatBroPluginTemplater)) {
+    class ChatBroPluginTemplater {
         private static $instance;
         protected $templates;
         public static function get_instance() {
             if( null == self::$instance ) {
-                self::$instance = new ChatbroTemplater();
+                self::$instance = new ChatBroPluginTemplater();
             }
             return self::$instance;
         }
@@ -462,4 +584,4 @@ if (!class_exists(ChatbroTemplater)) {
     }
 }
 
-add_action( 'plugins_loaded', array( 'ChatbroTemplater', 'get_instance' ) );
+add_action( 'plugins_loaded', array( 'ChatBroPluginTemplater', 'get_instance' ) );
