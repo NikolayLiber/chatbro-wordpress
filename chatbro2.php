@@ -73,7 +73,7 @@ if (!class_exists("ChatBroPlugin")) {
         }
 
         public static function gen_uuid() {
-            return strtoupper(sprintf( '%04x%04x-%04x-%04x-%04x-%04x%04x%04x',
+            return strtolower(sprintf( '%04x%04x-%04x-%04x-%04x-%04x%04x%04x',
                 // 32 bits for "time_low"
                 mt_rand( 0, 0xffff ), mt_rand( 0, 0xffff ),
 
@@ -119,9 +119,9 @@ if (!class_exists("ChatBroPlugin")) {
         }
 
         public static function sanitize_guid($guid) {
-            $guid = trim(strtoupper($guid));
+            $guid = trim(strtolower($guid));
 
-            if (!preg_match('/^[\dA-F]{8}-[\dA-F]{4}-[\dA-F]{4}-[\dA-F]{4}-[\dA-F]{12}$/', $guid)) {
+            if (!preg_match('/^[\da-f]{8}-[\da-f]{4}-[\da-f]{4}-[\da-f]{4}-[\da-f]{12}$/', $guid)) {
                 add_settings_error(ChatBroPlugin::guid_setting, "invalid-guid", __("Invalid Chat Id", 'chatbro_plugin'), "error");
                 return ChatBroPlugin::get_option(ChatBroPlugin::guid_setting);
             }
