@@ -1,0 +1,58 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the chatbro2 package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: chatbro2 1.0.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-11-17 21:52+0500\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: chatbro2.php:125
+msgid "Invalid Chat Id"
+msgstr ""
+
+#: chatbro2.php:134
+msgid "Invalid show popup chat option value"
+msgstr ""
+
+#: chatbro2.php:189
+msgid ""
+"To manage chat settings in the new version of the plugin, you should submit "
+"a chat secret key. Please, log in to your account at <a href=\"https://www."
+"chatbro.com/account\">chatbro.com</a> (use login button below), copy the "
+"chat secret key and insert it into the respective field."
+msgstr ""
+
+#: chatbro2.php:206
+msgid "Save secret key"
+msgstr ""
+
+#: chatbro2.php:227 chatbro2.php:232
+msgid "Plugin Settings"
+msgstr ""
+
+#: chatbro2.php:230
+msgid "Chat Constructor"
+msgstr ""
+
+#: chatbro2.php:247
+msgid "Save Changes"
+msgstr ""
+
+#: chatbro2.php:411
+msgid "Only for registered members! "
+msgstr ""
+
+#: chatbro2.php:413
+msgid "Register"
+msgstr ""
