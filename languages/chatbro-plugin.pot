@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: chatbro2 1.0.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-11-17 21:52+0500\n"
+"POT-Creation-Date: 2016-11-18 21:58+0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,15 +17,59 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: chatbro2.php:125
-msgid "Invalid Chat Id"
+#: chatbro2.php:10
+msgid "Chat secret key"
 msgstr ""
 
-#: chatbro2.php:134
+#: chatbro2.php:11
+msgid "Display chat to guests"
+msgstr ""
+
+#: chatbro2.php:12
+msgid "Show popup chat"
+msgstr ""
+
+#: chatbro2.php:13
+msgid "Everywhere"
+msgstr ""
+
+#: chatbro2.php:14
+msgid "Front page only"
+msgstr ""
+
+#: chatbro2.php:15
+msgid "Everywhere except those listed"
+msgstr ""
+
+#: chatbro2.php:16
+msgid "Only the listed pages"
+msgstr ""
+
+#: chatbro2.php:17
+msgid "Disable"
+msgstr ""
+
+#: chatbro2.php:18
+msgid ""
+"Specify pages by using their paths. Enter one path per line. The '*' "
+"character is a wildcard. Example paths are /2012/10/my-post for a single "
+"post and /2012/* for a group of posts. The path should always start with a "
+"forward slash(/)."
+msgstr ""
+
+#: chatbro2.php:19
+msgid "User profile path"
+msgstr ""
+
+#: chatbro2.php:137
+msgid "Invalid chat secret key"
+msgstr ""
+
+#: chatbro2.php:146
 msgid "Invalid show popup chat option value"
 msgstr ""
 
-#: chatbro2.php:189
+#: chatbro2.php:201
 msgid ""
 "To manage chat settings in the new version of the plugin, you should submit "
 "a chat secret key. Please, log in to your account at <a href=\"https://www."
@@ -33,26 +77,26 @@ msgid ""
 "chat secret key and insert it into the respective field."
 msgstr ""
 
-#: chatbro2.php:206
+#: chatbro2.php:218
 msgid "Save secret key"
 msgstr ""
 
-#: chatbro2.php:227 chatbro2.php:232
+#: chatbro2.php:239 chatbro2.php:244
 msgid "Plugin Settings"
 msgstr ""
 
-#: chatbro2.php:230
+#: chatbro2.php:242
 msgid "Chat Constructor"
 msgstr ""
 
-#: chatbro2.php:247
+#: chatbro2.php:259
 msgid "Save Changes"
 msgstr ""
 
-#: chatbro2.php:411
+#: chatbro2.php:423
 msgid "Only for registered members! "
 msgstr ""
 
-#: chatbro2.php:413
+#: chatbro2.php:425
 msgid "Register"
 msgstr ""

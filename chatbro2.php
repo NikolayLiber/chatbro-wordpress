@@ -3,9 +3,21 @@
 * Plugin Name: ChatBro 2
 */
 
+
 defined( 'ABSPATH' ) or die( 'No script kiddies please!' );
 
 if (!class_exists("ChatBroPlugin")) {
+    __('Chat secret key', 'chatbro-plugin');
+    __('Display chat to guests', 'chatbro-plugin');
+    __('Show popup chat', 'chatbro-plugin');
+    __('Everywhere', 'chatbro-plugin');
+    __('Front page only', 'chatbro-plugin');
+    __('Everywhere except those listed', 'chatbro-plugin');
+    __('Only the listed pages', 'chatbro-plugin');
+    __('Disable', 'chatbro-plugin');
+    __("Specify pages by using their paths. Enter one path per line. The '*' character is a wildcard. Example paths are /2012/10/my-post for a single post and /2012/* for a group of posts. The path should always start with a forward slash(/).", 'chatbro-plugin');
+    __('User profile path', 'chatbro-plugin');
+
     class InputType {
         const checkbox = 'checkbox';
         const text = 'text';
@@ -72,6 +84,11 @@ if (!class_exists("ChatBroPlugin")) {
             add_action('wp_footer', array(&$this, 'chat'));
         }
 
+        public static function load_my_textdomain() {
+            $mo_file_path = dirname(__FILE__) . '/languages/chatbro-plugin-'. get_locale() . '.mo';
+            load_textdomain('chatbro-plugin', $mo_file_path);
+        }
+
         public static function gen_uuid() {
             return strtolower(sprintf( '%04x%04x-%04x-%04x-%04x-%04x%04x%04x',
                 // 32 bits for "time_low"
@@ -122,7 +139,7 @@ if (!class_exists("ChatBroPlugin")) {
             $guid = trim(strtolower($guid));
 
             if (!preg_match('/^[\da-f]{8}-[\da-f]{4}-[\da-f]{4}-[\da-f]{4}-[\da-f]{12}$/', $guid)) {
-                add_settings_error(ChatBroPlugin::guid_setting, "invalid-guid", __("Invalid Chat Id", 'chatbro_plugin'), "error");
+                add_settings_error(ChatBroPlugin::guid_setting, "invalid-guid", __("Invalid chat secret key", 'chatbro-plugin'), "error");
                 return ChatBroPlugin::get_option(ChatBroPlugin::guid_setting);
             }
 
@@ -131,7 +148,7 @@ if (!class_exists("ChatBroPlugin")) {
 
         public static function sanitize_display($val) {
             if (!in_array($val, array_keys($options['display_setting']['options']))) {
-                add_settings_error(ChatBroPlugin::display_setting, "invalid-display", __("Invalid show popup chat option value", "chatbro_plugin"));
+                add_settings_error(ChatBroPlugin::display_setting, "invalid-display", __("Invalid show popup chat option value", 'chatbro-plugin'));
                 return ChatBroPlugin::get_option(ChatBroPlugin::display_setting);
             }
 
@@ -186,7 +203,7 @@ if (!class_exists("ChatBroPlugin")) {
             $chatPath = $old['chatPath'];
             $showGuests = $old['showGuests'];
             ?>
-            <p><div class="error"><?php echo __('To manage chat settings in the new version of the plugin, you should submit a chat secret key. Please, log in to your account at <a href="https://www.chatbro.com/account">chatbro.com</a> (use login button below), copy the chat secret key and insert it into the respective field.', 'chatbro_plugin'); ?></div></p>
+            <p><div class="error"><?php echo __('To manage chat settings in the new version of the plugin, you should submit a chat secret key. Please, log in to your account at <a href="https://www.chatbro.com/account">chatbro.com</a> (use login button below), copy the chat secret key and insert it into the respective field.', 'chatbro-plugin'); ?></div></p>
             <form method="post" action="options.php">
                 <?php
                 settings_fields(ChatBroPlugin::settings);
@@ -197,13 +214,13 @@ if (!class_exists("ChatBroPlugin")) {
                 <input type="hidden" id="<?php echo ChatBroPlugin::display_setting ?>" name="<?php echo ChatBroPlugin::display_setting ?>" value="everywhere">
                 <table class="form-table">
                     <tr>
-                        <th scope="row"><?php echo __(ChatBroPlugin::options[ChatBroPlugin::guid_setting]['label'], 'chatbro_plugin'); ?></th>
+                        <th scope="row"><?php echo __(ChatBroPlugin::options[ChatBroPlugin::guid_setting]['label'], 'chatbro-plugin'); ?></th>
                         <td><input type="text" class="regular-text" id="<?php echo ChatBroPlugin::guid_setting; ?>" name="<?php echo ChatBroPlugin::guid_setting; ?>">
                         </td>
                     </tr>
                 </table>
                 <p class="submit">
-                    <input type="submit" class="button-primary" value="<?php _e('Save secret key') ?>" />
+                    <input type="submit" class="button-primary" value="<?php _e('Save secret key', 'chatbro-plugin') ?>" />
                 </p>
             </form>
             <iframe src="<?php echo "http://www.chatbro.com/get_secretkey_by_path?chatPath={$chatPath}"; ?>" style="width: 100%;"></iframe>
@@ -224,12 +241,12 @@ if (!class_exists("ChatBroPlugin")) {
 
             ?>
             <div class="wrap">
-                <h1><?php __('Plugin Settings', 'chatbro_plugin'); ?></h1>
+                <h1><?php __('Plugin Settings', 'chatbro-plugin'); ?></h1>
                 <h2 class="nav-tab-wrapper">
                     <a href="?page=chatbro_settings&tab=constructor"
-                       class="nav-tab <?php echo $active_tab == 'constructor' ? 'nav-tab-active' : ''; ?>"><?php echo __("Chat Constructor", "chatbro_plugin"); ?></a>
+                       class="nav-tab <?php echo $active_tab == 'constructor' ? 'nav-tab-active' : ''; ?>"><?php echo __("Chat Constructor", 'chatbro-plugin'); ?></a>
                     <a href="?page=chatbro_settings&tab=plugin_settings"
-                       class="nav-tab <?php echo $active_tab == 'plugin_settings' ? 'nav-tab-active' : ''; ?>"><?php echo __("Plugin Settings", "chatbro_plugin"); ?></a>
+                       class="nav-tab <?php echo $active_tab == 'plugin_settings' ? 'nav-tab-active' : ''; ?>"><?php echo __("Plugin Settings", 'chatbro-plugin'); ?></a>
                 </h2>
 
 
@@ -244,7 +261,7 @@ if (!class_exists("ChatBroPlugin")) {
                             // do_settings_fields(ChatBroPlugin::page, "chbro_plugin_settings");
                         ?>
                         <p class="submit">
-                            <input type="submit" class="button-primary" value="<?php _e('Save Changes') ?>" />
+                            <input type="submit" class="button-primary" value="<?php _e('Save Changes', 'chatbro-plugin') ?>" />
                         </p>
                     </form>
                     <?php
@@ -263,7 +280,7 @@ if (!class_exists("ChatBroPlugin")) {
             add_settings_section("chbro_plugin_settings", "", "", ChatBroPlugin::page);
             foreach(ChatBroPlugin::options as $name => $args) {
                 register_setting(ChatBroPlugin::settings, $name, $args['sanitize_callback']);
-                add_settings_field($name, __($args['label'], 'chatbro_plugin'), array(&$this, "render_field"), ChatBroPlugin::page, "chbro_plugin_settings", $args);
+                add_settings_field($name, __($args['label'], 'chatbro-plugin'), array(&$this, "render_field"), ChatBroPlugin::page, "chbro_plugin_settings", $args);
             }
 
             if (ChatBroPlugin::get_option(ChatBroPlugin::guid_setting) == false && ChatBroPlugin::get_option(ChatBroPlugin::old_options) == false)
@@ -305,6 +322,7 @@ if (!class_exists("ChatBroPlugin")) {
                     $value = array_keys($args['options'])[0];
 
                 foreach($args['options'] as $val => $desc) {
+                    $desc = __($desc, 'chatbro-plugin');
                     $selected = $val == $value ? 'selected="selected"' : '';
                     echo "<option {$selected} name=\"{$args[id]}\" value=\"{$val}\">{$desc}</option>";
                 }
@@ -408,9 +426,9 @@ if (!class_exists("ChatBroPlugin")) {
                 if(isset($o['showGuests']) || is_user_logged_in()) {
                     $systemMessage='';
                 if( isset($o['showSystemMessage']) && !is_user_logged_in()) {
-                        $registerMessage = __('Only for registered members! ', 'chatbro');
+                        $registerMessage = __('Only for registered members! ', 'chatbro-plugin');
                     if( $o['registerLink'] ) {
-                            $registerTitle =__('Register', 'chatbro');
+                            $registerTitle =__('Register', 'chatbro-plugin');
                             $registerMessage.='<link><a href='.addslashes($o['registerLink']).'>'.$registerTitle.'</a></link>';
                         }
                         $systemMessage = '<script>
@@ -429,7 +447,6 @@ if (!class_exists("ChatBroPlugin")) {
         }
 
         function chat() {
-            echo "<h1>chat()</h1>";
             $guid = ChatBroPlugin::get_option(ChatBroPlugin::guid_setting);
 
             if (!$guid) {
@@ -441,7 +458,6 @@ if (!class_exists("ChatBroPlugin")) {
                 return;
             }
 
-            echo "<h1>NEW CHAT!</h1>";
             $hash = md5($guid);
             $user = wp_get_current_user();
             $siteurl = ChatBroPlugin::get_option('siteurl');
@@ -503,7 +519,6 @@ if (!class_exists("ChatBroPlugin")) {
                     break;
 
                 default:
-                    echo "<h1>NO DISPLAY 1</h1>";
                     return;
             }
 
@@ -584,4 +599,5 @@ if (!class_exists(ChatBroPluginTemplater)) {
     }
 }
 
-add_action( 'plugins_loaded', array( 'ChatBroPluginTemplater', 'get_instance' ) );
+add_action('plugins_loaded', array('ChatBroPlugin', 'load_my_textdomain'));
+add_action('plugins_loaded', array( 'ChatBroPluginTemplater', 'get_instance'));

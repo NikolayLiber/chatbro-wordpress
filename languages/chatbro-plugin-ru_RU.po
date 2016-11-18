@@ -1,0 +1,108 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: chatbro-wordpress-plugin\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-11-17 16:57+0000\n"
+"PO-Revision-Date: 2016-11-18 18:12+0000\n"
+"Last-Translator: Nikolay Liber\n"
+"Language-Team: Russian\n"
+"Language: ru\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10 >= 2 && "
+"n%10<=4 &&(n%100<10||n%100 >= 20)? 1 : 2);\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Loco https://localise.biz\n"
+"X-Loco-Source-Locale: en\n"
+"X-Loco-Project-Id: 19129\n"
+"X-Loco-Api-Version: 1.0.15 20161109-1"
+
+#: chatbro2.php:146 loco:582de1a852e1a133258b4568
+msgid "Invalid show popup chat option value"
+msgstr "Неверное значение параметра \"Показывать чат\""
+
+#: chatbro2.php:201 loco:582de1a852e1a133258b4569
+msgid ""
+"To manage chat settings in the new version of the plugin, you should submit "
+"a chat secret key. Please, log in to your account at <a href=\"https://www."
+"chatbro.com/account\">chatbro.com</a> (use login button below), copy the "
+"chat secret key and insert it into the respective field."
+msgstr ""
+"Для управления настройками чата в новой версии плагина необходим секретный "
+"ключ беседы. Пожалуйста войдите в свой аккаунт на chatbro.com, скопируйте "
+"секретный ключ беседы и вставьте в соответсвующее поле."
+
+#: chatbro2.php:218 loco:582de1a852e1a133258b456a
+msgid "Save secret key"
+msgstr "Сохранить секретный ключ"
+
+#: chatbro2.php:239 chatbro2.php:244 loco:582de1a852e1a133258b456b
+msgid "Plugin Settings"
+msgstr "Настройки плагина"
+
+#: chatbro2.php:242 loco:582de1a852e1a133258b456c
+msgid "Chat Constructor"
+msgstr "Конструктор чата"
+
+#: chatbro2.php:259 loco:582de1a852e1a133258b456d
+msgid "Save Changes"
+msgstr "Сохранить изменения"
+
+#: chatbro2.php:423 loco:582de1a852e1a133258b456e
+msgid "Only for registered members! "
+msgstr "Только для зарегистрированных пользователей!"
+
+#: chatbro2.php:425 loco:582de1a852e1a133258b456f
+msgid "Register"
+msgstr "Зарегистрироваться"
+
+#: chatbro2.php:10 loco:582f22cf52e1a1fb598b4567
+msgid "Chat secret key"
+msgstr "Секретный ключ беседы"
+
+#: chatbro2.php:11 loco:582f22cf52e1a1fb598b4568
+msgid "Display chat to guests"
+msgstr "Показывать чат незарегистрированым пользовтелям"
+
+#: chatbro2.php:12 loco:582f22cf52e1a1fb598b4569
+msgid "Show popup chat"
+msgstr "Показывать чат"
+
+#: chatbro2.php:13 loco:582f22cf52e1a1fb598b456a
+msgid "Everywhere"
+msgstr "Везде"
+
+#: chatbro2.php:14 loco:582f22cf52e1a1fb598b456b
+msgid "Front page only"
+msgstr "Только на главной"
+
+#: chatbro2.php:15 loco:582f22cf52e1a1fb598b456c
+msgid "Everywhere except those listed"
+msgstr "Везде кроме перечисленных страниц"
+
+#: chatbro2.php:17 loco:582f22cf52e1a1fb598b456d
+msgid "Disable"
+msgstr "Не показывать"
+
+#: chatbro2.php:18 loco:582f22cf52e1a1fb598b456e
+msgid ""
+"Specify pages by using their paths. Enter one path per line. The '*' "
+"character is a wildcard. Example paths are /2012/10/my-post for a single "
+"post and /2012/* for a group of posts. The path should always start with a "
+"forward slash(/)."
+msgstr ""
+"Укажите пути до страниц по одному на каждой строке. Символ '*' "
+"подстановочный. Например /2012/10/my-post - один пост, /2012/* - группа "
+"постов. Путь всегда должен начинаться с прямого слэша (/)."
+
+#: chatbro2.php:19 loco:582f22cf52e1a1fb598b456f
+msgid "User profile path"
+msgstr "Путь до профиля пользователя"
+
+#: chatbro2.php:137 loco:582f2bb552e1a11b5b8b4567
+msgid "Invalid chat secret key"
+msgstr "Неверный секретный ключ беседы"
+
+#: chatbro2.php:16 loco:582f337952e1a10e5f8b4567
+msgid "Only the listed pages"
+msgstr "Только на перечисленных страницах"
