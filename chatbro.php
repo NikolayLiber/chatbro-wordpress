@@ -283,7 +283,8 @@ if (!class_exists("ChatBroPlugin")) {
                 add_settings_field($name, __($args['label'], 'chatbro-plugin'), array(&$this, "render_field"), ChatBroPlugin::page, "chbro_plugin_settings", $args);
             }
 
-            if (ChatBroPlugin::get_option(ChatBroPlugin::guid_setting) == false && ChatBroPlugin::get_option(ChatBroPlugin::old_options) == false)
+            $old_options = ChatBroPlugin::get_option(ChatBroPlugin::old_options);
+            if (ChatBroPlugin::get_option(ChatBroPlugin::guid_setting) == false && ($old_options == false || $old_options['chatPath'] == 'tg/208397015/Ask your own question'))
                 $this->set_default_settings();
         }
 
