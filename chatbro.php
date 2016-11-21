@@ -338,7 +338,7 @@ if (!class_exists("ChatBroPlugin")) {
         }
 
         function add_menu_option() {
-            add_menu_page("ChatBro", "ChatBro", "manage_options", "chatbro_settings", array(&$this, 'constructor_page'), plugins_url()."/chatbro2/favicon_small.png");
+            add_menu_page("ChatBro", "ChatBro", "manage_options", "chatbro_settings", array(&$this, 'constructor_page'), plugins_url()."/chatbro/favicon_small.png");
         }
 
         function chat_old($o) {
