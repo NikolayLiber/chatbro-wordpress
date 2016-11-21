@@ -1,0 +1,111 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the chatbro2 package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: chatbro2 1.0.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-11-18 16:42-0200\n"
+"PO-Revision-Date: 2016-11-18 16:53-0200\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.8.7\n"
+"Last-Translator: \n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"Language: pt_BR\n"
+
+#: chatbro2.php:10
+msgid "Chat secret key"
+msgstr "Senha do chat"
+
+#: chatbro2.php:11
+msgid "Display chat to guests"
+msgstr "Mostrar chat para convidados"
+
+#: chatbro2.php:12
+msgid "Show popup chat"
+msgstr "Mostrar popup do chat"
+
+#: chatbro2.php:13
+msgid "Everywhere"
+msgstr "Todos lugares"
+
+#: chatbro2.php:14
+msgid "Front page only"
+msgstr "Página inicial apenas"
+
+#: chatbro2.php:15
+msgid "Everywhere except those listed"
+msgstr "Todos lugares exceto os listados"
+
+#: chatbro2.php:16
+msgid "Only the listed pages"
+msgstr "Somente páginas listadas"
+
+#: chatbro2.php:17
+msgid "Disable"
+msgstr "Desabilitar"
+
+#: chatbro2.php:18
+msgid ""
+"Specify pages by using their paths. Enter one path per line. The '*' "
+"character is a wildcard. Example paths are /2012/10/my-post for a single "
+"post and /2012/* for a group of posts. The path should always start with a "
+"forward slash(/)."
+msgstr ""
+"Especifique as páginas usando seus caminhos. Entre um caminho por linha. O "
+"caractere '*' é um coringa. Exemplos de caminhos são: /2012/10/meu-post "
+"(para um post único) e /2012/* (para um grupo de posts). O caminho sempre "
+"deve iniciar com barra inclinada para frente (/). "
+
+#: chatbro2.php:19
+msgid "User profile path"
+msgstr "Diretório do perfil do usuário"
+
+#: chatbro2.php:137
+msgid "Invalid chat secret key"
+msgstr "Senha do chat incorreta"
+
+#: chatbro2.php:146
+msgid "Invalid show popup chat option value"
+msgstr "Opção de valor inválida para popup do chat"
+
+#: chatbro2.php:201
+msgid ""
+"To manage chat settings in the new version of the plugin, you should submit "
+"a chat secret key. Please, log in to your account at <a href=\"https://www."
+"chatbro.com/account\">chatbro.com</a> (use login button below), copy the "
+"chat secret key and insert it into the respective field."
+msgstr ""
+"Para alterar as configurações do chat na nova versão do plugin você precisa "
+"inserir uma senha. Por favor faça seu login em <a href=\"https://www."
+"chatbro.com/account\">chatbro.com</a> (usando o botão de login abaixo), "
+"copie a senha do chat e insira a mesma no respectivo campo."
+
+#: chatbro2.php:218
+msgid "Save secret key"
+msgstr "Salvar senha"
+
+#: chatbro2.php:239 chatbro2.php:244
+msgid "Plugin Settings"
+msgstr "Configurações do plugin"
+
+#: chatbro2.php:242
+msgid "Chat Constructor"
+msgstr "Construtor do chat"
+
+#: chatbro2.php:259
+msgid "Save Changes"
+msgstr "Salvar alterações"
+
+#: chatbro2.php:423
+msgid "Only for registered members! "
+msgstr "Somente para membros registrados!"
+
+#: chatbro2.php:425
+msgid "Register"
+msgstr "Registrar"

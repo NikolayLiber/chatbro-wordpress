@@ -1,0 +1,112 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the chatbro2 package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: chatbro2 1.0.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-11-19 05:33+0700\n"
+"PO-Revision-Date: 2016-11-19 11:12+0700\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.8.1\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"Language: id_ID\n"
+
+#: chatbro2.php:10
+msgid "Chat secret key"
+msgstr "Kunci rahasia chat"
+
+#: chatbro2.php:11
+msgid "Display chat to guests"
+msgstr "Tampilkan chat pada tamu"
+
+#: chatbro2.php:12
+msgid "Show popup chat"
+msgstr "Tampilkan pop up chat"
+
+#: chatbro2.php:13
+msgid "Everywhere"
+msgstr "Di mana pun"
+
+#: chatbro2.php:14
+msgid "Front page only"
+msgstr "Hanya halaman depan"
+
+#: chatbro2.php:15
+msgid "Everywhere except those listed"
+msgstr "Di mana pun kecuali yang terdapat dalam daftar"
+
+#: chatbro2.php:16
+msgid "Only the listed pages"
+msgstr "Hanya halaman yang terdaftar"
+
+#: chatbro2.php:17
+msgid "Disable"
+msgstr "Nonaktifkan"
+
+#: chatbro2.php:18
+msgid ""
+"Specify pages by using their paths. Enter one path per line. The '*' "
+"character is a wildcard. Example paths are /2012/10/my-post for a single "
+"post and /2012/* for a group of posts. The path should always start with a "
+"forward slash(/)."
+msgstr ""
+"Tentukan halaman melalui jalurnya. Masukkan satu jalur per baris. Karakter "
+"'*' adalah wildcard. Contoh jalur adalah /2012/10/my-post untuk satu "
+"tulisan dan /2012/* untuk beberapa tulisan. Jalur harus selalu diawali "
+"dengan garis miring (/)."
+
+#: chatbro2.php:19
+msgid "User profile path"
+msgstr "Gunakan jalur profil"
+
+#: chatbro2.php:137
+msgid "Invalid chat secret key"
+msgstr "Kunci rahasia chat tidak valid"
+
+#: chatbro2.php:146
+msgid "Invalid show popup chat option value"
+msgstr "Pemunculan nilai pilihan pop up chat tidak valid"
+
+#: chatbro2.php:201
+msgid ""
+"To manage chat settings in the new version of the plugin, you should submit "
+"a chat secret key. Please, log in to your account at <a href=\"https://www."
+"chatbro.com/account\">chatbro.com</a> (use login button below), copy the "
+"chat secret key and insert it into the respective field."
+msgstr ""
+"Untuk mengelola pengaturan chat dalam versi plugin yang baru, Anda harus "
+"mengirimkan kunci rahasia chat. Silakan masuk ke akun Anda di <a href="
+"\"https://www.chatbro.com/account\">chatbro.com</a>(menggunakan tombol "
+"masuk di bawah ini), salin kunci rahasia chat, dan masukkan ke kolom yang "
+"sesuai."
+
+#: chatbro2.php:218
+msgid "Save secret key"
+msgstr "Simpan kunci rahasia"
+
+#: chatbro2.php:239 chatbro2.php:244
+msgid "Plugin Settings"
+msgstr "Pengaturan Plugin"
+
+#: chatbro2.php:242
+msgid "Chat Constructor"
+msgstr "Pembuat Chat"
+
+#: chatbro2.php:259
+msgid "Save Changes"
+msgstr "Simpan Perubahan"
+
+#: chatbro2.php:423
+msgid "Only for registered members! "
+msgstr "Hanya untuk anggota terdaftar!"
+
+#: chatbro2.php:425
+msgid "Register"
+msgstr "Daftar"
