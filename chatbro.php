@@ -1,6 +1,6 @@
 <?php
 /**
-* Plugin Name: ChatBro 2
+* Plugin Name: ChatBro
 */
 
 
