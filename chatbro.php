@@ -1,8 +1,19 @@
 <?php
 /**
-* Plugin Name: ChatBro
+ * @package ChatBro
+ * @version 1.1.0
+ */
+/*
+Plugin Name: ChatBro
+Plugin URI: http://chatbro.com
+Description: Chat for your community with social networks integration. Syncronizes chat conversation with popular messengers. Love ChatBro? Spread the word! <a href="https://wordpress.org/support/view/plugin-reviews/chatbro">Click here to review the plugin!</a>.
+Version: 1.1.0
+Author: ChatBro
+Author URI: http://chatbro.com
+License: GPL3
+Text Domain: chatbro-plugin
+Domain Path: /languages
 */
-
 
 defined( 'ABSPATH' ) or die( 'No script kiddies please!' );
 
@@ -37,7 +48,7 @@ if (!class_exists("ChatBroPlugin")) {
         const user_profile_path = 'chatbro_chat_user_profile_url';
         const old_options = 'chatbro_options';
 
-        const options = array(
+        public static $options = array(
             ChatBroPlugin::guid_setting => array(
                 'id' => ChatBroPlugin::guid_setting,
                 'type' => InputType::text,
@@ -214,7 +225,7 @@ if (!class_exists("ChatBroPlugin")) {
                 <input type="hidden" id="<?php echo ChatBroPlugin::display_setting ?>" name="<?php echo ChatBroPlugin::display_setting ?>" value="everywhere">
                 <table class="form-table">
                     <tr>
-                        <th scope="row"><?php echo __(ChatBroPlugin::options[ChatBroPlugin::guid_setting]['label'], 'chatbro-plugin'); ?></th>
+                        <th scope="row"><?php echo __(ChatBroPlugin::$options[ChatBroPlugin::guid_setting]['label'], 'chatbro-plugin'); ?></th>
                         <td><input type="text" class="regular-text" id="<?php echo ChatBroPlugin::guid_setting; ?>" name="<?php echo ChatBroPlugin::guid_setting; ?>">
                         </td>
                     </tr>
@@ -278,8 +289,8 @@ if (!class_exists("ChatBroPlugin")) {
 
         function init_settings() {
             add_settings_section("chbro_plugin_settings", "", "", ChatBroPlugin::page);
-            foreach(ChatBroPlugin::options as $name => $args) {
-                register_setting(ChatBroPlugin::settings, $name, $args['sanitize_callback']);
+            foreach(ChatBroPlugin::$options as $name => $args) {
+                register_setting(ChatBroPlugin::settings, $name, array_key_exists('sanitize_callback', $args) ? $args['sanitize_callback'] : null);
                 add_settings_field($name, __($args['label'], 'chatbro-plugin'), array(&$this, "render_field"), ChatBroPlugin::page, "chbro_plugin_settings", $args);
             }
 
@@ -289,7 +300,10 @@ if (!class_exists("ChatBroPlugin")) {
         }
 
         public static function clenup_settings() {
-            foreach (array_keys($options) as $name)
+            foreach (array_keys(ChatBroPlugin::$options) as $name)
+                if (ChatBroPlugin::get_option($name) === false)
+                    continue;
+
                 delete_option($name);
         }
 
@@ -315,7 +329,7 @@ if (!class_exists("ChatBroPlugin")) {
             $checked = $args['type'] == InputType::checkbox && $value ? 'checked="checked"' : '';
             $textarea_attrs = $args['type'] == InputType::textarea ? 'cols="80" rows="6"' : '';
 
-            echo "<{$tag} id=\"${args[id]}\" name=\"{$args[id]}\" {$class} type=\"{$args[type]}\" {$textarea_attrs} {$valueAttr} {$checked}>";
+            echo "<{$tag} id=\"{$args['id']}\" name=\"{$args['id']}\" {$class} type=\"{$args['type']}\" {$textarea_attrs} {$valueAttr} {$checked}>";
 
             switch($args['type']) {
             case InputType::select:
@@ -539,7 +553,7 @@ if (!class_exists("ChatBroPlugin")) {
 new ChatBroPlugin();
 
 //----------------------TEMPLATE------------------------//
-if (!class_exists(ChatBroPluginTemplater)) {
+if (!class_exists("ChatBroPluginTemplater")) {
     class ChatBroPluginTemplater {
         private static $instance;
         protected $templates;
@@ -602,3 +616,4 @@ if (!class_exists(ChatBroPluginTemplater)) {
 
 add_action('plugins_loaded', array('ChatBroPlugin', 'load_my_textdomain'));
 add_action('plugins_loaded', array( 'ChatBroPluginTemplater', 'get_instance'));
+register_uninstall_hook(__FILE__, array('ChatBroPlugin', 'clenup_settings'));
