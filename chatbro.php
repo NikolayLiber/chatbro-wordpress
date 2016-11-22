@@ -6,7 +6,7 @@
 /*
 Plugin Name: ChatBro
 Plugin URI: http://chatbro.com
-Description: Chat for your community with social networks integration. Syncronizes chat conversation with popular messengers. Love ChatBro? Spread the word! <a href="https://wordpress.org/support/view/plugin-reviews/chatbro">Click here to review the plugin!</a>.
+Description: Live group chat for your community with social networks integration. Syncronizes chat conversation with popular messengers. Love ChatBro? Spread the word! <a href="https://wordpress.org/support/view/plugin-reviews/chatbro">Click here to review the plugin!</a>.
 Version: 1.1.0
 Author: ChatBro
 Author URI: http://chatbro.com
