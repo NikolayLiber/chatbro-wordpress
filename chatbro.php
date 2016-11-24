@@ -1,13 +1,13 @@
 <?php
 /**
  * @package ChatBro
- * @version 1.1.0
+ * @version 1.1.1
  */
 /*
 Plugin Name: ChatBro
 Plugin URI: http://chatbro.com
 Description: Live group chat for your community with social networks integration. Chat conversation is being syncronized with popular messengers. Love ChatBro? Spread the word! <a href="https://wordpress.org/support/view/plugin-reviews/chatbro">Click here to review the plugin!</a>.
-Version: 1.1.0
+Version: 1.1.1
 Author: ChatBro
 Author URI: http://chatbro.com
 License: GPL3
