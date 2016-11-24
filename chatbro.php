@@ -41,7 +41,6 @@ if (!class_exists("ChatBroPlugin")) {
         const settings = "chatbro_plugin_settings";
 
         const guid_setting = "chatbro_chat_guid";
-        const hash_setting = "chatbro_chat_hash";
         const display_to_guests_setting = "chatbro_chat_display_to_guests";
         const display_setting = "chatbro_chat_display";
         const selected_pages_setting = 'chatbro_chat_selected_pages';
@@ -120,6 +119,14 @@ if (!class_exists("ChatBroPlugin")) {
                 // 48 bits for "node"
                 mt_rand( 0, 0xffff ), mt_rand( 0, 0xffff ), mt_rand( 0, 0xffff )
             ));
+        }
+
+        public static function get_site_domain() {
+            $url = ChatBroPlugin::get_option('siteurl');
+            if (!preg_match('/^.+:\/\/([^\/]+)/', $url, $m))
+                return '';
+
+            return $m[1];
         }
 
         public static function get_option($name) {
@@ -318,6 +325,9 @@ if (!class_exists("ChatBroPlugin")) {
 
             if (!ChatBroPlugin::add_option(ChatBroPlugin::user_profile_path, '/authors/{$username}'))
                 ChatBroPlugin::update_option(ChatBroPlugin::user_profile_path, '/authors/{$username}');
+
+            if (!ChatBroPlugin::add_option(ChatBroPlugin::display_setting, 'everywhere'))
+                ChatBroPlugin::update_option(ChatBroPlugin::display_setting, 'everywhere');
         }
 
         function render_field($args) {
@@ -333,8 +343,10 @@ if (!class_exists("ChatBroPlugin")) {
 
             switch($args['type']) {
             case InputType::select:
-                if (!$value)
-                    $value = array_keys($args['options'])[0];
+                if (!$value) {
+                    $t = array_keys($args['options']);
+                    $value = $t[0];
+                }
 
                 foreach($args['options'] as $val => $desc) {
                     $desc = __($desc, 'chatbro-plugin');
@@ -476,6 +488,7 @@ if (!class_exists("ChatBroPlugin")) {
             $hash = md5($guid);
             $user = wp_get_current_user();
             $siteurl = ChatBroPlugin::get_option('siteurl');
+            $site_domain = ChatBroPlugin::get_site_domain();
 
             $site_user_avatar_url = "";
             preg_match("/src='(.*)' alt/i", get_avatar($userid, 120), $avatar_path);
@@ -495,8 +508,8 @@ if (!class_exists("ChatBroPlugin")) {
 
             $params = "encodedChatGuid: '{$hash}'";
             if (is_user_logged_in()) {
-                $signature = md5($siteurl . $user->ID . $user->display_name . $site_user_avatar_url . $profile_url . $guid);
-                $params .= ", siteUserFullName: '{$user->display_name}', siteUserExternalId: '{$user->ID}'";
+                $signature = md5($site_domain . $user->ID . $user->display_name . $site_user_avatar_url . $profile_url . $guid);
+                $params .= ", siteUserFullName: '{$user->display_name}', siteUserExternalId: '{$user->ID}', siteDomain: '{$site_domain}'";
 
                 if ($site_user_avatar_url != "")
                     $params .= ", siteUserAvatarUrl: '{$site_user_avatar_url}'";
@@ -505,7 +518,7 @@ if (!class_exists("ChatBroPlugin")) {
                     $params .= ", siteUserProfileUrl: '{$profile_url}'";
             }
             else {
-                $signature = md5($siteurl . $guid);
+                $signature = md5($site_domain . $guid);
             }
 
             $params .= ", signature: '{$signature}'";
@@ -519,6 +532,7 @@ if (!class_exists("ChatBroPlugin")) {
             $where_to_display = ChatBroPlugin::get_option(ChatBroPlugin::display_setting);
 
             switch($where_to_display) {
+                case '':
                 case 'everywhere':
                     break;
 
