@@ -44,8 +44,9 @@ if (!class_exists("ChatBroPlugin")) {
         const display_to_guests_setting = "chatbro_chat_display_to_guests";
         const display_setting = "chatbro_chat_display";
         const selected_pages_setting = 'chatbro_chat_selected_pages';
-        const user_profile_path = 'chatbro_chat_user_profile_url';
+        const user_profile_path_setting = 'chatbro_chat_user_profile_url';
         const old_options = 'chatbro_options';
+        const default_profile_path = '/authors/{$username}';
 
         public static $options = array(
             ChatBroPlugin::guid_setting => array(
@@ -81,8 +82,8 @@ if (!class_exists("ChatBroPlugin")) {
                 'label' => "Specify pages by using their paths. Enter one path per line. The '*' character is a wildcard. Example paths are /2012/10/my-post for a single post and /2012/* for a group of posts. The path should always start with a forward slash(/)."
             ),
 
-            ChatBroPlugin::user_profile_path => array(
-                'id' => ChatBroPlugin::user_profile_path,
+            ChatBroPlugin::user_profile_path_setting => array(
+                'id' => ChatBroPlugin::user_profile_path_setting,
                 'type' => InputType::text,
                 'label' => 'User profile path'
             )
@@ -230,6 +231,7 @@ if (!class_exists("ChatBroPlugin")) {
                     echo '<input type="hidden" id="' . ChatBroPlugin::display_to_guests_setting . '" name="' . ChatBroPlugin::display_to_guests_setting . '" value="on">';
                 ?>
                 <input type="hidden" id="<?php echo ChatBroPlugin::display_setting ?>" name="<?php echo ChatBroPlugin::display_setting ?>" value="everywhere">
+                <input type="hidden" id="<?php echo ChatBroPlugin::user_profile_path_setting ?>" name="<?php echo ChatBroPlugin::user_profile_path_setting ?>" value="<?php echo ChatBroPlugin::default_profile_path; ?>">
                 <table class="form-table">
                     <tr>
                         <th scope="row"><?php echo __(ChatBroPlugin::$options[ChatBroPlugin::guid_setting]['label'], 'chatbro-plugin'); ?></th>
@@ -323,8 +325,8 @@ if (!class_exists("ChatBroPlugin")) {
             if (!ChatBroPlugin::add_option(ChatBroPlugin::display_to_guests_setting, true))
                 ChatBroPlugin::update_option(ChatBroPlugin::display_to_guests_setting, true);
 
-            if (!ChatBroPlugin::add_option(ChatBroPlugin::user_profile_path, '/authors/{$username}'))
-                ChatBroPlugin::update_option(ChatBroPlugin::user_profile_path, '/authors/{$username}');
+            if (!ChatBroPlugin::add_option(ChatBroPlugin::user_profile_path_setting, ChatBroPlugin::default_profile_path))
+                ChatBroPlugin::update_option(ChatBroPlugin::user_profile_path_setting, ChatBroPlugin::default_profile_path);
 
             if (!ChatBroPlugin::add_option(ChatBroPlugin::display_setting, 'everywhere'))
                 ChatBroPlugin::update_option(ChatBroPlugin::display_setting, 'everywhere');
@@ -499,7 +501,7 @@ if (!class_exists("ChatBroPlugin")) {
 
             $site_user_avatar_url = strpos($site_user_avatar_url, 'wp_user_avatar') == FALSE ? $site_user_avatar_url : '';
 
-            $profile_path = ChatBroPlugin::get_option(ChatBroPlugin::user_profile_path);
+            $profile_path = ChatBroPlugin::get_option(ChatBroPlugin::user_profile_path_setting);
 
             $profile_url = '';
 
