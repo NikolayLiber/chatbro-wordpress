@@ -491,11 +491,11 @@ if (!class_exists("ChatBroPlugin")) {
             $site_domain = ChatBroPlugin::get_site_domain();
 
             $site_user_avatar_url = "";
-            preg_match("/src='(.*)' alt/i", get_avatar($userid, 120), $avatar_path);
+            preg_match("/src='(.*)' alt/i", get_avatar($user->ID, 120), $avatar_path);
                 if(count($avatar_path)!=0)
                     $site_user_avatar_url = $avatar_path[1];
             if($site_user_avatar_url == "")
-                $site_user_avatar_url = get_avatar_url($userid);
+                $site_user_avatar_url = get_avatar_url($user->ID);
 
             $site_user_avatar_url = strpos($site_user_avatar_url, 'wp_user_avatar') == FALSE ? $site_user_avatar_url : '';
 
