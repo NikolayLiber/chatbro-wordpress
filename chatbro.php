@@ -165,7 +165,7 @@ if (!class_exists("ChatBroPlugin")) {
             $ch = curl_init("https://www.chatbro.com/constructor/{$guid}");
 
             if (!curl_exec($ch)) {
-                add_settings_error(ChatBroPlugin::guid_setting, 'constructor-failed', __('Failed to call chat constructor', 'chatbro-plugin') . " " . curl_error($ch), 'error');
+                add_settings_error(ChatBroPlugin::guid_setting, 'constructor-failed', __('Failed to call chat constructor', 'chatbro-plugin') . ": " . curl_error($ch), 'error');
                 return ChatBroPlugin::get_option(ChatBroPlugin::guid_setting);
             }
 
@@ -288,14 +288,20 @@ if (!class_exists("ChatBroPlugin")) {
                             // do_settings_fields(ChatBroPlugin::page, "chbro_plugin_settings");
                         ?>
                         <p class="submit">
-                            <input type="submit" class="button-primary" value="<?php _e('Save Changes', 'chatbro-plugin') ?>" />
+                            <input type="submit" class="button-primary" value="<?php _e('Save Changes', 'chatbro-plugin'); ?>" />
                         </p>
                     </form>
                     <?php
                 }
                 else {
                     ?>
-                    <iframe src="https://www.chatbro.com/constructor/<?php echo $guid; ?>" style="width: 100%; height: 85vh"></iframe>
+                    <iframe name="chatbro-constructor" style="width: 100%; height: 85vh"></iframe>
+                    <form id="load-constructor" target="chatbro-constructor" action="https://www.chatbro.com/constructor/<?php echo $guid; ?>" method="GET">
+                        <input type="hidden" name="guid" value="<?php echo $guid; ?>">
+                    </form>
+                    <script>
+                        jQuery("#load-constructor").submit();
+                    </script>
                     <?php
                 }
                 ?>
@@ -482,18 +488,7 @@ if (!class_exists("ChatBroPlugin")) {
 
         }
 
-        function chat() {
-            $guid = ChatBroPlugin::get_option(ChatBroPlugin::guid_setting);
-
-            if (!$guid) {
-                $opts = ChatBroPlugin::get_option(ChatBroPlugin::old_options);
-
-                if ($opts != false)
-                    $this->chat_old($opts);
-
-                return;
-            }
-
+        public static function generateChatCode($guid) {
             $hash = md5($guid);
             $user = wp_get_current_user();
             $siteurl = ChatBroPlugin::get_option('siteurl');
@@ -531,6 +526,34 @@ if (!class_exists("ChatBroPlugin")) {
             }
 
             $params .= ", signature: '{$signature}'";
+            ob_start();
+
+            ?>
+            <script id="chatBroEmbedCode">
+            /* Chatbro Widget Embed Code Start */
+            function ChatbroLoader(chats,async) {async=async!==false;var params={embedChatsParameters:chats instanceof Array?chats:[chats],needLoadCode:typeof Chatbro==='undefined'};var xhr=new XMLHttpRequest();xhr.onload=function(){eval(xhr.responseText)};xhr.onerror=function(){console.error('Chatbro loading error')};xhr.open('POST','//www.chatbro.com/embed_chats/',async);xhr.setRequestHeader('Content-Type','application/x-www-form-urlencoded');xhr.send('parameters='+encodeURIComponent(JSON.stringify(params)))}
+            /* Chatbro Widget Embed Code End */
+            ChatbroLoader({<?php echo $params; ?>});
+            </script>
+            <?php
+
+            $code = ob_get_contents();
+            ob_end_clean();
+
+            return $code;
+        }
+
+        function chat() {
+            $guid = ChatBroPlugin::get_option(ChatBroPlugin::guid_setting);
+
+            if (!$guid) {
+                $opts = ChatBroPlugin::get_option(ChatBroPlugin::old_options);
+
+                if ($opts != false)
+                    $this->chat_old($opts);
+
+                return;
+            }
 
             $display_to_guests = ChatBroPlugin::get_option(ChatBroPlugin::display_to_guests_setting);
 
@@ -560,20 +583,32 @@ if (!class_exists("ChatBroPlugin")) {
                     return;
             }
 
-            $hash = md5($guid);
-            ?>
-            <script id="chatBroEmbedCode">
-            /* Chatbro Widget Embed Code Start */
-            function ChatbroLoader(chats,async) {async=async!==false;var params={embedChatsParameters:chats instanceof Array?chats:[chats],needLoadCode:typeof Chatbro==='undefined'};var xhr=new XMLHttpRequest();xhr.onload=function(){eval(xhr.responseText)};xhr.onerror=function(){console.error('Chatbro loading error')};xhr.open('POST','//www.chatbro.com/embed_chats/',async);xhr.setRequestHeader('Content-Type','application/x-www-form-urlencoded');xhr.send('parameters='+encodeURIComponent(JSON.stringify(params)))}
-            /* Chatbro Widget Embed Code End */
-            ChatbroLoader({<?php echo $params; ?>});
-            </script>
-            <?php
+            echo ChatBroPlugin::generateChatCode($guid);
         }
     }
 }
 
-new ChatBroPlugin();
+if (!class_exists("ChatBroShortCode")) {
+    class ChatBroShortCode {
+        function ChatBroShortCode() {
+            add_shortcode('chatbro', array(&$this, 'render'));
+        }
+
+        public static function render($atts, $content = null) {
+            $guid = strtolower(ChatBroPlugin::get_option(ChatBroPlugin::guid_setting));
+            $encoded_guid = md5($guid);
+            $container_id = "chatbro-{$encoded_guid}-" . rand(0, 99999);
+
+            $a = shortcode_atts(array(
+                'id' => $encoded_guid,
+                'static' => true,
+                'container_id' => $container_id
+            ), $atts);
+
+            return "<h1>ChatBro</h1>";
+        }
+    }
+}
 
 //----------------------TEMPLATE------------------------//
 if (!class_exists("ChatBroPluginTemplater")) {
@@ -637,6 +672,8 @@ if (!class_exists("ChatBroPluginTemplater")) {
     }
 }
 
+new ChatBroPlugin();
+new ChatBroShortCode();
 add_action('plugins_loaded', array('ChatBroPlugin', 'load_my_textdomain'));
 add_action('plugins_loaded', array( 'ChatBroPluginTemplater', 'get_instance'));
 register_uninstall_hook(__FILE__, array('ChatBroPlugin', 'clenup_settings'));
