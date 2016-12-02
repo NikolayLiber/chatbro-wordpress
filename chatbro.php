@@ -162,6 +162,13 @@ if (!class_exists("ChatBroPlugin")) {
                 return ChatBroPlugin::get_option(ChatBroPlugin::guid_setting);
             }
 
+            $ch = curl_init("https://www.chatbro.com/constructor/{$guid}");
+
+            if (!curl_exec($ch)) {
+                add_settings_error(ChatBroPlugin::guid_setting, 'constructor-failed', __('Failed to call chat constructor', 'chatbro-plugin') . " " . curl_error($ch), 'error');
+                return ChatBroPlugin::get_option(ChatBroPlugin::guid_setting);
+            }
+
             return $guid;
         }
 
@@ -243,7 +250,7 @@ if (!class_exists("ChatBroPlugin")) {
                     <input type="submit" class="button-primary" value="<?php _e('Save secret key', 'chatbro-plugin') ?>" />
                 </p>
             </form>
-            <iframe src="<?php echo "http://www.chatbro.com/get_secretkey_by_path?chatPath={$chatPath}"; ?>" style="width: 100%;"></iframe>
+            <iframe src="<?php echo "https://www.chatbro.com/get_secretkey_by_path?chatPath={$chatPath}"; ?>" style="width: 100%;"></iframe>
             <?php
         }
 
