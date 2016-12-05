@@ -95,6 +95,23 @@ if (!class_exists("ChatBroPlugin")) {
             add_action('wp_footer', array(&$this, 'chat'));
         }
 
+        private static $instance;
+        public static function get_instance() {
+            if (self::$instance == null)
+                self::$instance = new ChatBroPlugin();
+
+            return self::$instance;
+        }
+
+        public static function on_activation() {
+            $guid = self::get_option(self::guid_setting);
+
+            if (!$guid)
+                $guid = self::get_instance()->set_default_settings();
+
+            self::call_constructor($guid);
+        }
+
         public static function load_my_textdomain() {
             $mo_file_path = dirname(__FILE__) . '/languages/chatbro-plugin-'. get_locale() . '.mo';
             load_textdomain('chatbro-plugin', $mo_file_path);
@@ -154,20 +171,29 @@ if (!class_exists("ChatBroPlugin")) {
             }
         }
 
+        public static function call_constructor($guid) {
+            $ch = curl_init("http://www.chatbro.com/constructor/{$guid}");
+            curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+            if (curl_exec($ch) === false) {
+                add_settings_error(ChatBroPlugin::guid_setting, 'constructor-failed', __('Failed to call chat constructor', 'chatbro-plugin') . " " . curl_error($ch), 'error');
+                return false;
+            }
+
+            return true;
+        }
+
         public static function sanitize_guid($guid) {
             $guid = trim(strtolower($guid));
 
             if (!preg_match('/^[\da-f]{8}-[\da-f]{4}-[\da-f]{4}-[\da-f]{4}-[\da-f]{12}$/', $guid)) {
-                add_settings_error(ChatBroPlugin::guid_setting, "invalid-guid", __("Invalid chat secret key", 'chatbro-plugin'), "error");
-                return ChatBroPlugin::get_option(ChatBroPlugin::guid_setting);
+                add_settings_error(self::guid_setting, "invalid-guid", __("Invalid chat secret key", 'chatbro-plugin'), "error");
+                return self::get_option(self::guid_setting);
             }
 
-            $ch = curl_init("https://www.chatbro.com/constructor/{$guid}");
-
-            if (!curl_exec($ch)) {
-                add_settings_error(ChatBroPlugin::guid_setting, 'constructor-failed', __('Failed to call chat constructor', 'chatbro-plugin') . " " . curl_error($ch), 'error');
-                return ChatBroPlugin::get_option(ChatBroPlugin::guid_setting);
-            }
+            if (!self::call_constructor($guid))
+                return self::get_option(self::guid_setting);
 
             return $guid;
         }
@@ -250,7 +276,7 @@ if (!class_exists("ChatBroPlugin")) {
                     <input type="submit" class="button-primary" value="<?php _e('Save secret key', 'chatbro-plugin') ?>" />
                 </p>
             </form>
-            <iframe src="<?php echo "https://www.chatbro.com/get_secretkey_by_path?chatPath={$chatPath}"; ?>" style="width: 100%;"></iframe>
+            <iframe id="convert" src="<?php echo "https://www.chatbro.com/get_secretkey_by_path?chatPath={$chatPath}"; ?>" style="width: 100%;"></iframe>
             <?php
         }
 
@@ -295,7 +321,7 @@ if (!class_exists("ChatBroPlugin")) {
                 }
                 else {
                     ?>
-                    <iframe src="https://www.chatbro.com/constructor/<?php echo $guid; ?>" style="width: 100%; height: 85vh"></iframe>
+                    <iframe id="constructor" src="https://www.chatbro.com/constructor/<?php echo $guid; ?>" style="width: 100%; height: 85vh"></iframe>
                     <?php
                 }
                 ?>
@@ -337,6 +363,8 @@ if (!class_exists("ChatBroPlugin")) {
 
             if (!ChatBroPlugin::add_option(ChatBroPlugin::display_setting, 'everywhere'))
                 ChatBroPlugin::update_option(ChatBroPlugin::display_setting, 'everywhere');
+
+            return $guid;
         }
 
         function render_field($args) {
@@ -573,7 +601,6 @@ if (!class_exists("ChatBroPlugin")) {
     }
 }
 
-new ChatBroPlugin();
 
 //----------------------TEMPLATE------------------------//
 if (!class_exists("ChatBroPluginTemplater")) {
@@ -637,6 +664,8 @@ if (!class_exists("ChatBroPluginTemplater")) {
     }
 }
 
-add_action('plugins_loaded', array('ChatBroPlugin', 'load_my_textdomain'));
+
+add_action('plugins_loaded', array(ChatBroPlugin::get_instance(), 'load_my_textdomain'));
 add_action('plugins_loaded', array( 'ChatBroPluginTemplater', 'get_instance'));
 register_uninstall_hook(__FILE__, array('ChatBroPlugin', 'clenup_settings'));
+//register_activation_hook(__FILE__, array('ChatBroPlugin', 'on_activation'));
