@@ -1,19 +1,4 @@
 <?php
-/**
- * @package ChatBro
- * @version 1.1.2
- */
-/*
-Plugin Name: ChatBro
-Plugin URI: http://chatbro.com
-Description: Live group chat for your community with social networks integration. Chat conversation is being syncronized with popular messengers. Love ChatBro? Spread the word! <a href="https://wordpress.org/support/view/plugin-reviews/chatbro">Click here to review the plugin!</a>.
-Version: 1.1.1
-Author: ChatBro
-Author URI: http://chatbro.com
-License: GPL3
-Text Domain: chatbro-plugin
-Domain Path: /languages
-*/
 
 defined( 'ABSPATH' ) or die( 'No script kiddies please!' );
 
@@ -89,10 +74,27 @@ if (!class_exists("ChatBroPlugin")) {
             )
         );
 
-        function ChatBroPlugin() {
+        private function __construct() {
             add_action('admin_init', array(&$this, 'init_settings'));
             add_action('admin_menu', array(&$this, 'add_menu_option'));
             add_action('wp_footer', array(&$this, 'chat'));
+        }
+
+        private static $instance;
+        public static function get_instance() {
+            if (self::$instance == null)
+                self::$instance = new ChatBroPlugin();
+
+            return self::$instance;
+        }
+
+        public static function on_activation() {
+            $guid = self::get_option(self::guid_setting);
+
+            if (!$guid)
+                $guid = self::get_instance()->set_default_settings();
+
+            self::call_constructor($guid);
         }
 
         public static function load_my_textdomain() {
@@ -154,20 +156,29 @@ if (!class_exists("ChatBroPlugin")) {
             }
         }
 
+        public static function call_constructor($guid) {
+            $ch = curl_init("http://www.chatbro.com/constructor/{$guid}");
+            curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+            if (curl_exec($ch) === false) {
+                add_settings_error(ChatBroPlugin::guid_setting, 'constructor-failed', __('Failed to call chat constructor', 'chatbro-plugin') . " " . curl_error($ch), 'error');
+                return false;
+            }
+
+            return true;
+        }
+
         public static function sanitize_guid($guid) {
             $guid = trim(strtolower($guid));
 
             if (!preg_match('/^[\da-f]{8}-[\da-f]{4}-[\da-f]{4}-[\da-f]{4}-[\da-f]{12}$/', $guid)) {
-                add_settings_error(ChatBroPlugin::guid_setting, "invalid-guid", __("Invalid chat secret key", 'chatbro-plugin'), "error");
-                return ChatBroPlugin::get_option(ChatBroPlugin::guid_setting);
+                add_settings_error(self::guid_setting, "invalid-guid", __("Invalid chat secret key", 'chatbro-plugin'), "error");
+                return self::get_option(self::guid_setting);
             }
 
-            $ch = curl_init("https://www.chatbro.com/constructor/{$guid}");
-
-            if (!curl_exec($ch)) {
-                add_settings_error(ChatBroPlugin::guid_setting, 'constructor-failed', __('Failed to call chat constructor', 'chatbro-plugin') . ": " . curl_error($ch), 'error');
-                return ChatBroPlugin::get_option(ChatBroPlugin::guid_setting);
-            }
+            if (!self::call_constructor($guid))
+                return self::get_option(self::guid_setting);
 
             return $guid;
         }
@@ -250,7 +261,7 @@ if (!class_exists("ChatBroPlugin")) {
                     <input type="submit" class="button-primary" value="<?php _e('Save secret key', 'chatbro-plugin') ?>" />
                 </p>
             </form>
-            <iframe src="<?php echo "https://www.chatbro.com/get_secretkey_by_path?chatPath={$chatPath}"; ?>" style="width: 100%;"></iframe>
+            <iframe id="convert" src="<?php echo "https://www.chatbro.com/get_secretkey_by_path?chatPath={$chatPath}"; ?>" style="width: 100%;"></iframe>
             <?php
         }
 
@@ -343,6 +354,8 @@ if (!class_exists("ChatBroPlugin")) {
 
             if (!ChatBroPlugin::add_option(ChatBroPlugin::display_setting, 'everywhere'))
                 ChatBroPlugin::update_option(ChatBroPlugin::display_setting, 'everywhere');
+
+            return $guid;
         }
 
         function render_field($args) {
@@ -588,92 +601,4 @@ if (!class_exists("ChatBroPlugin")) {
     }
 }
 
-if (!class_exists("ChatBroShortCode")) {
-    class ChatBroShortCode {
-        function ChatBroShortCode() {
-            add_shortcode('chatbro', array(&$this, 'render'));
-        }
-
-        public static function render($atts, $content = null) {
-            $guid = strtolower(ChatBroPlugin::get_option(ChatBroPlugin::guid_setting));
-            $encoded_guid = md5($guid);
-            $container_id = "chatbro-{$encoded_guid}-" . rand(0, 99999);
-
-            $a = shortcode_atts(array(
-                'id' => $encoded_guid,
-                'static' => true,
-                'container_id' => $container_id
-            ), $atts);
-
-            return "<h1>ChatBro</h1>";
-        }
-    }
-}
-
-//----------------------TEMPLATE------------------------//
-if (!class_exists("ChatBroPluginTemplater")) {
-    class ChatBroPluginTemplater {
-        private static $instance;
-        protected $templates;
-        public static function get_instance() {
-            if( null == self::$instance ) {
-                self::$instance = new ChatBroPluginTemplater();
-            }
-            return self::$instance;
-        }
-        private function __construct() {
-            $this->templates = array();
-            add_filter(
-                'page_attributes_dropdown_pages_args',
-                array( $this, 'register_project_templates' )
-                );
-            add_filter(
-                'wp_insert_post_data',
-                array( $this, 'register_project_templates' )
-                );
-            add_filter(
-                'template_include',
-                array( $this, 'view_project_template')
-                );
-            $this->templates = array(
-                'chatbro_history_template.php'     => 'Chat history',
-                );
-        }
-        public function register_project_templates( $atts ) {
-            $cache_key = 'page_templates-' . md5( get_theme_root() . '/' . get_stylesheet() );
-
-            $templates = wp_get_theme()->get_page_templates();
-            if ( empty( $templates ) ) {
-                $templates = array();
-            }
-            wp_cache_delete( $cache_key , 'themes');
-            $templates = array_merge( $templates, $this->templates );
-            wp_cache_add( $cache_key, $templates, 'themes', 1800 );
-            return $atts;
-        }
-        public function view_project_template( $template ) {
-            global $post;
-            $file = '';
-            if (isset($post->ID)) {
-                if (!isset($this->templates[get_post_meta($post->ID, '_wp_page_template', true)] ) ) {
-                    return $template;
-                }
-
-                $file = plugin_dir_path(__FILE__). get_post_meta(
-                    $post->ID, '_wp_page_template', true
-                    );
-            }
-            if( file_exists( $file ) ) {
-                return $file;
-            }
-            else { echo $file; }
-            return $template;
-        }
-    }
-}
-
-new ChatBroPlugin();
-new ChatBroShortCode();
-add_action('plugins_loaded', array('ChatBroPlugin', 'load_my_textdomain'));
-add_action('plugins_loaded', array( 'ChatBroPluginTemplater', 'get_instance'));
-register_uninstall_hook(__FILE__, array('ChatBroPlugin', 'clenup_settings'));
+?>
