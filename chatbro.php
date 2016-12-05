@@ -89,7 +89,7 @@ if (!class_exists("ChatBroPlugin")) {
             )
         );
 
-        function ChatBroPlugin() {
+        private function __construct() {
             add_action('admin_init', array(&$this, 'init_settings'));
             add_action('admin_menu', array(&$this, 'add_menu_option'));
             add_action('wp_footer', array(&$this, 'chat'));
