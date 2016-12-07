@@ -17,13 +17,14 @@ Domain Path: /languages
 
 defined( 'ABSPATH' ) or die( 'No script kiddies please!' );
 
+require_once('util.php');
 require_once('plugin.php');
 require_once('shortcode.php');
 require_once('templater.php');
 
+ChatBroPlugin::get_instance();
 
-add_action('plugins_loaded', array('ChatBroPlugin', 'load_my_textdomain'));
-add_action('plugins_loaded', array(ChatBroPlugin::get_instance(), 'load_my_textdomain'));
+add_action('plugins_loaded', array('ChatBroUtils', 'load_my_textdomain'));
 add_action('plugins_loaded', array( 'ChatBroPluginTemplater', 'get_instance'));
 register_uninstall_hook(__FILE__, array('ChatBroPlugin', 'clenup_settings'));
 register_activation_hook(__FILE__, array('ChatBroPlugin', 'on_activation'));

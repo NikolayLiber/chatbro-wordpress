@@ -38,14 +38,14 @@ if (!class_exists("ChatBroPlugin")) {
                 'id' => ChatBroPlugin::guid_setting,
                 'type' => InputType::text,
                 'label' => 'Chat secret key',
-                'sanitize_callback' => array('ChatBroPlugin', 'sanitize_guid')
+                'sanitize_callback' => array('ChatBroUtils', 'sanitize_guid')
             ),
 
             ChatBroPlugin::display_to_guests_setting => array(
                 'id' => ChatBroPlugin::display_to_guests_setting,
                 'type' => InputType::checkbox,
                 'label' => 'Display chat to guests',
-                'sanitize_callback' => array('ChatBroPlugin', 'sanitize_checkbox')
+                'sanitize_callback' => array('ChatBroUtils', 'sanitize_checkbox')
             ),
 
             ChatBroPlugin::display_setting => array(
@@ -89,152 +89,14 @@ if (!class_exists("ChatBroPlugin")) {
         }
 
         public static function on_activation() {
-            $guid = self::get_option(self::guid_setting);
+            $guid = ChatBroUtils::get_option(self::guid_setting);
 
             if (!$guid)
                 $guid = self::get_instance()->set_default_settings();
 
-            self::call_constructor($guid);
+            ChatBroUtils::call_constructor($guid);
         }
 
-        public static function load_my_textdomain() {
-            $mo_file_path = dirname(__FILE__) . '/languages/chatbro-plugin-'. get_locale() . '.mo';
-            load_textdomain('chatbro-plugin', $mo_file_path);
-        }
-
-        public static function gen_uuid() {
-            return strtolower(sprintf( '%04x%04x-%04x-%04x-%04x-%04x%04x%04x',
-                // 32 bits for "time_low"
-                mt_rand( 0, 0xffff ), mt_rand( 0, 0xffff ),
-
-                // 16 bits for "time_mid"
-                mt_rand( 0, 0xffff ),
-
-                // 16 bits for "time_hi_and_version",
-                // four most significant bits holds version number 4
-                mt_rand( 0, 0x0fff ) | 0x4000,
-
-                // 16 bits, 8 bits for "clk_seq_hi_res",
-                // 8 bits for "clk_seq_low",
-                // two most significant bits holds zero and one for variant DCE1.1
-                mt_rand( 0, 0x3fff ) | 0x8000,
-
-                // 48 bits for "node"
-                mt_rand( 0, 0xffff ), mt_rand( 0, 0xffff ), mt_rand( 0, 0xffff )
-            ));
-        }
-
-        public static function get_site_domain() {
-            $url = ChatBroPlugin::get_option('siteurl');
-            if (!preg_match('/^.+:\/\/([^\/]+)/', $url, $m))
-                return '';
-
-            return $m[1];
-        }
-
-        public static function get_option($name) {
-            if (is_multisite() && is_plugin_active_for_network(plugin_basename(__FILE__))) {
-                return get_site_option($name);
-            } else {
-                return get_option($name);
-            }
-        }
-
-        public static function add_option($name, $value = '', $v2 = '', $v3 = 'yes') {
-            if (is_multisite() && is_plugin_active_for_network(plugin_basename(__FILE__))) {
-                return add_site_option($name, $value, $v2, $v3);
-            } else {
-                return add_option($name, $value, $v2, $v3);
-            }
-        }
-
-        public static function update_option($name, $value) {
-            if (is_multisite() && is_plugin_active_for_network(plugin_basename(__FILE__))) {
-                return update_site_option($name, $value);
-            } else {
-                return update_option($name, $value);
-            }
-        }
-
-        public static function call_constructor($guid) {
-            $ch = curl_init("http://www.chatbro.com/constructor/{$guid}");
-            curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-
-            if (curl_exec($ch) === false) {
-                add_settings_error(ChatBroPlugin::guid_setting, 'constructor-failed', __('Failed to call chat constructor', 'chatbro-plugin') . " " . curl_error($ch), 'error');
-                return false;
-            }
-
-            return true;
-        }
-
-        public static function sanitize_guid($guid) {
-            $guid = trim(strtolower($guid));
-
-            if (!preg_match('/^[\da-f]{8}-[\da-f]{4}-[\da-f]{4}-[\da-f]{4}-[\da-f]{12}$/', $guid)) {
-                add_settings_error(self::guid_setting, "invalid-guid", __("Invalid chat secret key", 'chatbro-plugin'), "error");
-                return self::get_option(self::guid_setting);
-            }
-
-            if (!self::call_constructor($guid))
-                return self::get_option(self::guid_setting);
-
-            return $guid;
-        }
-
-        public static function sanitize_display($val) {
-            if (!in_array($val, array_keys($options['display_setting']['options']))) {
-                add_settings_error(ChatBroPlugin::display_setting, "invalid-display", __("Invalid show popup chat option value", 'chatbro-plugin'));
-                return ChatBroPlugin::get_option(ChatBroPlugin::display_setting);
-            }
-
-            return $val;
-        }
-
-        public static function sanitize_checkbox($val) {
-            return $val == "on";
-        }
-
-        static function match_path($path, $patterns)
-        {
-            $to_replace = array(
-                '/(\r\n?|\n)/',
-                '/\\\\\*/',
-            );
-            $replacements = array(
-                '|',
-                '.*',
-            );
-            $patterns_quoted = preg_quote($patterns, '/');
-            $regexps = '/^(' . preg_replace($to_replace, $replacements, $patterns_quoted) . ')$/';
-            return (bool)preg_match($regexps, $path);
-        }
-
-
-        static function check_path()
-        {
-            $page_match = FALSE;
-            $selected_pages = trim(ChatBroPlugin::get_option(ChatBroPlugin::selected_pages_setting));
-            $display = ChatBroPlugin::get_option(ChatBroPlugin::display_setting);
-
-            if ($selected_pages != '') {
-                if (function_exists('mb_strtolower')) {
-                    $pages = mb_strtolower($selected_pages);
-                    $path = mb_strtolower($_SERVER['REQUEST_URI']);
-                } else {
-                    $pages = strtolower($selected_pages);
-                    $path = strtolower($_SERVER['REQUEST_URI']);
-                }
-
-                $page_match = ChatBroPlugin::match_path($path, $pages);
-
-                if($display == 'except_listed')
-                    $page_match = !$page_match;
-            }
-
-            return $page_match;
-        }
 
         function convert_from_old_page($old) {
             $chatPath = $old['chatPath'];
@@ -266,15 +128,15 @@ if (!class_exists("ChatBroPlugin")) {
         }
 
         function constructor_page() {
-            $old = ChatBroPlugin::get_option(ChatBroPlugin::old_options);
-            if (ChatBroPlugin::get_option(ChatBroPlugin::guid_setting) == false && $old != false && $old['chatPath']) {
+            $old = ChatBroUtils::get_option(self::old_options);
+            if (ChatBroUtils::get_option(self::guid_setting) == false && $old != false && $old['chatPath']) {
                 $this->convert_from_old_page($old);
                 return;
             }
 
             wp_enqueue_script( 'chatbro-admin', plugin_dir_url( __FILE__ ) . 'js/chatbro.admin.js', array('jquery'));
 
-            $guid = ChatBroPlugin::get_option(ChatBroPlugin::guid_setting);
+            $guid = ChatBroUtils::get_option(self::guid_setting);
             $active_tab = isset($_GET['tab']) ? $_GET['tab'] : 'constructor';
 
             ?>
@@ -294,8 +156,8 @@ if (!class_exists("ChatBroPlugin")) {
                     ?>
                     <form method="post" action="options.php">
                         <?php
-                            settings_fields(ChatBroPlugin::settings);
-                            do_settings_sections(ChatBroPlugin::page);
+                            settings_fields(self::settings);
+                            do_settings_sections(self::page);
                             // do_settings_fields(ChatBroPlugin::page, "chbro_plugin_settings");
                         ?>
                         <p class="submit">
@@ -321,39 +183,32 @@ if (!class_exists("ChatBroPlugin")) {
         }
 
         function init_settings() {
-            add_settings_section("chbro_plugin_settings", "", "", ChatBroPlugin::page);
-            foreach(ChatBroPlugin::$options as $name => $args) {
-                register_setting(ChatBroPlugin::settings, $name, array_key_exists('sanitize_callback', $args) ? $args['sanitize_callback'] : null);
-                add_settings_field($name, __($args['label'], 'chatbro-plugin'), array(&$this, "render_field"), ChatBroPlugin::page, "chbro_plugin_settings", $args);
+            add_settings_section("chbro_plugin_settings", "", "", self::page);
+            foreach(self::$options as $name => $args) {
+                register_setting(self::settings, $name, array_key_exists('sanitize_callback', $args) ? $args['sanitize_callback'] : null);
+                add_settings_field($name, __($args['label'], 'chatbro-plugin'), array(&$this, "render_field"), self::page, "chbro_plugin_settings", $args);
             }
 
-            $old_options = ChatBroPlugin::get_option(ChatBroPlugin::old_options);
-            if (ChatBroPlugin::get_option(ChatBroPlugin::guid_setting) == false && ($old_options == false || $old_options['chatPath'] == 'tg/208397015/Ask your own question'))
+            $old_options = ChatBroUtils::get_option(self::old_options);
+            if (ChatBroUtils::get_option(self::guid_setting) == false && ($old_options == false || $old_options['chatPath'] == 'tg/208397015/Ask your own question'))
                 $this->set_default_settings();
         }
 
         public static function clenup_settings() {
-            foreach (array_keys(ChatBroPlugin::$options) as $name)
-                if (ChatBroPlugin::get_option($name) === false)
+            foreach (array_keys(self::$options) as $name)
+                if (ChatBroUtils::get_option($name) === false)
                     continue;
 
                 delete_option($name);
         }
 
         function set_default_settings() {
-            $guid = $this->gen_uuid();
+            $guid = ChatBroUtils::gen_uuid();
 
-            if (!ChatBroPlugin::add_option(ChatBroPlugin::guid_setting, $guid))
-                ChatBroPlugin::update_option(ChatBroPlugin::guid_setting, $guid);
-
-            if (!ChatBroPlugin::add_option(ChatBroPlugin::display_to_guests_setting, true))
-                ChatBroPlugin::update_option(ChatBroPlugin::display_to_guests_setting, true);
-
-            if (!ChatBroPlugin::add_option(ChatBroPlugin::user_profile_path_setting, ChatBroPlugin::default_profile_path))
-                ChatBroPlugin::update_option(ChatBroPlugin::user_profile_path_setting, ChatBroPlugin::default_profile_path);
-
-            if (!ChatBroPlugin::add_option(ChatBroPlugin::display_setting, 'everywhere'))
-                ChatBroPlugin::update_option(ChatBroPlugin::display_setting, 'everywhere');
+            ChatBroUtils::add_or_update_option(self::guid_setting, $guid);
+            ChatBroUtils::add_or_update_option(self::display_to_guests_setting, true);
+            ChatBroUtils::add_or_update_option(self::user_profile_path_setting, self::default_profile_path);
+            ChatBroUtils::add_or_update_option(self::display_setting, 'everywhere');
 
             return $guid;
         }
@@ -362,7 +217,7 @@ if (!class_exists("ChatBroPlugin")) {
             $tag = $args['type'] == InputType::select || $args['type'] == InputType::textarea ? $args['type'] : 'input';
             $class = $args['type'] == 'text' ? 'class="regular-text" ' : '';
 
-            $value = $this->get_option($args['id']);
+            $value = ChatBroUtils::get_option($args['id']);
             $valueAttr = $args['type'] == InputType::text ? "value=\"{$value}\" " : "";
             $checked = $args['type'] == InputType::checkbox && $value ? 'checked="checked"' : '';
             $textarea_attrs = $args['type'] == InputType::textarea ? 'cols="80" rows="6"' : '';
@@ -504,8 +359,8 @@ if (!class_exists("ChatBroPlugin")) {
         public static function generateChatCode($guid) {
             $hash = md5($guid);
             $user = wp_get_current_user();
-            $siteurl = ChatBroPlugin::get_option('siteurl');
-            $site_domain = ChatBroPlugin::get_site_domain();
+            $siteurl = ChatBroUtils::get_option('siteurl');
+            $site_domain = ChatBroUtils::get_site_domain();
 
             $site_user_avatar_url = "";
             preg_match("/src='(.*)' alt/i", get_avatar($user->ID, 120), $avatar_path);
@@ -516,7 +371,7 @@ if (!class_exists("ChatBroPlugin")) {
 
             $site_user_avatar_url = strpos($site_user_avatar_url, 'wp_user_avatar') == FALSE ? $site_user_avatar_url : '';
 
-            $profile_path = ChatBroPlugin::get_option(ChatBroPlugin::user_profile_path_setting);
+            $profile_path = ChatBroUtils::get_option(self::user_profile_path_setting);
 
             $profile_url = '';
 
@@ -557,10 +412,10 @@ if (!class_exists("ChatBroPlugin")) {
         }
 
         function chat() {
-            $guid = ChatBroPlugin::get_option(ChatBroPlugin::guid_setting);
+            $guid = ChatBroUtils::get_option(self::guid_setting);
 
             if (!$guid) {
-                $opts = ChatBroPlugin::get_option(ChatBroPlugin::old_options);
+                $opts = ChatBroUtils::get_option(self::old_options);
 
                 if ($opts != false)
                     $this->chat_old($opts);
@@ -568,13 +423,13 @@ if (!class_exists("ChatBroPlugin")) {
                 return;
             }
 
-            $display_to_guests = ChatBroPlugin::get_option(ChatBroPlugin::display_to_guests_setting);
+            $display_to_guests = ChatBroUtils::get_option(self::display_to_guests_setting);
 
             if (!$display_to_guests && !is_user_logged_in())
                 // Don't show the chat to unregistered users
                 return;
 
-            $where_to_display = ChatBroPlugin::get_option(ChatBroPlugin::display_setting);
+            $where_to_display = ChatBroUtils::get_option(self::display_setting);
 
             switch($where_to_display) {
                 case '':
@@ -588,7 +443,7 @@ if (!class_exists("ChatBroPlugin")) {
 
                 case 'except_listed':
                 case 'only_listed':
-                    if (!ChatBroPlugin::check_path())
+                    if (!ChatBroUtils::check_path())
                         return;
                     break;
 
@@ -596,7 +451,7 @@ if (!class_exists("ChatBroPlugin")) {
                     return;
             }
 
-            echo ChatBroPlugin::generateChatCode($guid);
+            echo self::generateChatCode($guid);
         }
     }
 }
