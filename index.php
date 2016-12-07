@@ -23,6 +23,7 @@ require_once('shortcode.php');
 require_once('templater.php');
 
 ChatBroPlugin::get_instance();
+ChatBroShortCode::get_instance();
 
 add_action('plugins_loaded', array('ChatBroUtils', 'load_my_textdomain'));
 add_action('plugins_loaded', array( 'ChatBroPluginTemplater', 'get_instance'));

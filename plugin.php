@@ -356,7 +356,7 @@ if (!class_exists("ChatBroPlugin")) {
 
         }
 
-        public static function generateChatCode($guid) {
+        public static function generate_chat_code($guid, $container_id = null, $is_static = true) {
             $hash = md5($guid);
             $user = wp_get_current_user();
             $siteurl = ChatBroUtils::get_option('siteurl');
@@ -388,6 +388,12 @@ if (!class_exists("ChatBroPlugin")) {
 
                 if ($profile_url != '')
                     $params .= ", siteUserProfileUrl: '{$profile_url}'";
+
+                if ($container_id)
+                	$params .= ", containerDivId: '{$container_id}'";
+
+                if (!$is_static)
+                	$params .= ", isStatic: false";
             }
             else {
                 $signature = md5($site_domain . $guid);
@@ -451,7 +457,7 @@ if (!class_exists("ChatBroPlugin")) {
                     return;
             }
 
-            echo self::generateChatCode($guid);
+            echo self::generate_chat_code($guid);
         }
     }
 }
