@@ -24,7 +24,7 @@ if (!class_exists("ChatBroPlugin")) {
     };
 
     class ChatBroPlugin {
-        const version = "1.2.0";
+        const version = CHATBRO_PLUGIN_VERSION;
         const page = "chatbro_plugin";
         const settings = "chatbro_plugin_settings";
 
