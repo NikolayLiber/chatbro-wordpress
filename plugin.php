@@ -13,6 +13,8 @@ if (!class_exists("ChatBroPlugin")) {
     __('Disable', 'chatbro-plugin');
     __("Specify pages by using their paths. Enter one path per line. The '*' character is a wildcard. Example paths are /2012/10/my-post for a single post and /2012/* for a group of posts. The path should always start with a forward slash(/).", 'chatbro-plugin');
     __('User profile path', 'chatbro-plugin');
+    __('Enable shortcodes', 'chatbro_plugin');
+
 
     class InputType {
         const checkbox = 'checkbox';
@@ -22,6 +24,7 @@ if (!class_exists("ChatBroPlugin")) {
     };
 
     class ChatBroPlugin {
+        const version = "1.2.0";
         const page = "chatbro_plugin";
         const settings = "chatbro_plugin_settings";
 
@@ -30,26 +33,29 @@ if (!class_exists("ChatBroPlugin")) {
         const display_setting = "chatbro_chat_display";
         const selected_pages_setting = 'chatbro_chat_selected_pages';
         const user_profile_path_setting = 'chatbro_chat_user_profile_url';
+        const enable_shortcodes_setting = 'chatbro_enable_shortcodes';
         const old_options = 'chatbro_options';
         const default_profile_path = '/authors/{$username}';
 
         public static $options = array(
-            ChatBroPlugin::guid_setting => array(
-                'id' => ChatBroPlugin::guid_setting,
+            self::guid_setting => array(
+                'id' => self::guid_setting,
                 'type' => InputType::text,
                 'label' => 'Chat secret key',
-                'sanitize_callback' => array('ChatBroUtils', 'sanitize_guid')
+                'sanitize_callback' => array('ChatBroUtils', 'sanitize_guid'),
+                'default' => false
             ),
 
-            ChatBroPlugin::display_to_guests_setting => array(
-                'id' => ChatBroPlugin::display_to_guests_setting,
+            self::display_to_guests_setting => array(
+                'id' => self::display_to_guests_setting,
                 'type' => InputType::checkbox,
                 'label' => 'Display chat to guests',
-                'sanitize_callback' => array('ChatBroUtils', 'sanitize_checkbox')
+                'sanitize_callback' => array('ChatBroUtils', 'sanitize_checkbox'),
+                'default' => true
             ),
 
-            ChatBroPlugin::display_setting => array(
-                'id' => ChatBroPlugin::display_setting,
+            self::display_setting => array(
+                'id' => self::display_setting,
                 'type' => InputType::select,
                 'label' => 'Show popup chat',
                 'options' => array(
@@ -58,19 +64,29 @@ if (!class_exists("ChatBroPlugin")) {
                     'except_listed' => 'Everywhere except those listed',
                     'only_listed' =>   'Only the listed pages',
                     'disable' =>       'Disable'
-                )
+                ),
+                'default' => 'everywhere'
             ),
 
-            ChatBroPlugin::selected_pages_setting => array(
-                'id' => ChatBroPlugin::selected_pages_setting,
+            self::selected_pages_setting => array(
+                'id' => self::selected_pages_setting,
                 'type' => InputType::textarea,
-                'label' => "Specify pages by using their paths. Enter one path per line. The '*' character is a wildcard. Example paths are /2012/10/my-post for a single post and /2012/* for a group of posts. The path should always start with a forward slash(/)."
+                'label' => "Specify pages by using their paths. Enter one path per line. The '*' character is a wildcard. Example paths are /2012/10/my-post for a single post and /2012/* for a group of posts. The path should always start with a forward slash(/).",
+                'default' => false
             ),
 
-            ChatBroPlugin::user_profile_path_setting => array(
-                'id' => ChatBroPlugin::user_profile_path_setting,
+            self::user_profile_path_setting => array(
+                'id' => self::user_profile_path_setting,
                 'type' => InputType::text,
-                'label' => 'User profile path'
+                'label' => 'User profile path',
+                'default' => '/authors/{$username}'
+            ),
+
+            self::enable_shortcodes_setting => array(
+                'id' => self::enable_shortcodes_setting,
+                'type' => InputType::checkbox,
+                'label' => 'Enable shortcodes',
+                'default' => true
             )
         );
 
@@ -154,6 +170,7 @@ if (!class_exists("ChatBroPlugin")) {
                 if ($active_tab == "plugin_settings") {
                     settings_errors();
                     ?>
+                    <div style="float: left; margin-right: 3em">
                     <form method="post" action="options.php">
                         <?php
                             settings_fields(self::settings);
@@ -164,6 +181,19 @@ if (!class_exists("ChatBroPlugin")) {
                             <input type="submit" class="button-primary" value="<?php _e('Save Changes', 'chatbro-plugin'); ?>" />
                         </p>
                     </form>
+                    </div>
+                    <div style="float: left; padding: 1em; margin-top: 1em; border: solid 1px #ccc; word-wrap: break-word; width: 50%">
+                        <?php _e('Use shortcode <em><b>[chatbro]</b></em> to add the chat widget to the desired place of your page or post.', 'chatbro-plugin'); ?>
+                        <h4><?php _e('Supported shortcode attribtes:', 'chatbro-plugin'); ?></h4>
+                        <ul>
+                            <li>
+                                <?php _e('<em><b>static</b></em> &ndash; static not movable chat widget (default <em>true</em>).', 'chatbro-plugin'); ?>
+                            </li>
+                            <li>
+                                <?php _e('<em><b>registered_only</b></em> &ndash; display chat widget to logged in users only (default <em>false</em>). If this attribute is explicitly set it precedes the global <em>"Display chat to guests"</em> setting value.', 'chatbro-plugin'); ?>
+                            </li>
+                        </ul>
+                    </div>
                     <?php
                 }
                 else {
@@ -209,6 +239,7 @@ if (!class_exists("ChatBroPlugin")) {
             ChatBroUtils::add_or_update_option(self::display_to_guests_setting, true);
             ChatBroUtils::add_or_update_option(self::user_profile_path_setting, self::default_profile_path);
             ChatBroUtils::add_or_update_option(self::display_setting, 'everywhere');
+            ChatBroUtils::add_or_update_option(self::enable_shortcodes_setting, true);
 
             return $guid;
         }
@@ -356,7 +387,7 @@ if (!class_exists("ChatBroPlugin")) {
 
         }
 
-        public static function generate_chat_code($guid, $container_id = null, $is_static = true) {
+        public static function generate_chat_code($guid, $container_id = null, $static = false) {
             $hash = md5($guid);
             $user = wp_get_current_user();
             $siteurl = ChatBroUtils::get_option('siteurl');
@@ -388,18 +419,19 @@ if (!class_exists("ChatBroPlugin")) {
 
                 if ($profile_url != '')
                     $params .= ", siteUserProfileUrl: '{$profile_url}'";
-
-                if ($container_id)
-                	$params .= ", containerDivId: '{$container_id}'";
-
-                if (!$is_static)
-                	$params .= ", isStatic: false";
             }
             else {
                 $signature = md5($site_domain . $guid);
             }
 
+            if ($container_id)
+                $params .= ", containerDivId: '{$container_id}'";
+
+            if ($static)
+                $params .= ", isStatic: true";
+
             $params .= ", signature: '{$signature}'";
+            $params .= ", wpPluginVersion: '" . self::version . "'";
             ob_start();
 
             ?>

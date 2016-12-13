@@ -40,10 +40,12 @@ if (!class_exists("ChatBroUtils")) {
         }
 
         public static function get_option($name) {
+            $default = array_key_exists($name, ChatBroPlugin::$options) && array_key_exists('default', ChatBroPlugin::$options[$name]) ? ChatBroPlugin::$options[$name]['default'] : null;
+
             if (is_multisite() && is_plugin_active_for_network(plugin_basename(__FILE__))) {
-                return get_site_option($name);
+                return get_site_option($name, $default);
             } else {
-                return get_option($name);
+                return get_option($name, $default);
             }
         }
 
