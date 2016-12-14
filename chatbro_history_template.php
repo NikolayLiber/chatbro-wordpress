@@ -1,10 +1,9 @@
 <?php
 
+require_once('util.php');
+require_once('plugin.php');
 
-// require_once('util.php');
-// require_once('plugin.php');
-
-// get_header();
+get_header();
 
 function get_opt() {
     global $wp;
@@ -12,11 +11,11 @@ function get_opt() {
 
     $current_url_param = $wp->query_string;
     $param = array(
-        'encodedChatGuid' =>       md5($guid),
-        'containerDivId' => "div_chatbro_history",
-        'currentUrlParam'=>     $current_url_param,
+        'encodedChatGuid'                  => md5($guid),
+        'containerDivId'                   => "div_chatbro_history",
+        'currentUrlParam'                  => $current_url_param,
         'useStandardHistoryWidgetSettings' => true,
-        'chatPaginatorUrlPrefix' => get_permalink()
+        'chatPaginatorUrlPrefix'           => get_permalink()
 
     );
     $json_param = json_encode($param);
@@ -30,6 +29,7 @@ function get_opt() {
 </div><!-- .content-area -->
 <script>
 /* Chatbro Widget Embed Code Start*/
+var chatBroHistoryPage = true;
 function ChatbroLoader(chats, async) {
     async = async !== false;
     var params = {
