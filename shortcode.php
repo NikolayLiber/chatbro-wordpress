@@ -39,7 +39,7 @@ if (!class_exists("ChatBroShortCode")) {
             $container_id = $static ? "chatbro-{$encoded_guid}-" . rand(0, 99999) : null;
             $code = $container_id ? "<div id=\"{$container_id}\"></div>" : "";
 
-            return $code . ChatBroPlugin::generate_chat_code($guid, $container_id, $static);
+            return $code . ChatBroUtils::generate_chat_code($guid, $container_id, $static);
         }
     }
 }

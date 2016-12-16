@@ -175,7 +175,6 @@ if (!class_exists("ChatBroPlugin")) {
                         <?php
                             settings_fields(self::settings);
                             do_settings_sections(self::page);
-                            // do_settings_fields(ChatBroPlugin::page, "chbro_plugin_settings");
                         ?>
                         <p class="submit">
                             <input type="submit" class="button-primary" value="<?php _e('Save Changes', 'chatbro-plugin'); ?>" />
@@ -199,8 +198,11 @@ if (!class_exists("ChatBroPlugin")) {
                 else {
                     ?>
                     <iframe name="chatbro-constructor" style="width: 100%; height: 85vh"></iframe>
-                    <form id="load-constructor" target="chatbro-constructor" action="https://www.chatbro.com/constructor/<?php echo $guid; ?>" method="GET">
+                    <form id="load-constructor" target="chatbro-constructor" action="https://www.chatbro.com/constructor/<?php echo $guid; ?>/" method="POST">
                         <input type="hidden" name="guid" value="<?php echo $guid; ?>">
+                        <input type="hidden" name="avatarUrl" value="<?php echo ChatBroUtils::get_avatar_url(); ?>">
+                        <input type="hidden" name="userFullName" value="<?php echo wp_get_current_user()->display_name; ?>">
+                        <input type="hidden" name="userProfileUrl" value="<?php echo ChatBroUtils::get_profile_url(); ?>">
                     </form>
                     <script>
                         jQuery("#load-constructor").submit();
@@ -387,68 +389,6 @@ if (!class_exists("ChatBroPlugin")) {
 
         }
 
-        public static function generate_chat_code($guid, $container_id = null, $static = false) {
-            $hash = md5($guid);
-            $user = wp_get_current_user();
-            $siteurl = ChatBroUtils::get_option('siteurl');
-            $site_domain = ChatBroUtils::get_site_domain();
-
-            $site_user_avatar_url = "";
-            preg_match("/src='(.*)' alt/i", get_avatar($user->ID, 120), $avatar_path);
-                if(count($avatar_path)!=0)
-                    $site_user_avatar_url = $avatar_path[1];
-            if($site_user_avatar_url == "")
-                $site_user_avatar_url = get_avatar_url($user->ID);
-
-            $site_user_avatar_url = strpos($site_user_avatar_url, 'wp_user_avatar') == FALSE ? $site_user_avatar_url : '';
-
-            $profile_path = ChatBroUtils::get_option(self::user_profile_path_setting);
-
-            $profile_url = '';
-
-            if ($profile_path)
-                $profile_url = str_ireplace('{$username}', $user->user_login, $siteurl . $profile_path);
-
-            $params = "encodedChatGuid: '{$hash}'";
-            if (is_user_logged_in()) {
-                $signature = md5($site_domain . $user->ID . $user->display_name . $site_user_avatar_url . $profile_url . $guid);
-                $params .= ", siteUserFullName: '{$user->display_name}', siteUserExternalId: '{$user->ID}', siteDomain: '{$site_domain}'";
-
-                if ($site_user_avatar_url != "")
-                    $params .= ", siteUserAvatarUrl: '{$site_user_avatar_url}'";
-
-                if ($profile_url != '')
-                    $params .= ", siteUserProfileUrl: '{$profile_url}'";
-            }
-            else {
-                $signature = md5($site_domain . $guid);
-            }
-
-            if ($container_id)
-                $params .= ", containerDivId: '{$container_id}'";
-
-            if ($static)
-                $params .= ", isStatic: true";
-
-            $params .= ", signature: '{$signature}'";
-            $params .= ", wpPluginVersion: '" . self::version . "'";
-            ob_start();
-
-            ?>
-            <script id="chatBroEmbedCode">
-            /* Chatbro Widget Embed Code Start */
-            function ChatbroLoader(chats,async) {async=async!==false;var params={embedChatsParameters:chats instanceof Array?chats:[chats],needLoadCode:typeof Chatbro==='undefined'};var xhr=new XMLHttpRequest();xhr.onload=function(){eval(xhr.responseText)};xhr.onerror=function(){console.error('Chatbro loading error')};xhr.open('POST','//www.chatbro.com/embed_chats/',async);xhr.setRequestHeader('Content-Type','application/x-www-form-urlencoded');xhr.send('parameters='+encodeURIComponent(JSON.stringify(params)))}
-            /* Chatbro Widget Embed Code End */
-            ChatbroLoader({<?php echo $params; ?>});
-            </script>
-            <?php
-
-            $code = ob_get_contents();
-            ob_end_clean();
-
-            return $code;
-        }
-
         function chat() {
             $guid = ChatBroUtils::get_option(self::guid_setting);
 
@@ -489,7 +429,7 @@ if (!class_exists("ChatBroPlugin")) {
                     return;
             }
 
-            echo self::generate_chat_code($guid);
+            echo ChatBroUtils::generate_chat_code($guid);
         }
     }
 }
