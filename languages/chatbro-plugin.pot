@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: chatbro2 1.0.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-11-18 21:58+0500\n"
+"POT-Creation-Date: 2016-12-13 15:23+0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,39 +17,39 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: chatbro2.php:10
+#: plugin.php:6
 msgid "Chat secret key"
 msgstr ""
 
-#: chatbro2.php:11
+#: plugin.php:7
 msgid "Display chat to guests"
 msgstr ""
 
-#: chatbro2.php:12
+#: plugin.php:8
 msgid "Show popup chat"
 msgstr ""
 
-#: chatbro2.php:13
+#: plugin.php:9
 msgid "Everywhere"
 msgstr ""
 
-#: chatbro2.php:14
+#: plugin.php:10
 msgid "Front page only"
 msgstr ""
 
-#: chatbro2.php:15
+#: plugin.php:11
 msgid "Everywhere except those listed"
 msgstr ""
 
-#: chatbro2.php:16
+#: plugin.php:12
 msgid "Only the listed pages"
 msgstr ""
 
-#: chatbro2.php:17
+#: plugin.php:13
 msgid "Disable"
 msgstr ""
 
-#: chatbro2.php:18
+#: plugin.php:14
 msgid ""
 "Specify pages by using their paths. Enter one path per line. The '*' "
 "character is a wildcard. Example paths are /2012/10/my-post for a single "
@@ -57,19 +57,15 @@ msgid ""
 "forward slash(/)."
 msgstr ""
 
-#: chatbro2.php:19
+#: plugin.php:15
 msgid "User profile path"
 msgstr ""
 
-#: chatbro2.php:137
-msgid "Invalid chat secret key"
+#: plugin.php:16
+msgid "Enable shortcodes"
 msgstr ""
 
-#: chatbro2.php:146
-msgid "Invalid show popup chat option value"
-msgstr ""
-
-#: chatbro2.php:201
+#: plugin.php:121
 msgid ""
 "To manage chat settings in the new version of the plugin, you should submit "
 "a chat secret key. Please, log in to your account at <a href=\"https://www."
@@ -77,26 +73,61 @@ msgid ""
 "chat secret key and insert it into the respective field."
 msgstr ""
 
-#: chatbro2.php:218
+#: plugin.php:139
 msgid "Save secret key"
 msgstr ""
 
-#: chatbro2.php:239 chatbro2.php:244
+#: plugin.php:160 plugin.php:165
 msgid "Plugin Settings"
 msgstr ""
 
-#: chatbro2.php:242
+#: plugin.php:163
 msgid "Chat Constructor"
 msgstr ""
 
-#: chatbro2.php:259
+#: plugin.php:181
 msgid "Save Changes"
 msgstr ""
 
-#: chatbro2.php:423
+#: plugin.php:186
+msgid ""
+"Use shortcode <em><b>[chatbro]</b></em> to add the chat widget to the "
+"desired place of your page or post."
+msgstr ""
+
+#: plugin.php:187
+msgid "Supported shortcode attribtes:"
+msgstr ""
+
+#: plugin.php:190
+msgid ""
+"<em><b>static</b></em> &ndash; static not movable chat widget (default "
+"<em>true</em>)."
+msgstr ""
+
+#: plugin.php:193
+msgid ""
+"<em><b>registered_only</b></em> &ndash; display chat widget to logged in "
+"users only (default <em>false</em>). If this attribute is explicitly set it "
+"precedes the global <em>\"Display chat to guests\"</em> setting value."
+msgstr ""
+
+#: plugin.php:370
 msgid "Only for registered members! "
 msgstr ""
 
-#: chatbro2.php:425
+#: plugin.php:372
 msgid "Register"
+msgstr ""
+
+#: util.php:79
+msgid "Failed to call chat constructor"
+msgstr ""
+
+#: util.php:90
+msgid "Invalid chat secret key"
+msgstr ""
+
+#: util.php:102
+msgid "Invalid show popup chat option value"
 msgstr ""
