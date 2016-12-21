@@ -37,60 +37,62 @@ if (!class_exists("ChatBroPlugin")) {
         const old_options = 'chatbro_options';
         const default_profile_path = '/authors/{$username}';
 
-        public static $options = array(
-            self::guid_setting => array(
-                'id' => self::guid_setting,
-                'type' => InputType::text,
-                'label' => 'Chat secret key',
-                'sanitize_callback' => array('ChatBroUtils', 'sanitize_guid'),
-                'default' => false
-            ),
-
-            self::display_to_guests_setting => array(
-                'id' => self::display_to_guests_setting,
-                'type' => InputType::checkbox,
-                'label' => 'Display chat to guests',
-                'sanitize_callback' => array('ChatBroUtils', 'sanitize_checkbox'),
-                'default' => true
-            ),
-
-            self::display_setting => array(
-                'id' => self::display_setting,
-                'type' => InputType::select,
-                'label' => 'Show popup chat',
-                'options' => array(
-                    'everywhere' =>    'Everywhere',
-                    'frontpage_only' => 'Front page only',
-                    'except_listed' => 'Everywhere except those listed',
-                    'only_listed' =>   'Only the listed pages',
-                    'disable' =>       'Disable'
-                ),
-                'default' => 'everywhere'
-            ),
-
-            self::selected_pages_setting => array(
-                'id' => self::selected_pages_setting,
-                'type' => InputType::textarea,
-                'label' => "Specify pages by using their paths. Enter one path per line. The '*' character is a wildcard. Example paths are /2012/10/my-post for a single post and /2012/* for a group of posts. The path should always start with a forward slash(/).",
-                'default' => false
-            ),
-
-            self::user_profile_path_setting => array(
-                'id' => self::user_profile_path_setting,
-                'type' => InputType::text,
-                'label' => 'User profile path',
-                'default' => '/authors/{$username}'
-            ),
-
-            self::enable_shortcodes_setting => array(
-                'id' => self::enable_shortcodes_setting,
-                'type' => InputType::checkbox,
-                'label' => 'Enable shortcodes',
-                'default' => true
-            )
-        );
-
+        public static $options;
         private function __construct() {
+            self::$options = array(
+                self::guid_setting => array(
+                    'id' => self::guid_setting,
+                    'type' => InputType::text,
+                    'label' => 'Chat secret key',
+                    'sanitize_callback' => array('ChatBroUtils', 'sanitize_guid'),
+                    'default' => false
+                ),
+
+                self::display_to_guests_setting => array(
+                    'id' => self::display_to_guests_setting,
+                    'type' => InputType::checkbox,
+                    'label' => 'Display chat to guests',
+                    'sanitize_callback' => array('ChatBroUtils', 'sanitize_checkbox'),
+                    'default' => true
+                ),
+
+                self::display_setting => array(
+                    'id' => self::display_setting,
+                    'type' => InputType::select,
+                    'label' => 'Show popup chat',
+                    'options' => array(
+                        'everywhere' =>    'Everywhere',
+                        'frontpage_only' => 'Front page only',
+                        'except_listed' => 'Everywhere except those listed',
+                        'only_listed' =>   'Only the listed pages',
+                        'disable' =>       'Disable'
+                    ),
+                    'default' => 'everywhere'
+                ),
+
+                self::selected_pages_setting => array(
+                    'id' => self::selected_pages_setting,
+                    'type' => InputType::textarea,
+                    'label' => "Specify pages by using their paths. Enter one path per line. The '*' character is a wildcard. Example paths are /2012/10/my-post for a single post and /2012/* for a group of posts. The path should always start with a forward slash(/).",
+                    'default' => false
+                ),
+
+                self::user_profile_path_setting => array(
+                    'id' => self::user_profile_path_setting,
+                    'type' => InputType::text,
+                    'label' => 'User profile path',
+                    'default' => '/authors/{$username}',
+                    'addon' => get_home_url() . '/'
+                ),
+
+                self::enable_shortcodes_setting => array(
+                    'id' => self::enable_shortcodes_setting,
+                    'type' => InputType::checkbox,
+                    'label' => 'Enable shortcodes',
+                    'default' => true
+                )
+            );
+
             add_action('admin_init', array(&$this, 'init_settings'));
             add_action('admin_menu', array(&$this, 'add_menu_option'));
             add_action('wp_footer', array(&$this, 'chat'));
@@ -150,14 +152,15 @@ if (!class_exists("ChatBroPlugin")) {
                 return;
             }
 
-            wp_enqueue_script( 'chatbro-admin', plugin_dir_url( __FILE__ ) . 'js/chatbro.admin.js', array('jquery'));
+            wp_enqueue_style('bootstrap', plugin_dir_url( __FILE__ ) . 'css/bootstrap.min.css');
+            wp_enqueue_script('chatbro-admin', plugin_dir_url( __FILE__ ) . 'js/chatbro.admin.js', array('jquery'));
+            wp_enqueue_script('bootstrap', plugin_dir_url( __FILE__ ) . 'js/bootstrap.min.js', array('jquery'));
 
             $guid = ChatBroUtils::get_option(self::guid_setting);
             $active_tab = isset($_GET['tab']) ? $_GET['tab'] : 'constructor';
 
             ?>
             <div class="wrap">
-                <h1><?php __('Plugin Settings', 'chatbro-plugin'); ?></h1>
                 <h2 class="nav-tab-wrapper">
                     <a href="?page=chatbro_settings&tab=constructor"
                        class="nav-tab <?php echo $active_tab == 'constructor' ? 'nav-tab-active' : ''; ?>"><?php echo __("Chat Constructor", 'chatbro-plugin'); ?></a>
@@ -170,18 +173,23 @@ if (!class_exists("ChatBroPlugin")) {
                 if ($active_tab == "plugin_settings") {
                     settings_errors();
                     ?>
-                    <div style="float: left; margin-right: 3em">
-                    <form method="post" action="options.php">
+                    <script>
+                        var chatbro_secret_key = '<?php echo $guid ?>';
+                    </script>
+                    <div style="/*float: left; margin-right: 3em*/ margin-top: 1rem; padding: 1.5rem">
+                    <form id="chatbro-settings-form" method="post" action="options.php">
                         <?php
                             settings_fields(self::settings);
-                            do_settings_sections(self::page);
+                            foreach(self::$options as $name => $args) {
+                                self::render_field($args);
+                            }
                         ?>
                         <p class="submit">
                             <input type="submit" class="button-primary" value="<?php _e('Save Changes', 'chatbro-plugin'); ?>" />
                         </p>
                     </form>
                     </div>
-                    <div style="float: left; padding: 1em; margin-top: 1em; border: solid 1px #ccc; word-wrap: break-word; width: 50%">
+                    <!--<div style="float: left; padding: 1em; margin-top: 1em; border: solid 1px #ccc; word-wrap: break-word; width: 50%">
                         <?php _e('Use shortcode <em><b>[chatbro]</b></em> to add the chat widget to the desired place of your page or post.', 'chatbro-plugin'); ?>
                         <h4><?php _e('Supported shortcode attribtes:', 'chatbro-plugin'); ?></h4>
                         <ul>
@@ -192,13 +200,13 @@ if (!class_exists("ChatBroPlugin")) {
                                 <?php _e('<em><b>registered_only</b></em> &ndash; display chat widget to logged in users only (default <em>false</em>). If this attribute is explicitly set it precedes the global <em>"Display chat to guests"</em> setting value.', 'chatbro-plugin'); ?>
                             </li>
                         </ul>
-                    </div>
+                    </div> -->
                     <?php
                 }
                 else {
                     ?>
                     <iframe name="chatbro-constructor" style="width: 100%; height: 85vh"></iframe>
-                    <form id="load-constructor" target="chatbro-constructor" action="https://www.chatbro.com/constructor/<?php echo $guid; ?>/" method="POST">
+                    <form id="load-constructor" target="chatbro-constructor" action="https://www.chatbro.com/constructor/<?php echo $guid; ?>/" method="GET">
                         <input type="hidden" name="guid" value="<?php echo $guid; ?>">
                         <input type="hidden" name="avatarUrl" value="<?php echo ChatBroUtils::get_avatar_url(); ?>">
                         <input type="hidden" name="userFullName" value="<?php echo wp_get_current_user()->display_name; ?>">
@@ -213,6 +221,52 @@ if (!class_exists("ChatBroPlugin")) {
             </div>
             <?php
         }
+
+        function render_field($args) {
+            $tag = $args['type'] == InputType::select || $args['type'] == InputType::textarea ? $args['type'] : 'input';
+            $class = $args['type'] == InputType::checkbox ? 'form-check-input' : 'form-control';
+
+            $value = ChatBroUtils::get_option($args['id']);
+            $valueAttr = $args['type'] == InputType::text ? "value=\"{$value}\" " : "";
+            $checked = $args['type'] == InputType::checkbox && $value ? 'checked="checked"' : '';
+            $textarea_attrs = $args['type'] == InputType::textarea ? 'cols="80" rows="6"' : '';
+
+
+            echo "<div class=\"form-group row\">";
+            echo "<label for=\"{$args['id']}\" class=\"col-xs-2 col-form-label\">{$args['label']}</label>";
+            echo "<div class=\"input-group col-xs-10\">";
+
+            if (array_key_exists('addon', $args))
+                echo "<span class=\"input-group-addon\">{$args['addon']}</span>";
+
+            echo "<{$tag} id=\"{$args['id']}\" name=\"{$args['id']}\" class=\"{$class}\" type=\"{$args['type']}\" {$textarea_attrs} {$valueAttr} {$checked}>";
+
+            switch($args['type']) {
+            case InputType::select:
+                if (!$value) {
+                    $t = array_keys($args['options']);
+                    $value = $t[0];
+                }
+
+                foreach($args['options'] as $val => $desc) {
+                    $desc = __($desc, 'chatbro-plugin');
+                    $selected = $val == $value ? 'selected="selected"' : '';
+                    echo "<option {$selected} name=\"{$args[id]}\" value=\"{$val}\">{$desc}</option>";
+                }
+
+                echo "</select>";
+                break;
+
+            case InputType::textarea:
+                echo $value;
+                echo "</textarea>";
+                break;
+            }
+
+            echo "</div>";
+            echo "</div>";
+        }
+
 
         function init_settings() {
             add_settings_section("chbro_plugin_settings", "", "", self::page);
@@ -246,39 +300,6 @@ if (!class_exists("ChatBroPlugin")) {
             return $guid;
         }
 
-        function render_field($args) {
-            $tag = $args['type'] == InputType::select || $args['type'] == InputType::textarea ? $args['type'] : 'input';
-            $class = $args['type'] == 'text' ? 'class="regular-text" ' : '';
-
-            $value = ChatBroUtils::get_option($args['id']);
-            $valueAttr = $args['type'] == InputType::text ? "value=\"{$value}\" " : "";
-            $checked = $args['type'] == InputType::checkbox && $value ? 'checked="checked"' : '';
-            $textarea_attrs = $args['type'] == InputType::textarea ? 'cols="80" rows="6"' : '';
-
-            echo "<{$tag} id=\"{$args['id']}\" name=\"{$args['id']}\" {$class} type=\"{$args['type']}\" {$textarea_attrs} {$valueAttr} {$checked}>";
-
-            switch($args['type']) {
-            case InputType::select:
-                if (!$value) {
-                    $t = array_keys($args['options']);
-                    $value = $t[0];
-                }
-
-                foreach($args['options'] as $val => $desc) {
-                    $desc = __($desc, 'chatbro-plugin');
-                    $selected = $val == $value ? 'selected="selected"' : '';
-                    echo "<option {$selected} name=\"{$args[id]}\" value=\"{$val}\">{$desc}</option>";
-                }
-
-                echo "</select>";
-                break;
-
-            case InputType::textarea:
-                echo $value;
-                echo "</textarea>";
-                break;
-            }
-        }
 
         function add_menu_option() {
             add_menu_page("ChatBro", "ChatBro", "manage_options", "chatbro_settings", array(&$this, 'constructor_page'), plugins_url()."/chatbro/favicon_small.png");

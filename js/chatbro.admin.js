@@ -9,4 +9,12 @@ jQuery(document).ready(function($) {
 	});
 
 	$("#chatbro_chat_display").change();
+
+	$("#chatbro-settings-form").submit(function(event) {
+		console.log("Submit!");
+		if ($("#chatbro_chat_guid").val() != chatbro_secret_key) {
+			console.log("key changed");
+			// event.preventDefault();
+		}
+	});
 });

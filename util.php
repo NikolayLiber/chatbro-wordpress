@@ -71,12 +71,10 @@ if (!class_exists("ChatBroUtils")) {
         }
 
         public static function call_constructor($guid) {
-            $ch = curl_init("http://www.chatbro.com/constructor/{$guid}");
-            curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            $response = wp_safe_remote_get("http://www.chatbro.com/constructor/{$guid}");
 
-            if (curl_exec($ch) === false) {
-                add_settings_error(ChatBroPlugin::guid_setting, 'constructor-failed', __('Failed to call chat constructor', 'chatbro-plugin') . " " . curl_error($ch), 'error');
+            if (is_wp_error($response)) {
+                add_settings_error(ChatBroPlugin::guid_setting, 'constructor-failed', __('Failed to call chat constructor', 'chatbro-plugin') . " " . $response->get_error_message(), 'error');
                 return false;
             }
 

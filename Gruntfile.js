@@ -62,9 +62,36 @@ module.exports = function(grunt) {
 			expand: true,
 			},
 		},
+		svn_fetch: {
+			options: {
+				repository: 'https://plugins.svn.wordpress.org/chatbro/',
+				path: './',
+				svnOptions: {
+					username: 'yozeg',
+					password: 'W*ojrKFw@73V'
+				}
+			},
+			svn: {
+				map: { 'svn': 'trunk' }
+			}
+		},
+		sync: {
+			main: {
+				files: [
+					{ src: ['**/*.php', '**/*.js', '**/*.css', '**/*.mo', '!Gruntfile.js', '!node_modules/**', '!svn/**'],  dest: 'svn/' }
+				],
+				verbose: true,
+				pretend: true,
+				failOnError: true,
+				updateAndDelete: true,
+				compareUsing: "md5"
+			},
+		}
 	});
 
 	grunt.loadNpmTasks('grunt-po2mo');
 	grunt.loadNpmTasks('grunt-pot');
 	grunt.loadNpmTasks('grunt-checktextdomain');
+	grunt.loadNpmTasks('grunt-svn-fetch');
+	grunt.loadNpmTasks('grunt-sync');
 }
