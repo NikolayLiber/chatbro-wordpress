@@ -1,13 +1,13 @@
 <?php
 /**
  * @package ChatBro
- * @version 1.1.4
+ * @version 1.1.6
  */
 /*
 Plugin Name: ChatBro
 Plugin URI: http://chatbro.com
 Description: Live group chat for your community with social networks integration. Chat conversation is being syncronized with popular messengers. Love ChatBro? Spread the word! <a href="https://wordpress.org/support/view/plugin-reviews/chatbro">Click here to review the plugin!</a>.
-Version: 1.1.4
+Version: 1.1.6
 Author: ChatBro
 Author URI: http://chatbro.com
 License: GPL3
@@ -16,7 +16,7 @@ Domain Path: /languages
 */
 
 defined( 'ABSPATH' ) or die( 'No script kiddies please!' );
-define('CHATBRO_PLUGIN_VERSION', '1.1.4', true);
+define('CHATBRO_PLUGIN_VERSION', '1.1.6', true);
 
 if (!class_exists("ChatBroPlugin")) {
     __('Chat secret key', 'chatbro-plugin');
@@ -41,6 +41,8 @@ if (!class_exists("ChatBroPlugin")) {
         const version = CHATBRO_PLUGIN_VERSION;
         const page = "chatbro_plugin";
         const settings = "chatbro_plugin_settings";
+        const cap_delete = "chatbro_delete_message";
+        const cap_ban = "chatbro_ban_user";
 
         const guid_setting = "chatbro_chat_guid";
         const display_to_guests_setting = "chatbro_chat_display_to_guests";
@@ -112,6 +114,9 @@ if (!class_exists("ChatBroPlugin")) {
                 $guid = self::get_instance()->set_default_settings();
 
             self::call_constructor($guid);
+            $adm = get_role('administrator');
+            $adm->add_cap(self::cap_delete);
+            $adm->add_cap(self::cap_ban);
         }
 
         public static function load_my_textdomain() {
@@ -321,7 +326,18 @@ if (!class_exists("ChatBroPlugin")) {
                 }
                 else {
                     ?>
-                    <iframe id="constructor" src="https://www.chatbro.com/constructor/<?php echo $guid; ?>" style="width: 100%; height: 85vh"></iframe>
+                    <!--<iframe id="constructor" src="https://www.chatbro.com/constructor/<?php echo $guid; ?>" style="width: 100%; height: 85vh"></iframe>-->
+                    <iframe name="chatbro-constructor" style="width: 100%; height: 85vh"></iframe>
+                    <form id="load-constructor" target="chatbro-constructor" action="https://www.chatbro.com/constructor/<?php echo $guid; ?>/" method="POST">
+                        <input type="hidden" name="guid" value="<?php echo $guid; ?>">
+                        <input type="hidden" name="avatarUrl" value="<?php echo self::get_avatar_url(); ?>">
+                        <input type="hidden" name="userFullName" value="<?php echo wp_get_current_user()->display_name; ?>">
+                        <input type="hidden" name="userProfileUrl" value="<?php echo self::get_profile_url(); ?>">
+                    </form>
+                    <script>
+                        jQuery("#load-constructor").submit();
+                    </script>
+
                     <?php
                 }
                 ?>
@@ -341,12 +357,16 @@ if (!class_exists("ChatBroPlugin")) {
                 $this->set_default_settings();
         }
 
-        public static function clenup_settings() {
+        public static function cleanup_settings() {
             foreach (array_keys(ChatBroPlugin::$options) as $name)
                 if (ChatBroPlugin::get_option($name) === false)
                     continue;
 
                 delete_option($name);
+
+            $adm = get_role('administrator');
+            $adm->remove_cap(self::delete);
+            $adm->remove_cap(self::ban);
         }
 
         function set_default_settings() {
@@ -527,6 +547,14 @@ if (!class_exists("ChatBroPlugin")) {
             $siteurl = ChatBroPlugin::get_option('siteurl');
             $site_domain = ChatBroPlugin::get_site_domain();
 
+            $permissions = array();
+
+            if (current_user_can(self::cap_delete))
+                array_push($permissions, 'delete');
+
+            if (current_user_can(self::cap_ban))
+                array_push($permissions, 'ban');
+
             $site_user_avatar_url = "";
             preg_match("/src='(.*)' alt/i", get_avatar($user->ID, 120), $avatar_path);
                 if(count($avatar_path)!=0)
@@ -545,7 +573,7 @@ if (!class_exists("ChatBroPlugin")) {
 
             $params = "encodedChatGuid: '{$hash}'";
             if (is_user_logged_in()) {
-                $signature = md5($site_domain . $user->ID . $user->display_name . $site_user_avatar_url . $profile_url . $guid);
+                $signature = md5($site_domain . $user->ID . $user->display_name . $site_user_avatar_url . $profile_url . $guid . implode('', $permissions));
                 $params .= ", siteUserFullName: '{$user->display_name}', siteUserExternalId: '{$user->ID}', siteDomain: '{$site_domain}'";
 
                 if ($site_user_avatar_url != "")
@@ -560,6 +588,9 @@ if (!class_exists("ChatBroPlugin")) {
 
             $params .= ", signature: '{$signature}'";
             $params .= ", wpPluginVersion: '" . self::version . "'";
+
+            if (!empty($permissions))
+                $params .= ", permissions: ['" . implode("','", $permissions) . "']";
 
             $display_to_guests = ChatBroPlugin::get_option(ChatBroPlugin::display_to_guests_setting);
 
@@ -599,6 +630,39 @@ if (!class_exists("ChatBroPlugin")) {
             </script>
             <?php
         }
+
+        public static function get_avatar_url()
+        {
+            $user = wp_get_current_user();
+            $site_user_avatar_url = "";
+            preg_match("/src='(.*)' alt/i", get_avatar($user->ID, 120), $avatar_path);
+
+            if(count($avatar_path)!=0)
+                $site_user_avatar_url = $avatar_path[1];
+
+            if($site_user_avatar_url == "")
+                $site_user_avatar_url = get_avatar_url($user->ID);
+
+            $site_user_avatar_url = strpos($site_user_avatar_url, 'wp_user_avatar') == FALSE ? $site_user_avatar_url : '';
+
+            return $site_user_avatar_url;
+        }
+
+        public static function get_profile_url()
+        {
+            $user = wp_get_current_user();
+            $profile_path = self::get_option(self::user_profile_path_setting);
+            $profile_url = '';
+
+            if ($profile_path) {
+                $profile_url = get_home_url() . ($profile_path[0] == '/' ? '' : '/') . $profile_path;
+                $profile_url = str_ireplace('{$username}', $user->user_login, $profile_url);
+                $profile_url = str_ireplace('{$userid}', $user->ID, $profile_url);
+            }
+
+            return $profile_url;
+        }
+
     }
 }
 
@@ -629,7 +693,7 @@ if (!class_exists("ChatBroPluginTemplater")) {
                 array( $this, 'view_project_template')
                 );
             $this->templates = array(
-                'chatbro_history_template.php'     => 'Chat history',
+                'chatbro_history_template.php' => 'Chat history',
                 );
         }
         public function register_project_templates( $atts ) {
@@ -668,5 +732,5 @@ if (!class_exists("ChatBroPluginTemplater")) {
 
 add_action('plugins_loaded', array(ChatBroPlugin::get_instance(), 'load_my_textdomain'));
 add_action('plugins_loaded', array( 'ChatBroPluginTemplater', 'get_instance'));
-register_uninstall_hook(__FILE__, array('ChatBroPlugin', 'clenup_settings'));
-//register_activation_hook(__FILE__, array('ChatBroPlugin', 'on_activation'));
+register_uninstall_hook(__FILE__, array('ChatBroPlugin', 'cleanup_settings'));
+register_activation_hook(__FILE__, array('ChatBroPlugin', 'on_activation'));
