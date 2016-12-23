@@ -1,13 +1,13 @@
 <?php
 /**
  * @package ChatBro
- * @version 1.1.7
+ * @version 1.1.8
  */
 /*
 Plugin Name: ChatBro
 Plugin URI: http://chatbro.com
 Description: Live group chat for your community with social networks integration. Chat conversation is being syncronized with popular messengers. Love ChatBro? Spread the word! <a href="https://wordpress.org/support/view/plugin-reviews/chatbro">Click here to review the plugin!</a>.
-Version: 1.1.7
+Version: 1.1.8
 Author: ChatBro
 Author URI: http://chatbro.com
 License: GPL3
@@ -16,7 +16,7 @@ Domain Path: /languages
 */
 
 defined( 'ABSPATH' ) or die( 'No script kiddies please!' );
-define('CHATBRO_PLUGIN_VERSION', '1.1.7', true);
+define('CHATBRO_PLUGIN_VERSION', '1.1.8', true);
 
 if (!class_exists("ChatBroPlugin")) {
     __('Chat secret key', 'chatbro-plugin');
@@ -97,6 +97,14 @@ if (!class_exists("ChatBroPlugin")) {
             add_action('admin_init', array(&$this, 'init_settings'));
             add_action('admin_menu', array(&$this, 'add_menu_option'));
             add_action('wp_footer', array(&$this, 'chat'));
+
+            $adm = get_role('administrator');
+
+            if (!$adm->has_cap(self::cap_delete))
+                $adm->add_cap(self::cap_delete);
+
+            if (!$adm->has_cap(self::cap_ban))
+                $adm->add_cap(self::cap_ban);
         }
 
         private static $instance;
@@ -112,11 +120,6 @@ if (!class_exists("ChatBroPlugin")) {
 
             if (!$guid)
                 $guid = self::get_instance()->set_default_settings();
-
-            self::call_constructor($guid);
-            $adm = get_role('administrator');
-            $adm->add_cap(self::cap_delete);
-            $adm->add_cap(self::cap_ban);
         }
 
         public static function load_my_textdomain() {
@@ -662,19 +665,6 @@ if (!class_exists("ChatBroPlugin")) {
 
             return $profile_url;
         }
-
-        public static function on_plugin_upgrade($uo, $options)
-        {
-            $current_plugin_path_name = plugin_basename( __FILE__ );
-
-            if ($options['action'] == 'update' && $options['type'] == 'plugin')
-                foreach($options['packages'] as $plugin)
-                    if ($plugin == $current_plugin_path_name) {
-                        $adm = get_role('administrator');
-                        $adm->add_cap(self::cap_delete);
-                        $adm->add_cap(self::cap_ban);
-                    }
-        }
     }
 }
 
@@ -744,7 +734,6 @@ if (!class_exists("ChatBroPluginTemplater")) {
 
 add_action('plugins_loaded', array(ChatBroPlugin::get_instance(), 'load_my_textdomain'));
 add_action('plugins_loaded', array('ChatBroPluginTemplater', 'get_instance'));
-add_action('upgrader_process_complete', array(ChatBroPlugin::get_instance(), 'on_plugin_upgrade'));
 
 register_uninstall_hook(__FILE__, array('ChatBroPlugin', 'cleanup_settings'));
 register_activation_hook(__FILE__, array('ChatBroPlugin', 'on_activation'));
