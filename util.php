@@ -187,9 +187,17 @@ if (!class_exists("ChatBroUtils")) {
             $site_user_avatar_url = self::get_avatar_url();
             $profile_url = self::get_profile_url();
 
+            $permissions = array();
+
+            if (current_user_can(ChatBroPlugin::cap_delete))
+                array_push($permissions, 'delete');
+
+            if (current_user_can(ChatBroPlugin::cap_ban))
+                array_push($permissions, 'ban');
+
             $params = "encodedChatGuid: '{$hash}'";
             if (is_user_logged_in()) {
-                $signature = md5($site_domain . $user->ID . $user->display_name . $site_user_avatar_url . $profile_url . $guid);
+                $signature = md5($site_domain . $user->ID . $user->display_name . $site_user_avatar_url . $profile_url . $guid . implode('', $permissions));
                 $params .= ", siteUserFullName: '{$user->display_name}', siteUserExternalId: '{$user->ID}', siteDomain: '{$site_domain}'";
 
                 if ($site_user_avatar_url != "")
@@ -210,6 +218,10 @@ if (!class_exists("ChatBroUtils")) {
 
             $params .= ", signature: '{$signature}'";
             $params .= ", wpPluginVersion: '" . ChatBroPlugin::version . "'";
+
+            if (!empty($permissions))
+                $params .= ", permissions: ['" . implode("','", $permissions) . "']";
+
             ob_start();
 
             ?>

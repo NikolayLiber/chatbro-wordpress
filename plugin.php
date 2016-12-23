@@ -27,6 +27,9 @@ if (!class_exists("ChatBroPlugin")) {
         const version = CHATBRO_PLUGIN_VERSION;
         const page = "chatbro_plugin";
         const settings = "chatbro_plugin_settings";
+        const cap_delete = "chatbro_delete_message";
+        const cap_ban = "chatbro_ban_user";
+
 
         const guid_setting = "chatbro_chat_guid";
         const display_to_guests_setting = "chatbro_chat_display_to_guests";
@@ -98,6 +101,14 @@ if (!class_exists("ChatBroPlugin")) {
             add_action('admin_menu', array(&$this, 'add_menu_option'));
             add_action('wp_footer', array(&$this, 'chat'));
             add_action('wp_ajax_chatbro_save_settings', array('ChatBroPlugin', 'ajax_save_settings'));
+
+            $adm = get_role('administrator');
+
+            if (!$adm->has_cap(self::cap_delete))
+                $adm->add_cap(self::cap_delete);
+
+            if (!$adm->has_cap(self::cap_ban))
+                $adm->add_cap(self::cap_ban);
         }
 
         private static $instance;
@@ -284,11 +295,16 @@ if (!class_exists("ChatBroPlugin")) {
         }
 
         public static function clenup_settings() {
-            foreach (array_keys(self::$options) as $name)
+            foreach (array_keys(self::$options) as $name) {
                 if (ChatBroUtils::get_option($name) === false)
                     continue;
 
                 delete_option($name);
+            }
+
+            $adm = get_role('administrator');
+            $adm->remove_cap(self::delete);
+            $adm->remove_cap(self::ban);
         }
 
         function set_default_settings() {
