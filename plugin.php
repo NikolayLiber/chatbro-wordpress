@@ -73,7 +73,8 @@ if (!class_exists("ChatBroPlugin")) {
                 self::selected_pages_setting => array(
                     'id' => self::selected_pages_setting,
                     'type' => InputType::textarea,
-                    'label' => "Specify pages by using their paths. Enter one path per line. The '*' character is a wildcard. Example paths are /2012/10/my-post for a single post and /2012/* for a group of posts. The path should always start with a forward slash(/).",
+                    'label' => "Pages",
+                    'help_block' => "Specify pages by using their paths. Enter one path per line. The '*' character is a wildcard. Example paths are /2012/10/my-post for a single post and /2012/* for a group of posts. The path should always start with a forward slash(/).",
                     'default' => false
                 ),
 
@@ -96,6 +97,7 @@ if (!class_exists("ChatBroPlugin")) {
             add_action('admin_init', array(&$this, 'init_settings'));
             add_action('admin_menu', array(&$this, 'add_menu_option'));
             add_action('wp_footer', array(&$this, 'chat'));
+            add_action('wp_ajax_chatbro_save_settings', array('ChatBroPlugin', 'ajax_save_settings'));
         }
 
         private static $instance;
@@ -112,7 +114,10 @@ if (!class_exists("ChatBroPlugin")) {
             if (!$guid)
                 $guid = self::get_instance()->set_default_settings();
 
-            ChatBroUtils::call_constructor($guid);
+            if (!ChatBroUtils::call_constructor($guid)) {
+                deactivate_plugins(plugin_basename( __FILE__ ));
+                wp_die(__("Failed to connect to chat server"));
+            }
         }
 
 
@@ -153,41 +158,52 @@ if (!class_exists("ChatBroPlugin")) {
             }
 
             wp_enqueue_style('bootstrap', plugin_dir_url( __FILE__ ) . 'css/bootstrap.min.css');
-            wp_enqueue_script('chatbro-admin', plugin_dir_url( __FILE__ ) . 'js/chatbro.admin.js', array('jquery'));
             wp_enqueue_script('bootstrap', plugin_dir_url( __FILE__ ) . 'js/bootstrap.min.js', array('jquery'));
+            wp_enqueue_script('chatbro-admin', plugin_dir_url( __FILE__ ) . 'js/chatbro.admin.js', array('jquery-form'));
 
             $guid = ChatBroUtils::get_option(self::guid_setting);
             $active_tab = isset($_GET['tab']) ? $_GET['tab'] : 'constructor';
 
             ?>
-            <div class="wrap">
-                <h2 class="nav-tab-wrapper">
-                    <a href="?page=chatbro_settings&tab=constructor"
-                       class="nav-tab <?php echo $active_tab == 'constructor' ? 'nav-tab-active' : ''; ?>"><?php echo __("Chat Constructor", 'chatbro-plugin'); ?></a>
-                    <a href="?page=chatbro_settings&tab=plugin_settings"
-                       class="nav-tab <?php echo $active_tab == 'plugin_settings' ? 'nav-tab-active' : ''; ?>"><?php echo __("Plugin Settings", 'chatbro-plugin'); ?></a>
-                </h2>
+            <ul id="settings-tabs" class="nav nav-tabs" role="tablist" style="margin-top: 1.5rem;">
+                <li role="presentation" <?php if ($_GET['tab'] != 'plugin_settings') echo 'class="active"'; ?> >
+                    <a href="#constructor" aria-controls="constructor" role="tab" data-toggle="tab"><?php _e("Chat Constructor", 'chatbro-plugin'); ?></a>
+                </li>
+                <li role="presentation" <?php if ($_GET['tab'] == 'plugin_settings') echo 'class="active"'; ?>>
+                    <a href="#plugin-settings" aria-controls="plugin-settings" role="tab" data-toggle="tab"><?php _e("Plugin Settings", 'chatbro-plugin'); ?></a>
+                </li>
+            </ul>
+            <div class="tab-content">
+                <div role="tabpanel" class="tab-pane fade in active" id="constructor">
+                    <iframe name="chatbro-constructor" style="width: 100%; height: 85vh"></iframe>
+                    <form id="load-constructor" target="chatbro-constructor" action="https://www.chatbro.com/constructor/<?php echo $guid; ?>/" method="GET">
+                        <input type="hidden" name="guid" value="<?php echo $guid; ?>">
+                        <input type="hidden" name="avatarUrl" value="<?php echo ChatBroUtils::get_avatar_url(); ?>">
+                        <input type="hidden" name="userFullName" value="<?php echo wp_get_current_user()->display_name; ?>">
+                        <input type="hidden" name="userProfileUrl" value="<?php echo ChatBroUtils::get_profile_url(); ?>">
+                    </form>
+                    <script>
+                        jQuery("#load-constructor").submit();
+                    </script>
+                </div>
+                <div role="tabpanel" class="tab-pane fade" id="plugin-settings">
 
-
-                <?php
-                if ($active_tab == "plugin_settings") {
-                    settings_errors();
-                    ?>
+                    <?php settings_errors(); ?>
                     <script>
                         var chatbro_secret_key = '<?php echo $guid ?>';
                     </script>
-                    <div style="/*float: left; margin-right: 3em*/ margin-top: 1rem; padding: 1.5rem">
-                    <form id="chatbro-settings-form" method="post" action="options.php">
-                        <?php
-                            settings_fields(self::settings);
-                            foreach(self::$options as $name => $args) {
-                                self::render_field($args);
-                            }
-                        ?>
-                        <p class="submit">
-                            <input type="submit" class="button-primary" value="<?php _e('Save Changes', 'chatbro-plugin'); ?>" />
-                        </p>
-                    </form>
+                    <div style="margin-top: 1rem; padding: 1.5rem">
+                        <form id="chatbro-settings-form" method="post" action="options.php">
+                            <?php
+                                settings_fields(self::settings);
+                                foreach(self::$options as $name => $args) {
+                                    self::render_field($args);
+                                }
+                            ?>
+                            <p class="form-group">
+                                <button type="button" class="btn btn-primary"><?php _e('Save Changes', 'chatbro-plugin'); ?></button>
+                            </p>
+                        </form>
                     </div>
                     <!--<div style="float: left; padding: 1em; margin-top: 1em; border: solid 1px #ccc; word-wrap: break-word; width: 50%">
                         <?php _e('Use shortcode <em><b>[chatbro]</b></em> to add the chat widget to the desired place of your page or post.', 'chatbro-plugin'); ?>
@@ -201,23 +217,7 @@ if (!class_exists("ChatBroPlugin")) {
                             </li>
                         </ul>
                     </div> -->
-                    <?php
-                }
-                else {
-                    ?>
-                    <iframe name="chatbro-constructor" style="width: 100%; height: 85vh"></iframe>
-                    <form id="load-constructor" target="chatbro-constructor" action="https://www.chatbro.com/constructor/<?php echo $guid; ?>/" method="GET">
-                        <input type="hidden" name="guid" value="<?php echo $guid; ?>">
-                        <input type="hidden" name="avatarUrl" value="<?php echo ChatBroUtils::get_avatar_url(); ?>">
-                        <input type="hidden" name="userFullName" value="<?php echo wp_get_current_user()->display_name; ?>">
-                        <input type="hidden" name="userProfileUrl" value="<?php echo ChatBroUtils::get_profile_url(); ?>">
-                    </form>
-                    <script>
-                        jQuery("#load-constructor").submit();
-                    </script>
-                    <?php
-                }
-                ?>
+                </div>
             </div>
             <?php
         }
@@ -262,6 +262,9 @@ if (!class_exists("ChatBroPlugin")) {
                 echo "</textarea>";
                 break;
             }
+
+            if (array_key_exists('help_block', $args))
+                echo "<span class=\"help-block\">" . __($args['help_block'], 'chatbro-plugin') . "</span>";
 
             echo "</div>";
             echo "</div>";
@@ -451,6 +454,13 @@ if (!class_exists("ChatBroPlugin")) {
             }
 
             echo ChatBroUtils::generate_chat_code($guid);
+        }
+
+        /**
+         * Save settings ajax call
+        */
+        function ajax_save_settings() {
+            echo "Hello world!";
         }
     }
 }
