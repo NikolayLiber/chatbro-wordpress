@@ -23,5 +23,17 @@ jQuery(document).ready(function($) {
 		$(this).tab('show');
 	});
 
-	$("#chatbro-settings-form").ajaxForm();
+	$("#chatbro-settings-form").ajaxForm({
+	});
+
+	$("#chatbro-save").on('click', function() {
+		var self = $(this);
+
+		self.button('saving');
+		self.addClass('disabled').blur();
+		setTimeout(function() {
+			self.button('reset');
+			self.removeClass('disabled');
+		}, 5000);
+	});
 });

@@ -195,10 +195,11 @@ if (!class_exists("ChatBroUtils")) {
             if (current_user_can(ChatBroPlugin::cap_ban))
                 array_push($permissions, 'ban');
 
-            $params = "encodedChatGuid: '{$hash}'";
+            $params = "encodedChatGuid: '{$hash}', siteDomain: '{$site_domain}'";
             if (is_user_logged_in()) {
-                $signature = md5($site_domain . $user->ID . $user->display_name . $site_user_avatar_url . $profile_url . $guid . implode('', $permissions));
-                $params .= ", siteUserFullName: '{$user->display_name}', siteUserExternalId: '{$user->ID}', siteDomain: '{$site_domain}'";
+                $sigData = $site_domain . $user->ID . $user->display_name . $site_user_avatar_url . $profile_url . implode('', $permissions) . $guid;
+                $signature = md5($sigData);
+                $params .= ", siteUserFullName: '{$user->display_name}', siteUserExternalId: '{$user->ID}'";
 
                 if ($site_user_avatar_url != "")
                     $params .= ", siteUserAvatarUrl: '{$site_user_avatar_url}'";

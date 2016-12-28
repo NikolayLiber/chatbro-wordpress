@@ -169,6 +169,7 @@ if (!class_exists("ChatBroPlugin")) {
             }
 
             wp_enqueue_style('bootstrap', plugin_dir_url( __FILE__ ) . 'css/bootstrap.min.css');
+            wp_enqueue_style('font-awesome', 'http://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.1.0/css/font-awesome.min.css');
             wp_enqueue_script('bootstrap', plugin_dir_url( __FILE__ ) . 'js/bootstrap.min.js', array('jquery'));
             wp_enqueue_script('chatbro-admin', plugin_dir_url( __FILE__ ) . 'js/chatbro.admin.js', array('jquery-form'));
 
@@ -212,7 +213,7 @@ if (!class_exists("ChatBroPlugin")) {
                                 }
                             ?>
                             <p class="form-group">
-                                <button type="button" class="btn btn-primary"><?php _e('Save Changes', 'chatbro-plugin'); ?></button>
+                                <button id="chatbro-save" type="button" class="btn btn-primary" data-saving-text="<i class='fa fa-circle-o-notch fa-spin'></i> Saving Changes"><?php _e('Save Changes', 'chatbro-plugin'); ?></button>
                             </p>
                         </form>
                     </div>
