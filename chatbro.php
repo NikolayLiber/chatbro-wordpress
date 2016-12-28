@@ -1,13 +1,13 @@
 <?php
 /**
  * @package ChatBro
- * @version 1.1.8
+ * @version 1.1.9
  */
 /*
 Plugin Name: ChatBro
 Plugin URI: http://chatbro.com
 Description: Live group chat for your community with social networks integration. Chat conversation is being syncronized with popular messengers. Love ChatBro? Spread the word! <a href="https://wordpress.org/support/view/plugin-reviews/chatbro">Click here to review the plugin!</a>.
-Version: 1.1.8
+Version: 1.1.9
 Author: ChatBro
 Author URI: http://chatbro.com
 License: GPL3
@@ -16,7 +16,7 @@ Domain Path: /languages
 */
 
 defined( 'ABSPATH' ) or die( 'No script kiddies please!' );
-define('CHATBRO_PLUGIN_VERSION', '1.1.8', true);
+define('CHATBRO_PLUGIN_VERSION', '1.1.9', true);
 
 if (!class_exists("ChatBroPlugin")) {
     __('Chat secret key', 'chatbro-plugin');
@@ -574,10 +574,12 @@ if (!class_exists("ChatBroPlugin")) {
             if ($profile_path)
                 $profile_url = str_ireplace('{$username}', $user->user_login, $siteurl . $profile_path);
 
-            $params = "encodedChatGuid: '{$hash}'";
+            $params = "encodedChatGuid: '{$hash}', siteDomain: '{$site_domain}'";
+            $sig_source = "";
+
             if (is_user_logged_in()) {
-                $signature = md5($site_domain . $user->ID . $user->display_name . $site_user_avatar_url . $profile_url . $guid . implode('', $permissions));
-                $params .= ", siteUserFullName: '{$user->display_name}', siteUserExternalId: '{$user->ID}', siteDomain: '{$site_domain}'";
+                $sig_source = $site_domain . $user->ID . $user->display_name . $site_user_avatar_url . $profile_url . implode('', $permissions);
+                $params .= ", siteUserFullName: '{$user->display_name}', siteUserExternalId: '{$user->ID}'";
 
                 if ($site_user_avatar_url != "")
                     $params .= ", siteUserAvatarUrl: '{$site_user_avatar_url}'";
@@ -585,9 +587,10 @@ if (!class_exists("ChatBroPlugin")) {
                 if ($profile_url != '')
                     $params .= ", siteUserProfileUrl: '{$profile_url}'";
             }
-            else {
-                $signature = md5($site_domain . $guid);
-            }
+            else
+                $sig_source = $site_domain;
+
+            $signature = md5($sig_source . $guid);
 
             $params .= ", signature: '{$signature}'";
             $params .= ", wpPluginVersion: '" . self::version . "'";
