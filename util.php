@@ -196,9 +196,10 @@ if (!class_exists("ChatBroUtils")) {
                 array_push($permissions, 'ban');
 
             $params = "encodedChatGuid: '{$hash}', siteDomain: '{$site_domain}'";
+            $sig_source = "";
+
             if (is_user_logged_in()) {
-                $sigData = $site_domain . $user->ID . $user->display_name . $site_user_avatar_url . $profile_url . implode('', $permissions) . $guid;
-                $signature = md5($sigData);
+                $sig_source = $site_domain . $user->ID . $user->display_name . $site_user_avatar_url . $profile_url . implode('', $permissions);
                 $params .= ", siteUserFullName: '{$user->display_name}', siteUserExternalId: '{$user->ID}'";
 
                 if ($site_user_avatar_url != "")
@@ -207,9 +208,10 @@ if (!class_exists("ChatBroUtils")) {
                 if ($profile_url != '')
                     $params .= ", siteUserProfileUrl: '{$profile_url}'";
             }
-            else {
-                $signature = md5($site_domain . $guid);
-            }
+            else
+                $sig_source = $site_domain;
+
+            $signature = md5($sig_source . $guid);
 
             if ($container_id)
                 $params .= ", containerDivId: '{$container_id}'";
