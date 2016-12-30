@@ -151,7 +151,7 @@ if (!class_exists("ChatBroPlugin")) {
 
         public static function get_site_domain() {
             $url = ChatBroPlugin::get_option('siteurl');
-            if (!preg_match('/^.+:\/\/([^\/]+)/', $url, $m))
+            if (!preg_match('/^.+:\/\/([^\/\:]+)/', $url, $m))
                 return '';
 
             return $m[1];
@@ -368,8 +368,8 @@ if (!class_exists("ChatBroPlugin")) {
                 delete_option($name);
 
             $adm = get_role('administrator');
-            $adm->remove_cap(self::delete);
-            $adm->remove_cap(self::ban);
+            $adm->remove_cap(self::cap_delete);
+            $adm->remove_cap(self::cap_ban);
         }
 
         function set_default_settings() {
