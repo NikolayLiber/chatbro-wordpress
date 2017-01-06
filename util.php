@@ -33,7 +33,7 @@ if (!class_exists("ChatBroUtils")) {
 
         public static function get_site_domain() {
             $url = self::get_option('siteurl');
-            if (!preg_match('/^.+:\/\/([^\/]+)/', $url, $m))
+            if (!preg_match('/^.+:\/\/([^\/\:]+)/', $url, $m))
                 return '';
 
             return $m[1];
@@ -70,41 +70,47 @@ if (!class_exists("ChatBroUtils")) {
         		self::update_option($name, $value);
         }
 
-        public static function call_constructor($guid) {
+        public static function call_constructor($guid, &$messages) {
             $response = wp_safe_remote_get("http://www.chatbro.com/constructor/{$guid}");
 
             if (is_wp_error($response)) {
-                add_settings_error(ChatBroPlugin::guid_setting, 'constructor-failed', __('Failed to call chat constructor', 'chatbro-plugin') . " " . $response->get_error_message(), 'error');
+                $messages['fatal'] = __('Failed to call chat constructor', 'chatbro-plugin') . " " . $response->get_error_message();
                 return false;
             }
 
             return true;
         }
 
-        public static function sanitize_guid($guid) {
+        public static function sanitize_guid($guid, &$messages) {
             $guid = trim(strtolower($guid));
 
             if (!preg_match('/^[\da-f]{8}-[\da-f]{4}-[\da-f]{4}-[\da-f]{4}-[\da-f]{12}$/', $guid)) {
-                add_settings_error(ChatBroPlugin::guid_setting, "invalid-guid", __("Invalid chat secret key", 'chatbro-plugin'), "error");
+                $messages['fields'][ChatBroPlugin::guid_setting] = array(
+                    "message" => __("Invalid chat secret key", 'chatbro-plugin'),
+                    "type" => "error"
+                );
                 return self::get_option(ChatBroPlugin::guid_setting);
             }
 
-            if (!self::call_constructor($guid))
+            if (!self::call_constructor($guid, $messages))
                 return self::get_option(ChatBroPlugin::guid_setting);
 
             return $guid;
         }
 
-        public static function sanitize_display($val) {
+        public static function sanitize_display($val, &$messages) {
             if (!in_array($val, array_keys($options['display_setting']['options']))) {
-                add_settings_error(ChatBroPlugin::display_setting, "invalid-display", __("Invalid show popup chat option value", 'chatbro-plugin'));
+                $messages['fields'][ChatBroPlugin::display_setting] = array(
+                    "message" => __("Invalid show popup chat option value", 'chatbro-plugin'),
+                    "type" => "error"
+                );
                 return ChatBroPlugin::get_option(ChatBroPlugin::display_setting);
             }
 
             return $val;
         }
 
-        public static function sanitize_checkbox($val) {
+        public static function sanitize_checkbox($val, &$messages) {
             return $val == "on";
         }
 

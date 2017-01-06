@@ -19,6 +19,7 @@ defined( 'ABSPATH' ) or die( 'No script kiddies please!' );
 define('CHATBRO_PLUGIN_VERSION', '1.2.0', true);
 
 require_once('util.php');
+require_once('deprecated.php');
 require_once('plugin.php');
 require_once('shortcode.php');
 require_once('templater.php');

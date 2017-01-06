@@ -127,44 +127,14 @@ if (!class_exists("ChatBroPlugin")) {
 
             if (!ChatBroUtils::call_constructor($guid)) {
                 deactivate_plugins(plugin_basename( __FILE__ ));
-                wp_die(__("Failed to connect to chat server"));
+                wp_die(__("Failed to connect to chat server", "chatbro-plugin"));
             }
-        }
-
-
-        function convert_from_old_page($old) {
-            $chatPath = $old['chatPath'];
-            $showGuests = $old['showGuests'];
-            ?>
-            <p><div class="error"><?php echo __('To manage chat settings in the new version of the plugin, you should submit a chat secret key. Please, log in to your account at <a href="https://www.chatbro.com/account">chatbro.com</a> (use login button below), copy the chat secret key and insert it into the respective field.', 'chatbro-plugin'); ?></div></p>
-            <form method="post" action="options.php">
-                <?php
-                settings_fields(ChatBroPlugin::settings);
-
-                if ($showGuests)
-                    echo '<input type="hidden" id="' . ChatBroPlugin::display_to_guests_setting . '" name="' . ChatBroPlugin::display_to_guests_setting . '" value="on">';
-                ?>
-                <input type="hidden" id="<?php echo ChatBroPlugin::display_setting ?>" name="<?php echo ChatBroPlugin::display_setting ?>" value="everywhere">
-                <input type="hidden" id="<?php echo ChatBroPlugin::user_profile_path_setting ?>" name="<?php echo ChatBroPlugin::user_profile_path_setting ?>" value="<?php echo ChatBroPlugin::default_profile_path; ?>">
-                <table class="form-table">
-                    <tr>
-                        <th scope="row"><?php echo __(ChatBroPlugin::$options[ChatBroPlugin::guid_setting]['label'], 'chatbro-plugin'); ?></th>
-                        <td><input type="text" class="regular-text" id="<?php echo ChatBroPlugin::guid_setting; ?>" name="<?php echo ChatBroPlugin::guid_setting; ?>">
-                        </td>
-                    </tr>
-                </table>
-                <p class="submit">
-                    <input type="submit" class="button-primary" value="<?php _e('Save secret key', 'chatbro-plugin') ?>" />
-                </p>
-            </form>
-            <iframe id="convert" src="<?php echo "https://www.chatbro.com/get_secretkey_by_path?chatPath={$chatPath}"; ?>" style="width: 100%;"></iframe>
-            <?php
         }
 
         function constructor_page() {
             $old = ChatBroUtils::get_option(self::old_options);
             if (ChatBroUtils::get_option(self::guid_setting) == false && $old != false && $old['chatPath']) {
-                $this->convert_from_old_page($old);
+                ChatBroDeprecated::convert_from_old_page($old);
                 return;
             }
 
@@ -199,21 +169,23 @@ if (!class_exists("ChatBroPlugin")) {
                     </script>
                 </div>
                 <div role="tabpanel" class="tab-pane fade" id="plugin-settings">
-
-                    <?php settings_errors(); ?>
                     <script>
                         var chatbro_secret_key = '<?php echo $guid ?>';
                     </script>
                     <div style="margin-top: 1rem; padding: 1.5rem">
-                        <form id="chatbro-settings-form" method="post" action="options.php">
+                        <div id="chatbro-message" role="alert"></div>
+                        <form id="chatbro-settings-form">
+                            <input name="action" type="hidden" value="chatbro_save_settings">
+                            <?php wp_create_nonce("chatbro_save_settings", "chb-sec"); ?>
+                            <input id="chb-login-url" name="chb-login-url" type="hidden" value="<?php echo wp_login_url(get_permalink()); ?>">
+                            <input id="chb-sec-key" name="chb-sec-key" type="hidden" value = "<?php echo $guid ?>">
                             <?php
-                                settings_fields(self::settings);
                                 foreach(self::$options as $name => $args) {
                                     self::render_field($args);
                                 }
                             ?>
                             <p class="form-group">
-                                <button id="chatbro-save" type="button" class="btn btn-primary" data-saving-text="<i class='fa fa-circle-o-notch fa-spin'></i> Saving Changes"><?php _e('Save Changes', 'chatbro-plugin'); ?></button>
+                                <button id="chatbro-save" type="submit" class="btn btn-primary" data-saving-text="<i class='fa fa-circle-o-notch fa-spin'></i> Saving Changes"><?php _e('Save Changes', 'chatbro-plugin'); ?></button>
                             </p>
                         </form>
                     </div>
@@ -284,12 +256,6 @@ if (!class_exists("ChatBroPlugin")) {
 
 
         function init_settings() {
-            add_settings_section("chbro_plugin_settings", "", "", self::page);
-            foreach(self::$options as $name => $args) {
-                register_setting(self::settings, $name, array_key_exists('sanitize_callback', $args) ? $args['sanitize_callback'] : null);
-                add_settings_field($name, __($args['label'], 'chatbro-plugin'), array(&$this, "render_field"), self::page, "chbro_plugin_settings", $args);
-            }
-
             $old_options = ChatBroUtils::get_option(self::old_options);
             if (ChatBroUtils::get_option(self::guid_setting) == false && ($old_options == false || $old_options['chatPath'] == 'tg/208397015/Ask your own question'))
                 $this->set_default_settings();
@@ -325,111 +291,6 @@ if (!class_exists("ChatBroPlugin")) {
             add_menu_page("ChatBro", "ChatBro", "manage_options", "chatbro_settings", array(&$this, 'constructor_page'), plugins_url()."/chatbro/favicon_small.png");
         }
 
-        function chat_old($o) {
-            $current_user = wp_get_current_user();
-            $display_name = $current_user->display_name;
-            $userid = $current_user->ID;
-            $siteUrl = get_option('siteurl');
-
-            $siteUserAvatarUrl = "";
-            preg_match("/src='(.*)' alt/i", get_avatar($userid, 120), $avatarPath);
-                if(count($avatarPath)!=0)
-                    $siteUserAvatarUrl = $avatarPath[1];
-            if($siteUserAvatarUrl == "")
-                $siteUserAvatarUrl =  get_avatar_url($userid);
-
-            $username = $current_user->user_login;
-
-            $param = array(
-                'chatPath' =>                 $o['chatPath'],
-                'containerDivId' =>           $o['containerDivId'],
-                'chatLanguage'=>              $o['chatLanguage'],
-                'chatState'=>                 $o['chatState'],
-                'chatTop'=>                   $o['chatTop'],
-                'chatLeft'=>                  $o['chatLeft'],
-                'chatWidth'=>                 $o['chatWidth'],
-                'chatHeight'=>                $o['chatHeight'],
-                'siteDomain'=>                $o['siteDomain'],
-                'chatHeaderTextColor'=>       $o['chatHeaderTextColor'],
-                'chatHeaderBackgroundColor'=> $o['chatHeaderBackgroundColor'],
-                'chatBodyBackgroundColor'=>   $o['chatBodyBackgroundColor'],
-                'chatBodyTextColor'=>         $o['chatBodyTextColor'],
-                'chatInputBackgroundColor'=>  $o['chatInputBackgroundColor'],
-                'chatInputTextColor'=>        $o['chatInputTextColor'],
-                'allowSendMessages'=>         isset($o['allowSendMessages']),
-                'allowMoveChat'=>             isset($o['allowMoveChat']),
-                'allowUploadMessages'=>       isset($o['allowUploadMessages']),
-                'allowResizeChat'=>           isset($o['allowResizeChat']),
-                'showChatHeader'=>            isset($o['showChatHeader']),
-                'allowMinimizeChat'=>         isset($o['allowMinimizeChat']),
-                'showChatMenu'=>              isset($o['showChatMenu']),
-                'showChatParticipants'=>      isset($o['showChatParticipants']),
-                'showGuests'=>                isset($o['showGuests']),
-                );
-
-            $json_param = json_encode($param);
-            $signature ="";
-            if( $o['siteDomain'] && isset($o['secretKey']) )
-                $signature  = md5($o['siteDomain'].$userid.$display_name.$siteUserAvatarUrl.$o['secretKey']);
-            $chatBroCode ='<script>
-            /* Chatbro Widget Embed Code Start*/
-            function ChatbroLoader(chats, async) {
-                async = async || true;
-                var params = {
-                    embedChatsParameters: chats instanceof Array ? chats : [chats],
-                    needLoadCode: typeof Chatbro === "undefined"
-                };
-                var xhr = new XMLHttpRequest();
-                xhr.onload = function () {
-                    eval(xhr.responseText);
-                };
-                xhr.onerror = function () {
-                    console.error("Chatbro loading error");
-                };
-                xhr.open("POST", "http://www.chatbro.com/embed_chats", async);
-                xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-                xhr.send("parameters=" + encodeURIComponent(JSON.stringify(params)));
-            }
-            /* Chatbro Widget Embed Code End*/
-            var param={};
-            var json_param= '.$json_param.'
-            for (var p in json_param) {
-                if (json_param[p]!=null)
-                    param[p]=json_param[p];
-            }
-            if("'.is_user_logged_in().'") {
-                param.siteUserFullName   = "'.$display_name.'";
-                param.siteUserExternalId = "'.$userid.'";
-                if("'.$siteUserAvatarUrl.'".indexOf("wp_user_avatar"==-1))
-                    param.siteUserAvatarUrl  = "'.$siteUserAvatarUrl.'";
-                if( "'.$signature.'" )
-                    param.signature = "'.$signature.'";
-            }
-                ChatbroLoader(param);
-            </script>';
-                if(isset($o['showGuests']) || is_user_logged_in()) {
-                    $systemMessage='';
-                if( isset($o['showSystemMessage']) && !is_user_logged_in()) {
-                        $registerMessage = __('Only for registered members! ', 'chatbro-plugin');
-                    if( $o['registerLink'] ) {
-                            $registerTitle =__('Register', 'chatbro-plugin');
-                            $registerMessage.='<link><a href='.addslashes($o['registerLink']).'>'.$registerTitle.'</a></link>';
-                        }
-                        $systemMessage = '<script>
-                            document.addEventListener("chatLoaded", function () {
-                            document.addEventListener("chatInputClick", function (event) {
-                                var chat = event.chat;
-                                chat.lockSendMessage();
-                                chat.showSystemMessage("'.$registerMessage.'");
-                            });
-                        });
-                    </script>';
-                }
-                echo $chatBroCode.$systemMessage;
-            }
-
-        }
-
         function chat() {
             $guid = ChatBroUtils::get_option(self::guid_setting);
 
@@ -437,7 +298,7 @@ if (!class_exists("ChatBroPlugin")) {
                 $opts = ChatBroUtils::get_option(self::old_options);
 
                 if ($opts != false)
-                    $this->chat_old($opts);
+                    ChatBro::chat_old($opts);
 
                 return;
             }
@@ -477,7 +338,55 @@ if (!class_exists("ChatBroPlugin")) {
          * Save settings ajax call
         */
         function ajax_save_settings() {
-            echo "Hello world!";
+            global $_POST;
+            if (!current_user_can('manage_options'))
+                die('{"success":false,"message":"' . __("You are not allowed to modify settings","chatbro-plugin") . '","msg_type":"error"}');
+
+            $messages = array('fields' => array());
+            $new_vals = array();
+            foreach($_POST as $option => $value) {
+                // We are interested only in settings parameters
+                if (!array_key_exists($option, self::$options))
+                    continue;
+
+                if (!is_array($value))
+                    $value = trim($value);
+
+                $value = wp_unslash($value);
+
+                if (array_key_exists($option, self::$options) && array_key_exists('sanitize_callback', self::$options[$option])) {
+                    $new_vals[$option] = trim(call_user_func_array(self::$options[$option]['sanitize_callback'], array($value, &$messages)));
+                }
+            }
+
+            $reply = array('success' => true);
+
+            if (array_key_exists('fatal', $messages)) {
+                $reply['success'] = false;
+                $reply['message'] = $messages['fatal'];
+                $reply['msg_type'] = 'error';
+            }
+            else {
+                foreach($messages['fields'] as $m) {
+                    if ($m['type'] == 'error') {
+                        $reply['success'] = false;
+                        break;
+                    }
+                }
+            }
+
+            if ($reply['success']) {
+                foreach($new_vals as $option => $value)
+                    ChatBroUtils::update_option($option, $value);
+
+                $reply['message'] = __("Settings was successfuly saved", "chatbro-plugin");
+                $reply['msg_type'] = "info";
+            }
+
+            if (count($messages['fields']))
+                $reply['field_messages'] = $messages['fields'];
+
+            die(json_encode($reply));
         }
     }
 }
