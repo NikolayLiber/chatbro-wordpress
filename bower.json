@@ -1,0 +1,21 @@
+{
+  "name": "chatbro-wordpress",
+  "description": "Wordpress plugin for ChatBro live chat",
+  "main": "",
+  "authors": [
+    "Nikolay Liber <fwnd80@gmail.com>"
+  ],
+  "license": "GPL-3.0",
+  "homepage": "https://github.com/NikolayLiber/chatbro-wordpress",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "bootstrap": "v4.0.0-alpha.6"
+  }
+}

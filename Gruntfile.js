@@ -1,5 +1,23 @@
 module.exports = function(grunt) {
 	grunt.initConfig({
+		bower: {
+			install: {
+				options: {
+					cleanup: true,
+					targetDir: '_build/lib'
+				}
+			}
+		},
+
+		bower_concat: {
+			all: {
+				dest: {
+					js: '_build/js/chatbro.js',
+					css: '_build/css/chatbro.css'
+				}
+			}
+		},
+
 		pkg: grunt.file.readJSON('package.json'),
 		po2mo: {
 		    files: {
@@ -8,6 +26,7 @@ module.exports = function(grunt) {
 		        expand: true,
 		    },
 		},
+
 		pot: {
 			options:{
 				text_domain: 'chatbro-plugin', //Your text domain. Produces my-text-domain.pot
@@ -35,6 +54,7 @@ module.exports = function(grunt) {
 				expand: true,
 			}
 		},
+
 		checktextdomain: {
 			options:{
 				text_domain: 'chatbro-plugin',
@@ -62,6 +82,7 @@ module.exports = function(grunt) {
 			expand: true,
 			},
 		},
+
 		svn_fetch: {
 			options: {
 				repository: 'https://plugins.svn.wordpress.org/chatbro/',
@@ -75,6 +96,7 @@ module.exports = function(grunt) {
 				map: { 'svn': 'trunk' }
 			}
 		},
+
 		sync: {
 			main: {
 				files: [
@@ -89,6 +111,8 @@ module.exports = function(grunt) {
 		}
 	});
 
+	grunt.loadNpmTasks('grunt-bower-task');
+	grunt.loadNpmTasks('grunt-bower-concat');
 	grunt.loadNpmTasks('grunt-po2mo');
 	grunt.loadNpmTasks('grunt-pot');
 	grunt.loadNpmTasks('grunt-checktextdomain');
