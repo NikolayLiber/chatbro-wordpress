@@ -1,3 +1,5 @@
 node_modules
 *.mo
 svn
+_build
+bower_components
