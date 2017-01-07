@@ -138,10 +138,8 @@ if (!class_exists("ChatBroPlugin")) {
                 return;
             }
 
-            wp_enqueue_style('bootstrap', plugin_dir_url( __FILE__ ) . 'css/bootstrap.min.css');
-            wp_enqueue_style('font-awesome', 'http://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.1.0/css/font-awesome.min.css');
-            wp_enqueue_script('bootstrap', plugin_dir_url( __FILE__ ) . 'js/bootstrap.min.js', array('jquery'));
-            wp_enqueue_script('chatbro-admin', plugin_dir_url( __FILE__ ) . 'js/chatbro.admin.js', array('jquery-form'));
+            wp_enqueue_style('chatbro', plugin_dir_url( __FILE__ ) . 'css/chatbro.min.css');
+            wp_enqueue_script('chatbro', plugin_dir_url( __FILE__ ) . 'js/chatbro.min.js');
 
             $guid = ChatBroUtils::get_option(self::guid_setting);
             $active_tab = isset($_GET['tab']) ? $_GET['tab'] : 'constructor';

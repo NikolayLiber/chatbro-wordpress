@@ -13,6 +13,26 @@ module.exports = function(grunt) {
 				dest: {
 					js: '_build/js/chatbro.js',
 					css: '_build/css/chatbro.css'
+				},
+
+				mainFiles: {
+					bootstrap: ['dist/js/bootstrap.js', 'dist/css/bootstrap.css']
+				}
+			}
+		},
+
+		uglify: {
+			all: {
+				files: {
+					'js/chatbro.min.js': ['_build/js/chatbro.js', 'src/js/chatbro.admin.js']
+				}
+			}
+		},
+
+		cssmin: {
+			all: {
+				files: {
+					'css/chatbro.min.css': ['_build/css/chatbro.css']
 				}
 			}
 		},
@@ -107,7 +127,9 @@ module.exports = function(grunt) {
 				updateAndDelete: true,
 				compareUsing: "md5"
 			},
-		}
+		},
+
+		clean: ['_build', 'bower_components', 'js', 'css']
 	});
 
 	grunt.loadNpmTasks('grunt-bower-task');
@@ -117,4 +139,9 @@ module.exports = function(grunt) {
 	grunt.loadNpmTasks('grunt-checktextdomain');
 	grunt.loadNpmTasks('grunt-svn-fetch');
 	grunt.loadNpmTasks('grunt-sync');
+	grunt.loadNpmTasks('grunt-contrib-uglify');
+	grunt.loadNpmTasks('grunt-contrib-cssmin');
+	grunt.loadNpmTasks('grunt-contrib-clean');
+
+	grunt.registerTask('default', ['bower', 'bower_concat', 'uglify', 'cssmin']);
 }

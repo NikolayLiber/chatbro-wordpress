@@ -3,3 +3,5 @@ node_modules
 svn
 _build
 bower_components
+css
+js
