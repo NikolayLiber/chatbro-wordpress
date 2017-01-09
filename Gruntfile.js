@@ -16,7 +16,8 @@ module.exports = function(grunt) {
 				},
 
 				mainFiles: {
-					bootstrap: ['dist/js/bootstrap.js', 'dist/css/bootstrap.css']
+					bootstrap: ['dist/js/bootstrap.js', 'dist/css/bootstrap.css'],
+					'font-awesome': ['css/font-awesome.css']
 				}
 			}
 		},
@@ -129,7 +130,17 @@ module.exports = function(grunt) {
 			},
 		},
 
-		clean: ['_build', 'bower_components', 'js', 'css']
+		clean: ['_build', 'bower_components', 'js', 'css', 'fonts'],
+
+		copy: {
+			fonts: {
+				expand: true,
+				src: ['bower_components/font-awesome/fonts/*', 'bower_components/bootstrap/fonts/*'],
+				dest: 'fonts/',
+				filter: 'isFile',
+				flatten: true
+			}
+		}
 	});
 
 	grunt.loadNpmTasks('grunt-bower-task');
@@ -142,6 +153,7 @@ module.exports = function(grunt) {
 	grunt.loadNpmTasks('grunt-contrib-uglify');
 	grunt.loadNpmTasks('grunt-contrib-cssmin');
 	grunt.loadNpmTasks('grunt-contrib-clean');
+	grunt.loadNpmTasks('grunt-contrib-copy');
 
-	grunt.registerTask('default', ['bower', 'bower_concat', 'uglify', 'cssmin']);
+	grunt.registerTask('default', ['bower', 'bower_concat', 'uglify', 'cssmin', 'copy:fonts']);
 }

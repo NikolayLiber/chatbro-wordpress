@@ -214,8 +214,8 @@ if (!class_exists("ChatBroPlugin")) {
             $textarea_attrs = $args['type'] == InputType::textarea ? 'cols="80" rows="6"' : '';
 
 
-            echo "<div class=\"form-group row\">";
-            echo "<label for=\"{$args['id']}\" class=\"col-xs-2 col-form-label\">{$args['label']}</label>";
+            echo "<div id=\"{$args['id']}-group\" class=\"form-group row\">";
+            echo "<label for=\"{$args['id']}\" class=\"col-xs-2 control-label\">{$args['label']}</label>";
             echo "<div class=\"input-group col-xs-10\">";
 
             if (array_key_exists('addon', $args))
