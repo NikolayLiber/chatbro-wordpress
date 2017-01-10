@@ -1,13 +1,13 @@
 <?php
 /**
  * @package ChatBro
- * @version 1.1.10
+ * @version 1.1.11
  */
 /*
 Plugin Name: ChatBro
 Plugin URI: http://chatbro.com
 Description: Live group chat for your community with social networks integration. Chat conversation is being syncronized with popular messengers. Love ChatBro? Spread the word! <a href="https://wordpress.org/support/view/plugin-reviews/chatbro">Click here to review the plugin!</a>.
-Version: 1.1.10
+Version: 1.1.11
 Author: ChatBro
 Author URI: http://chatbro.com
 License: GPL3
@@ -16,7 +16,7 @@ Domain Path: /languages
 */
 
 defined( 'ABSPATH' ) or die( 'No script kiddies please!' );
-define('CHATBRO_PLUGIN_VERSION', '1.1.10', true);
+define('CHATBRO_PLUGIN_VERSION', '1.1.11', true);
 
 if (!class_exists("ChatBroPlugin")) {
     __('Chat secret key', 'chatbro-plugin');
@@ -377,6 +377,8 @@ if (!class_exists("ChatBroPlugin")) {
 
             if (!ChatBroPlugin::add_option(ChatBroPlugin::guid_setting, $guid))
                 ChatBroPlugin::update_option(ChatBroPlugin::guid_setting, $guid);
+            else
+                self::call_constructor($guid);
 
             if (!ChatBroPlugin::add_option(ChatBroPlugin::display_to_guests_setting, true))
                 ChatBroPlugin::update_option(ChatBroPlugin::display_to_guests_setting, true);
