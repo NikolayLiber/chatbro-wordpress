@@ -3,20 +3,12 @@ jQuery(document).ready(function($) {
 
 	$("#chatbro_chat_display").change(function() {
 		if (t.indexOf($("#chatbro_chat_display").val()) != -1)
-			$('#chatbro_chat_selected_pages').parent().parent().show();
+			$('#chatbro_chat_selected_pages-group').show();
 		else
-			$('#chatbro_chat_selected_pages').parent().parent().hide();
+			$('#chatbro_chat_selected_pages-group').hide();
 	});
 
 	$("#chatbro_chat_display").change();
-
-	// $("#chatbro-settings-form").submit(function(event) {
-	// 	console.log("Submit!");
-	// 	if ($("#chatbro_chat_guid").val() != chatbro_secret_key) {
-	// 		console.log("key changed");
-	// 		// event.preventDefault();
-	// 	}
-	// });
 
 	$("#settings-tabs a").click(function(e) {
 		e.preventDefault();
@@ -71,15 +63,4 @@ jQuery(document).ready(function($) {
 	function enableSubmit() {
 		$("#chatbro-save").button('reset').removeClass('disabled');
 	}
-
-	// $("#chatbro-save").on('click', function() {
-	// 	var self = $(this);
-
-	// 	self.button('saving');
-	// 	self.addClass('disabled').blur();
-	// 	setTimeout(function() {
-	// 		self.button('reset');
-	// 		self.removeClass('disabled');
-	// 	}, 5000);
-	// });
 });

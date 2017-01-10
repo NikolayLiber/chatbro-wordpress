@@ -172,7 +172,8 @@ if (!class_exists("ChatBroPlugin")) {
                     </script>
                     <div style="margin-top: 1rem; padding: 1.5rem">
                         <div id="chatbro-message" role="alert"></div>
-                        <form id="chatbro-settings-form">
+
+                        <form id="chatbro-settings-form" class="form-horizontal">
                             <input name="action" type="hidden" value="chatbro_save_settings">
                             <?php wp_create_nonce("chatbro_save_settings", "chb-sec"); ?>
                             <input id="chb-login-url" name="chb-login-url" type="hidden" value="<?php echo wp_login_url(get_permalink()); ?>">
@@ -182,9 +183,11 @@ if (!class_exists("ChatBroPlugin")) {
                                     self::render_field($args);
                                 }
                             ?>
-                            <p class="form-group">
-                                <button id="chatbro-save" type="submit" class="btn btn-primary" data-saving-text="<i class='fa fa-circle-o-notch fa-spin'></i> Saving Changes"><?php _e('Save Changes', 'chatbro-plugin'); ?></button>
-                            </p>
+                            <div class="form-group">
+                                <div class="col-sm-offset-2 col-sm-10">
+                                    <button id="chatbro-save" type="submit" class="btn btn-primary" data-saving-text="<i class='fa fa-circle-o-notch fa-spin'></i> Saving Changes"><?php _e('Save Changes', 'chatbro-plugin'); ?></button>
+                               </div>
+                            </div>
                         </form>
                     </div>
                     <!--<div style="float: left; padding: 1em; margin-top: 1em; border: solid 1px #ccc; word-wrap: break-word; width: 50%">
@@ -204,52 +207,145 @@ if (!class_exists("ChatBroPlugin")) {
             <?php
         }
 
-        function render_field($args) {
-            $tag = $args['type'] == InputType::select || $args['type'] == InputType::textarea ? $args['type'] : 'input';
-            $class = $args['type'] == InputType::checkbox ? 'form-check-input' : 'form-control';
+        function render_checkbox($id, $label) {
+            $checked = ChatBroUtils::get_option($id) ? 'checked="checked"' : '';
+            ?>
 
-            $value = ChatBroUtils::get_option($args['id']);
-            $valueAttr = $args['type'] == InputType::text ? "value=\"{$value}\" " : "";
-            $checked = $args['type'] == InputType::checkbox && $value ? 'checked="checked"' : '';
-            $textarea_attrs = $args['type'] == InputType::textarea ? 'cols="80" rows="6"' : '';
+            <div class="col-sm-offset-2 col-sm-10">
+                <div class="checkbox">
+                    <label>
+                        <input id="<?php echo $id; ?>" type="checkbox" name="<?php echo $id; ?>" <?php echo $checked; ?> >
+                        <?php _e($label, 'chatbro-plugin'); ?>
+                    </label>
+                </div>
+            </div>
+            <?php
+        }
 
+        function render_other($id, $label, $args) {
+            ?>
+            <label for="<?php echo $id; ?>" class="col-sm-2 control-label"><?php _e($label, 'chatbro-plugin'); ?></label>
+            <div class="col-sm-10">
+                <?php
+                    if (array_key_exists('addon', $args))
+                        $this->render_addon($id, $args);
+                    else
+                        $this->render_control($id, $args);
+                ?>
+            </div>
+            <?php
+        }
 
-            echo "<div id=\"{$args['id']}-group\" class=\"form-group row\">";
-            echo "<label for=\"{$args['id']}\" class=\"col-xs-2 control-label\">{$args['label']}</label>";
-            echo "<div class=\"input-group col-xs-10\">";
+        function render_addon($id, $args) {
+            $addon = $args['addon'];
+            ?>
+            <div class="input-group">
+                <span class="input-group-addon"><?php echo $addon; ?></span>
+                <?php $this->render_control($id, $args); ?>
+            </div>
+            <?php
+        }
 
-            if (array_key_exists('addon', $args))
-                echo "<span class=\"input-group-addon\">{$args['addon']}</span>";
-
-            echo "<{$tag} id=\"{$args['id']}\" name=\"{$args['id']}\" class=\"{$class}\" type=\"{$args['type']}\" {$textarea_attrs} {$valueAttr} {$checked}>";
+        function render_control($id, $args) {
+            $value = ChatBroUtils::get_option($id);
 
             switch($args['type']) {
-            case InputType::select:
-                if (!$value) {
-                    $t = array_keys($args['options']);
-                    $value = $t[0];
-                }
+                case InputType::text:
+                    ?>
+                    <input id="<?php echo $id; ?>" type="text" class="form-control" value="<?php echo $value; ?>">
+                    <?php
+                    break;
 
-                foreach($args['options'] as $val => $desc) {
-                    $desc = __($desc, 'chatbro-plugin');
-                    $selected = $val == $value ? 'selected="selected"' : '';
-                    echo "<option {$selected} name=\"{$args[id]}\" value=\"{$val}\">{$desc}</option>";
-                }
+                case InputType::textarea:
+                    ?>
+                    <input id="<?php echo $id; ?>" type="textarea" class="form-control" value="<?php echo $value; ?>" cols="80" rows="6">
+                    <?php
+                    break;
 
-                echo "</select>";
-                break;
-
-            case InputType::textarea:
-                echo $value;
-                echo "</textarea>";
-                break;
+                case InputType::select:
+                    ?>
+                    <select id="<?php echo $id; ?>" class="form-control">
+                        <?php
+                        foreach($args['options'] as $val => $desc) {
+                            $desc = __($desc, 'chatbro-plugin');
+                            $selected = $val == $value ? 'selected="selected"' : '';
+                            echo "<option {$selected} name=\"$id\" value=\"{$val}\">{$desc}</option>";
+                        }
+                        ?>
+                    </select>
+                    <?php
+                    break;
             }
+        }
 
-            if (array_key_exists('help_block', $args))
-                echo "<span class=\"help-block\">" . __($args['help_block'], 'chatbro-plugin') . "</span>";
+        function render_field($args) {
+            $id = $args['id'];
+            $type = $args['type'];
+            $label = $args['label'];
 
-            echo "</div>";
-            echo "</div>";
+            ?>
+            <div id="<?php echo $id; ?>-group" class="form-group">
+                <?php
+                if($type == InputType::checkbox)
+                    $this->render_checkbox($id, $label, $value);
+                else
+                    $this->render_other($id, $label, $args);
+                ?>
+            </div>
+            <?php
+
+
+
+
+
+            // $tag = $type == InputType::select || $type == InputType::textarea ? $type : 'input';
+            // $class = $type == InputType::checkbox ? 'form-check-input' : 'form-control';
+
+            // $valueAttr = $type == InputType::text ? "value=\"{$value}\" " : "";
+            // $textarea_attrs = $type == InputType::textarea ? 'cols="80" rows="6"' : '';
+
+
+            // if ($type == InputType::checkbox) {
+            // }
+            // else {
+
+            // }
+
+            // echo "<label for=\"{$args['id']}\" class=\"col-xs-2 control-label\">{$args['label']}</label>";
+            // echo "<div class=\"input-group col-xs-10\">";
+
+            // if (array_key_exists('addon', $args))
+            //     echo "<span class=\"input-group-addon\">{$args['addon']}</span>";
+
+            // echo "<{$tag} id=\"{$args['id']}\" name=\"{$args['id']}\" class=\"{$class}\" type=\"{$args['type']}\" {$textarea_attrs} {$valueAttr} {$checked}>";
+
+            // switch($args['type']) {
+            // case InputType::select:
+            //     if (!$value) {
+            //         $t = array_keys($args['options']);
+            //         $value = $t[0];
+            //     }
+
+            //     foreach($args['options'] as $val => $desc) {
+            //         $desc = __($desc, 'chatbro-plugin');
+            //         $selected = $val == $value ? 'selected="selected"' : '';
+            //         echo "<option {$selected} name=\"{$args[id]}\" value=\"{$val}\">{$desc}</option>";
+            //     }
+
+            //     echo "</select>";
+            //     break;
+
+            // case InputType::textarea:
+            //     echo $value;
+            //     echo "</textarea>";
+            //     break;
+            // }
+
+            // if (array_key_exists('help_block', $args))
+            //     echo "<span class=\"help-block\">" . __($args['help_block'], 'chatbro-plugin') . "</span>";
+
+            // echo "</div>";
+            // echo "</div>";
         }
 
 
