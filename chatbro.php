@@ -368,8 +368,8 @@ if (!class_exists("ChatBroPlugin")) {
                 delete_option($name);
 
             $adm = get_role('administrator');
-            $adm->remove_cap(self::can_delete);
-            $adm->remove_cap(self::can_ban);
+            $adm->remove_cap(self::cap_delete);
+            $adm->remove_cap(self::cap_ban);
         }
 
         function set_default_settings() {
