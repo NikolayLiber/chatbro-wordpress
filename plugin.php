@@ -51,14 +51,6 @@ if (!class_exists("ChatBroPlugin")) {
                     'default' => false
                 ),
 
-                self::display_to_guests_setting => array(
-                    'id' => self::display_to_guests_setting,
-                    'type' => InputType::checkbox,
-                    'label' => 'Display chat to guests',
-                    'sanitize_callback' => array('ChatBroUtils', 'sanitize_checkbox'),
-                    'default' => true
-                ),
-
                 self::display_setting => array(
                     'id' => self::display_setting,
                     'type' => InputType::select,
@@ -87,6 +79,14 @@ if (!class_exists("ChatBroPlugin")) {
                     'label' => 'User profile path',
                     'default' => '/authors/{$username}',
                     'addon' => get_home_url() . '/'
+                ),
+
+                self::display_to_guests_setting => array(
+                    'id' => self::display_to_guests_setting,
+                    'type' => InputType::checkbox,
+                    'label' => 'Display chat to guests',
+                    'sanitize_callback' => array('ChatBroUtils', 'sanitize_checkbox'),
+                    'default' => true
                 ),
 
                 self::enable_shortcodes_setting => array(
@@ -142,8 +142,23 @@ if (!class_exists("ChatBroPlugin")) {
             wp_enqueue_script('chatbro', plugin_dir_url( __FILE__ ) . 'js/chatbro.min.js');
 
             $guid = ChatBroUtils::get_option(self::guid_setting);
-            $active_tab = isset($_GET['tab']) ? $_GET['tab'] : 'constructor';
 
+            ?>
+            <div>
+                <?php
+                $this->render_tabs();
+                ?>
+                <div class="tab-content row">
+                    <?php
+                    $this->render_constructor_tab($guid);
+                    $this->render_settings_tab($guid);
+                    ?>
+                </div>
+            </div>
+            <?php
+        }
+
+        function render_tabs() {
             ?>
             <ul id="settings-tabs" class="nav nav-tabs" role="tablist" style="margin-top: 1.5rem;">
                 <li role="presentation" <?php if ($_GET['tab'] != 'plugin_settings') echo 'class="active"'; ?> >
@@ -153,56 +168,97 @@ if (!class_exists("ChatBroPlugin")) {
                     <a href="#plugin-settings" aria-controls="plugin-settings" role="tab" data-toggle="tab"><?php _e("Plugin Settings", 'chatbro-plugin'); ?></a>
                 </li>
             </ul>
-            <div class="tab-content">
-                <div role="tabpanel" class="tab-pane fade in active" id="constructor">
-                    <iframe name="chatbro-constructor" style="width: 100%; height: 85vh"></iframe>
-                    <form id="load-constructor" target="chatbro-constructor" action="https://www.chatbro.com/constructor/<?php echo $guid; ?>/" method="GET">
-                        <input type="hidden" name="guid" value="<?php echo $guid; ?>">
-                        <input type="hidden" name="avatarUrl" value="<?php echo ChatBroUtils::get_avatar_url(); ?>">
-                        <input type="hidden" name="userFullName" value="<?php echo wp_get_current_user()->display_name; ?>">
-                        <input type="hidden" name="userProfileUrl" value="<?php echo ChatBroUtils::get_profile_url(); ?>">
-                    </form>
-                    <script>
-                        jQuery("#load-constructor").submit();
-                    </script>
-                </div>
-                <div role="tabpanel" class="tab-pane fade" id="plugin-settings">
-                    <script>
-                        var chatbro_secret_key = '<?php echo $guid ?>';
-                    </script>
-                    <div style="margin-top: 1rem; padding: 1.5rem">
-                        <div id="chatbro-message" role="alert"></div>
+            <?php
+        }
 
-                        <form id="chatbro-settings-form" class="form-horizontal">
-                            <input name="action" type="hidden" value="chatbro_save_settings">
-                            <?php wp_create_nonce("chatbro_save_settings", "chb-sec"); ?>
-                            <input id="chb-login-url" name="chb-login-url" type="hidden" value="<?php echo wp_login_url(get_permalink()); ?>">
-                            <input id="chb-sec-key" name="chb-sec-key" type="hidden" value = "<?php echo $guid ?>">
-                            <?php
-                                foreach(self::$options as $name => $args) {
-                                    self::render_field($args);
-                                }
-                            ?>
-                            <div class="form-group">
-                                <div class="col-sm-offset-2 col-sm-10">
-                                    <button id="chatbro-save" type="submit" class="btn btn-primary" data-saving-text="<i class='fa fa-circle-o-notch fa-spin'></i> Saving Changes"><?php _e('Save Changes', 'chatbro-plugin'); ?></button>
-                               </div>
-                            </div>
-                        </form>
+        function render_constructor_tab($guid) {
+            ?>
+            <div role="tabpanel" class="tab-pane fade in active" id="constructor">
+                <iframe name="chatbro-constructor" style="width: 100%; height: 85vh"></iframe>
+                <form id="load-constructor" target="chatbro-constructor" action="https://www.chatbro.com/constructor/<?php echo $guid; ?>/" method="GET">
+                    <input type="hidden" name="guid" value="<?php echo $guid; ?>">
+                    <input type="hidden" name="avatarUrl" value="<?php echo ChatBroUtils::get_avatar_url(); ?>">
+                    <input type="hidden" name="userFullName" value="<?php echo wp_get_current_user()->display_name; ?>">
+                    <input type="hidden" name="userProfileUrl" value="<?php echo ChatBroUtils::get_profile_url(); ?>">
+                </form>
+                <script>
+                    jQuery("#load-constructor").submit();
+                </script>
+            </div>
+            <?php
+        }
+
+        function render_settings_tab($guid) {
+            ?>
+            <div role="tabpanel" class="tab-pane fade container-fluid" id="plugin-settings">
+                <script>
+                    var chatbro_secret_key = '<?php echo $guid ?>';
+                </script>
+                <div class="row">
+                    <div class="col-lg-8" style="margin-top: 1.5rem;">
+                        <div id="chatbro-message" style="margin-bottom: 1.5rem;" role="alert"></div>
+                        <?php $this->render_settings_form($guid); ?>
                     </div>
-                    <!--<div style="float: left; padding: 1em; margin-top: 1em; border: solid 1px #ccc; word-wrap: break-word; width: 50%">
-                        <?php _e('Use shortcode <em><b>[chatbro]</b></em> to add the chat widget to the desired place of your page or post.', 'chatbro-plugin'); ?>
-                        <h4><?php _e('Supported shortcode attribtes:', 'chatbro-plugin'); ?></h4>
-                        <ul>
-                            <li>
-                                <?php _e('<em><b>static</b></em> &ndash; static not movable chat widget (default <em>true</em>).', 'chatbro-plugin'); ?>
-                            </li>
-                            <li>
-                                <?php _e('<em><b>registered_only</b></em> &ndash; display chat widget to logged in users only (default <em>false</em>). If this attribute is explicitly set it precedes the global <em>"Display chat to guests"</em> setting value.', 'chatbro-plugin'); ?>
-                            </li>
-                        </ul>
-                    </div> -->
+                    <?php $this->render_help_block(); ?>
                 </div>
+            </div>
+            <?php
+        }
+
+        function render_settings_form($guid) {
+            ?>
+            <form id="chatbro-settings-form" class="form-horizontal">
+                <input name="action" type="hidden" value="chatbro_save_settings">
+                <?php wp_create_nonce("chatbro_save_settings", "chb-sec"); ?>
+                <input id="chb-login-url" name="chb-login-url" type="hidden" value="<?php echo wp_login_url(get_permalink()); ?>">
+                <input id="chb-sec-key" name="chb-sec-key" type="hidden" value = "<?php echo $guid ?>">
+                <?php
+                    foreach(self::$options as $name => $args) {
+                        self::render_field($args);
+                    }
+                ?>
+                <div class="form-group">
+                    <div class="col-sm-offset-2 col-sm-10" style="padding-top: 1.5rem">
+                        <button id="chatbro-save" type="submit" class="btn btn-primary" data-saving-text="<i class='fa fa-circle-o-notch fa-spin'></i> Saving Changes"><?php _e('Save Changes', 'chatbro-plugin'); ?></button>
+                   </div>
+                </div>
+            </form>
+            <?php
+        }
+
+        function render_help_block() {
+            ?>
+            <div class="col-lg-4" style="margin-top: 1.5rem;">
+                <div class="bs-callout bs-callout-info">
+                    <h3><span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span><span style="padding-left: 0.7rem">Shortcodes</span></h3>
+                    <?php _e('Use shortcode <em><b>[chatbro]</b></em> to add the chat widget to the desired place of your page or post.', 'chatbro-plugin'); ?>
+                    <h4><?php _e('Supported shortcode attributes:', 'chatbro-plugin'); ?></h4>
+                    <ul>
+                        <li>
+                            <?php _e('<em><b>static</b></em> &ndash; static not movable chat widget (default <em>true</em>).', 'chatbro-plugin'); ?>
+                        </li>
+                        <li>
+                            <?php _e('<em><b>registered_only</b></em> &ndash; display chat widget to logged in users only (default <em>false</em>). If this attribute is explicitly set it precedes the global <em>"Display chat to guests"</em> setting value.', 'chatbro-plugin'); ?>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <?php
+        }
+
+        function render_field($args) {
+            $id = $args['id'];
+            $type = $args['type'];
+            $label = $args['label'];
+
+            ?>
+            <div id="<?php echo $id; ?>-group" class="form-group">
+                <?php
+                if($type == InputType::checkbox)
+                    $this->render_checkbox($id, $label, $value);
+                else
+                    $this->render_other($id, $label, $args);
+                ?>
             </div>
             <?php
         }
@@ -231,6 +287,15 @@ if (!class_exists("ChatBroPlugin")) {
                         $this->render_addon($id, $args);
                     else
                         $this->render_control($id, $args);
+
+                    if (array_key_exists('help_block', $args)) {
+                        $help_block = $args['help_block'];
+                        ?>
+                        <div class="input-group">
+                            <span class="help-block"><?php _e($help_block, 'chatbro-plugin'); ?></span>
+                        </div>
+                        <?php
+                    }
                 ?>
             </div>
             <?php
@@ -258,7 +323,9 @@ if (!class_exists("ChatBroPlugin")) {
 
                 case InputType::textarea:
                     ?>
-                    <input id="<?php echo $id; ?>" type="textarea" class="form-control" value="<?php echo $value; ?>" cols="80" rows="6">
+                    <textarea id="<?php echo $id; ?>" class="form-control" cols="80" rows="6">
+                        <?php echo $value; ?>
+                    </textarea>
                     <?php
                     break;
 
@@ -277,77 +344,6 @@ if (!class_exists("ChatBroPlugin")) {
                     break;
             }
         }
-
-        function render_field($args) {
-            $id = $args['id'];
-            $type = $args['type'];
-            $label = $args['label'];
-
-            ?>
-            <div id="<?php echo $id; ?>-group" class="form-group">
-                <?php
-                if($type == InputType::checkbox)
-                    $this->render_checkbox($id, $label, $value);
-                else
-                    $this->render_other($id, $label, $args);
-                ?>
-            </div>
-            <?php
-
-
-
-
-
-            // $tag = $type == InputType::select || $type == InputType::textarea ? $type : 'input';
-            // $class = $type == InputType::checkbox ? 'form-check-input' : 'form-control';
-
-            // $valueAttr = $type == InputType::text ? "value=\"{$value}\" " : "";
-            // $textarea_attrs = $type == InputType::textarea ? 'cols="80" rows="6"' : '';
-
-
-            // if ($type == InputType::checkbox) {
-            // }
-            // else {
-
-            // }
-
-            // echo "<label for=\"{$args['id']}\" class=\"col-xs-2 control-label\">{$args['label']}</label>";
-            // echo "<div class=\"input-group col-xs-10\">";
-
-            // if (array_key_exists('addon', $args))
-            //     echo "<span class=\"input-group-addon\">{$args['addon']}</span>";
-
-            // echo "<{$tag} id=\"{$args['id']}\" name=\"{$args['id']}\" class=\"{$class}\" type=\"{$args['type']}\" {$textarea_attrs} {$valueAttr} {$checked}>";
-
-            // switch($args['type']) {
-            // case InputType::select:
-            //     if (!$value) {
-            //         $t = array_keys($args['options']);
-            //         $value = $t[0];
-            //     }
-
-            //     foreach($args['options'] as $val => $desc) {
-            //         $desc = __($desc, 'chatbro-plugin');
-            //         $selected = $val == $value ? 'selected="selected"' : '';
-            //         echo "<option {$selected} name=\"{$args[id]}\" value=\"{$val}\">{$desc}</option>";
-            //     }
-
-            //     echo "</select>";
-            //     break;
-
-            // case InputType::textarea:
-            //     echo $value;
-            //     echo "</textarea>";
-            //     break;
-            // }
-
-            // if (array_key_exists('help_block', $args))
-            //     echo "<span class=\"help-block\">" . __($args['help_block'], 'chatbro-plugin') . "</span>";
-
-            // echo "</div>";
-            // echo "</div>";
-        }
-
 
         function init_settings() {
             $old_options = ChatBroUtils::get_option(self::old_options);
@@ -473,7 +469,7 @@ if (!class_exists("ChatBroPlugin")) {
                 foreach($new_vals as $option => $value)
                     ChatBroUtils::update_option($option, $value);
 
-                $reply['message'] = __("Settings was successfuly saved", "chatbro-plugin");
+                $reply['message'] = "<strong>" . __("Settings was successfuly saved", "chatbro-plugin") . "</strong>";
                 $reply['msg_type'] = "info";
             }
 

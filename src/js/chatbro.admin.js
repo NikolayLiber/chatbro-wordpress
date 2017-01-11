@@ -39,14 +39,11 @@ jQuery(document).ready(function($) {
 			msgDiv.html("");
 
 			if (response.hasOwnProperty("message")) {
-				console.log("has message");
 				if (response.hasOwnProperty("msg_type") && response["msg_type"] == "error") {
-					console.log("adding danger")
 					msgDiv.addClass("alert alert-danger");
 				}
 				else {
-					msgDiv.addClass("alert alert-success");
-					console.log("adding success");
+					msgDiv.addClass("bs-callout-small bs-callout-small-success");
 				}
 
 				msgDiv.html(response['message']);
