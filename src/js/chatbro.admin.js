@@ -33,8 +33,6 @@ jQuery(document).ready(function($) {
 			}
 
 			response = JSON.parse(response);
-			rrr = response;
-			console.log(response);
 
 			var msgDiv = $("#chatbro-message");
 			msgDiv.removeClass();
@@ -52,19 +50,21 @@ jQuery(document).ready(function($) {
 			}
 
 			$(".control-message").hide();
-			$(".form-group").removeClass("has-error has-feedback");
+			$(".field-icon").hide();
+			$(".field-icon").removeClass("glyphicon-ok glyphicon-remove");
+			$(".form-group").removeClass("has-error");
 
 			if (response.hasOwnProperty("field_messages")) {
-				console.log("Has messages\n");
 				Object.keys(response.field_messages).forEach(function(id) {
-					console.log("#" + id + "-message > span\n");
 					var m = response.field_messages[id];
 
 					$("#" + id + "-message > span").html(m.message);
 					$("#" + id + "-message").show();
 
-					if (m.type == "error")
-						$("#" + id + "-group").addClass("has-error has-feedback");
+					if (m.type == "error") {
+						$("#" + id + "-group").addClass("has-error");
+						$("#" + id + "-icon").addClass("glyphicon-remove").show();
+					}
 				});
 			}
 

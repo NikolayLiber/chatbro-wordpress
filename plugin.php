@@ -251,8 +251,12 @@ if (!class_exists("ChatBroPlugin")) {
             $type = $args['type'];
             $label = $args['label'];
 
+            $class = "form-group";
+            if ($type == InputType::text && !array_key_exists('addon', $args))
+                $class .= " has-feedback";
+
             ?>
-            <div id="<?php echo $id; ?>-group" class="form-group">
+            <div id="<?php echo $id; ?>-group" class="<?php echo $class; ?>">
                 <?php
                 if($type == InputType::checkbox)
                     $this->render_checkbox($id, $label, $value);
@@ -324,6 +328,7 @@ if (!class_exists("ChatBroPlugin")) {
                 case InputType::text:
                     ?>
                     <input id="<?php echo $id; ?>" name="<?php echo $id; ?>" type="text" class="form-control" value="<?php echo $value; ?>">
+                    <span id="<?php echo "{$id}-icon"; ?>" class="field-icon form-control-feedback glyphicon"></span>
                     <?php
                     break;
 
