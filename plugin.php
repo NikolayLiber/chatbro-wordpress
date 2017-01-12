@@ -148,7 +148,7 @@ if (!class_exists("ChatBroPlugin")) {
                 <?php
                 $this->render_tabs();
                 ?>
-                <div class="tab-content row">
+                <div class="tab-content">
                     <?php
                     $this->render_constructor_tab($guid);
                     $this->render_settings_tab($guid);
@@ -183,7 +183,7 @@ if (!class_exists("ChatBroPlugin")) {
                 </form>
                 <script>
                     jQuery("#load-constructor").submit();
-                </script>
+                </script> -->
             </div>
             <?php
         }
@@ -230,7 +230,7 @@ if (!class_exists("ChatBroPlugin")) {
             ?>
             <div class="col-lg-4" style="margin-top: 1.5rem;">
                 <div class="bs-callout bs-callout-info">
-                    <h3><span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span><span style="padding-left: 0.7rem">Shortcodes</span></h3>
+                    <h3><span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span><span style="padding-left: 0.7rem">Shortcode</span></h3>
                     <?php _e('Use shortcode <em><b>[chatbro]</b></em> to add the chat widget to the desired place of your page or post.', 'chatbro-plugin'); ?>
                     <h4><?php _e('Supported shortcode attributes:', 'chatbro-plugin'); ?></h4>
                     <ul>
@@ -288,6 +288,12 @@ if (!class_exists("ChatBroPlugin")) {
                     else
                         $this->render_control($id, $args);
 
+                    ?>
+                    <div id="<?php echo "{$id}-message"; ?>" class="input-group control-message">
+                        <span class="help-block"></span>
+                    </div>
+                    <?php
+
                     if (array_key_exists('help_block', $args)) {
                         $help_block = $args['help_block'];
                         ?>
@@ -317,13 +323,13 @@ if (!class_exists("ChatBroPlugin")) {
             switch($args['type']) {
                 case InputType::text:
                     ?>
-                    <input id="<?php echo $id; ?>" type="text" class="form-control" value="<?php echo $value; ?>">
+                    <input id="<?php echo $id; ?>" name="<?php echo $id; ?>" type="text" class="form-control" value="<?php echo $value; ?>">
                     <?php
                     break;
 
                 case InputType::textarea:
                     ?>
-                    <textarea id="<?php echo $id; ?>" class="form-control" cols="80" rows="6">
+                    <textarea id="<?php echo $id; ?>" name="<?php echo $id; ?>" class="form-control" cols="80" rows="6">
                         <?php echo $value; ?>
                     </textarea>
                     <?php
@@ -331,7 +337,7 @@ if (!class_exists("ChatBroPlugin")) {
 
                 case InputType::select:
                     ?>
-                    <select id="<?php echo $id; ?>" class="form-control">
+                    <select id="<?php echo $id; ?>" name="<?php echo $id; ?>" class="form-control">
                         <?php
                         foreach($args['options'] as $val => $desc) {
                             $desc = __($desc, 'chatbro-plugin');

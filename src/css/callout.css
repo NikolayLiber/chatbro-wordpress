@@ -40,7 +40,7 @@
 .bs-callout-success h3 {
     color: #5cb85c;
 }
-.bs-callout-danger {
+.bs-callout-danger, .bs-callout-small-danger {
     border-left-color: #d9534f;
 }
 .bs-callout-danger h3 {

@@ -156,4 +156,5 @@ module.exports = function(grunt) {
 	grunt.loadNpmTasks('grunt-contrib-copy');
 
 	grunt.registerTask('default', ['bower', 'bower_concat', 'uglify', 'cssmin', 'copy:fonts']);
+	grunt.registerTask('compact', ["cssmin", "uglify"]);
 }

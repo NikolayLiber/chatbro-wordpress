@@ -15,6 +15,8 @@ jQuery(document).ready(function($) {
 		$(this).tab('show');
 	});
 
+	$(".control-message").hide();
+
 	$("#chatbro-settings-form").ajaxForm({
 		url: ajaxurl,
 		type: 'POST',
@@ -31,7 +33,7 @@ jQuery(document).ready(function($) {
 			}
 
 			response = JSON.parse(response);
-
+			rrr = response;
 			console.log(response);
 
 			var msgDiv = $("#chatbro-message");
@@ -40,13 +42,30 @@ jQuery(document).ready(function($) {
 
 			if (response.hasOwnProperty("message")) {
 				if (response.hasOwnProperty("msg_type") && response["msg_type"] == "error") {
-					msgDiv.addClass("alert alert-danger");
+					msgDiv.addClass("bs-callout-small bs-callout-small-danger");
 				}
 				else {
 					msgDiv.addClass("bs-callout-small bs-callout-small-success");
 				}
 
 				msgDiv.html(response['message']);
+			}
+
+			$(".control-message").hide();
+			$(".form-group").removeClass("has-error has-feedback");
+
+			if (response.hasOwnProperty("field_messages")) {
+				console.log("Has messages\n");
+				Object.keys(response.field_messages).forEach(function(id) {
+					console.log("#" + id + "-message > span\n");
+					var m = response.field_messages[id];
+
+					$("#" + id + "-message > span").html(m.message);
+					$("#" + id + "-message").show();
+
+					if (m.type == "error")
+						$("#" + id + "-group").addClass("has-error has-feedback");
+				});
 			}
 
 			enableSubmit();
