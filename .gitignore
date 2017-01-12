@@ -5,5 +5,5 @@ _build
 bower_components
 css/**
 js
-fonts
+fonts/**
 .sublime-grunt.cache
