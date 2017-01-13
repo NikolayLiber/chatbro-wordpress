@@ -15,8 +15,6 @@ jQuery(document).ready(function($) {
 		$(this).tab('show');
 	});
 
-	$(".control-message").hide();
-
 	$("#chatbro-settings-form").ajaxForm({
 		url: ajaxurl,
 		type: 'POST',
@@ -49,21 +47,20 @@ jQuery(document).ready(function($) {
 				msgDiv.html(response['message']);
 			}
 
-			$(".control-message").hide();
-			$(".field-icon").hide();
+			$(".with-errors").empty();
 			$(".field-icon").removeClass("glyphicon-ok glyphicon-remove");
-			$(".form-group").removeClass("has-error");
+			$(".form-group").removeClass("has-error has-success");
 
 			if (response.hasOwnProperty("field_messages")) {
 				Object.keys(response.field_messages).forEach(function(id) {
 					var m = response.field_messages[id];
+					var group = $("#" + id + "-group");
 
-					$("#" + id + "-message > span").html(m.message);
-					$("#" + id + "-message").show();
+					$(".with-errors", group).html('<ul class="list-unstyled"><li>' + m.message + '</li></ul>');
 
 					if (m.type == "error") {
-						$("#" + id + "-group").addClass("has-error");
-						$("#" + id + "-icon").addClass("glyphicon-remove").show();
+						group.addClass("has-error");
+						$(".form-control-feedback", group).addClass("glyphicon-remove");
 					}
 				});
 			}

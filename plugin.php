@@ -14,6 +14,7 @@ if (!class_exists("ChatBroPlugin")) {
     __("Specify pages by using their paths. Enter one path per line. The '*' character is a wildcard. Example paths are /2012/10/my-post for a single post and /2012/* for a group of posts. The path should always start with a forward slash(/).", 'chatbro-plugin');
     __('User profile path', 'chatbro-plugin');
     __('Enable shortcodes', 'chatbro_plugin');
+    __('Invalid chat key', 'chatbro_plugin');
 
 
     class InputType {
@@ -48,7 +49,10 @@ if (!class_exists("ChatBroPlugin")) {
                     'type' => InputType::text,
                     'label' => 'Chat secret key',
                     'sanitize_callback' => array('ChatBroUtils', 'sanitize_guid'),
-                    'default' => false
+                    'default' => false,
+                    'required' => true,
+                    'pattern' => "[\da-f]{8}-[\da-f]{4}-[\da-f]{4}-[\da-f]{4}-[\da-f]{12}$",
+                    'pattern_error' => "Invalid chat key"
                 ),
 
                 self::display_setting => array(
@@ -62,7 +66,8 @@ if (!class_exists("ChatBroPlugin")) {
                         'only_listed' =>   'Only the listed pages',
                         'disable' =>       'Disable'
                     ),
-                    'default' => 'everywhere'
+                    'default' => 'everywhere',
+                    'required' => true
                 ),
 
                 self::selected_pages_setting => array(
@@ -70,7 +75,8 @@ if (!class_exists("ChatBroPlugin")) {
                     'type' => InputType::textarea,
                     'label' => "Pages",
                     'help_block' => "Specify pages by using their paths. Enter one path per line. The '*' character is a wildcard. Example paths are /2012/10/my-post for a single post and /2012/* for a group of posts. The path should always start with a forward slash(/).",
-                    'default' => false
+                    'default' => false,
+                    'required' => false
                 ),
 
                 self::user_profile_path_setting => array(
@@ -78,7 +84,8 @@ if (!class_exists("ChatBroPlugin")) {
                     'type' => InputType::text,
                     'label' => 'User profile path',
                     'default' => '/authors/{$username}',
-                    'addon' => get_home_url() . '/'
+                    'addon' => get_home_url() . '/',
+                    'required' => false
                 ),
 
                 self::display_to_guests_setting => array(
@@ -183,14 +190,14 @@ if (!class_exists("ChatBroPlugin")) {
                 </form>
                 <script>
                     jQuery("#load-constructor").submit();
-                </script> -->
+                </script>
             </div>
             <?php
         }
 
         function render_settings_tab($guid) {
             ?>
-            <div role="tabpanel" class="tab-pane fade container-fluid" id="plugin-settings">
+            <div role="tabpanel" class="tab-pane fade in container-fluid" id="plugin-settings">
                 <script>
                     var chatbro_secret_key = '<?php echo $guid ?>';
                 </script>
@@ -207,7 +214,7 @@ if (!class_exists("ChatBroPlugin")) {
 
         function render_settings_form($guid) {
             ?>
-            <form id="chatbro-settings-form" class="form-horizontal">
+            <form id="chatbro-settings-form" class="form-horizontal" data-toggle="validator" role="form">
                 <input name="action" type="hidden" value="chatbro_save_settings">
                 <?php wp_create_nonce("chatbro_save_settings", "chb-sec"); ?>
                 <input id="chb-login-url" name="chb-login-url" type="hidden" value="<?php echo wp_login_url(get_permalink()); ?>">
@@ -293,9 +300,7 @@ if (!class_exists("ChatBroPlugin")) {
                         $this->render_control($id, $args);
 
                     ?>
-                    <div id="<?php echo "{$id}-message"; ?>" class="input-group control-message">
-                        <span class="help-block"></span>
-                    </div>
+                    <div class="help-block with-errors"></div>
                     <?php
 
                     if (array_key_exists('help_block', $args)) {
@@ -323,18 +328,21 @@ if (!class_exists("ChatBroPlugin")) {
 
         function render_control($id, $args) {
             $value = ChatBroUtils::get_option($id);
+            $required = (array_key_exists('required', $args) && $args['required']) ? "required " : "";
 
             switch($args['type']) {
                 case InputType::text:
+                    $pattern = array_key_exists('pattern', $args) ? "pattern=\"{$args['pattern']}\" " : "";
+                    $pattern_error = (array_key_exists('pattern_error', $args) ? ('data-pattern-error="' . __($args['pattern_error'], 'chatbro_plugin') . '" ') : "");
                     ?>
-                    <input id="<?php echo $id; ?>" name="<?php echo $id; ?>" type="text" class="form-control" value="<?php echo $value; ?>">
-                    <span id="<?php echo "{$id}-icon"; ?>" class="field-icon form-control-feedback glyphicon"></span>
+                    <input id="<?php echo $id; ?>" name="<?php echo $id; ?>" type="text" class="form-control" value="<?php echo $value; ?>" <?php echo "{$required}{$pattern}{$pattern_error}"; ?>>
+                    <span class="field-icon form-control-feedback glyphicon" aria-hidden="true"></span>
                     <?php
                     break;
 
                 case InputType::textarea:
                     ?>
-                    <textarea id="<?php echo $id; ?>" name="<?php echo $id; ?>" class="form-control" cols="80" rows="6">
+                    <textarea id="<?php echo $id; ?>" name="<?php echo $id; ?>" class="form-control" cols="80" rows="6" <?php echo $required; ?>>
                         <?php echo $value; ?>
                     </textarea>
                     <?php
@@ -342,7 +350,7 @@ if (!class_exists("ChatBroPlugin")) {
 
                 case InputType::select:
                     ?>
-                    <select id="<?php echo $id; ?>" name="<?php echo $id; ?>" class="form-control">
+                    <select id="<?php echo $id; ?>" name="<?php echo $id; ?>" class="form-control" <?php echo $required; ?>>
                         <?php
                         foreach($args['options'] as $val => $desc) {
                             $desc = __($desc, 'chatbro-plugin');
