@@ -48,10 +48,11 @@ jQuery(document).ready(function($) {
 			}
 
 			$(".with-errors").empty();
-			$(".field-icon").removeClass("glyphicon-ok glyphicon-remove");
 			$(".form-group").removeClass("has-error has-success");
 
 			if (response.hasOwnProperty("field_messages")) {
+				var focused = false;
+
 				Object.keys(response.field_messages).forEach(function(id) {
 					var m = response.field_messages[id];
 					var group = $("#" + id + "-group");
@@ -60,7 +61,12 @@ jQuery(document).ready(function($) {
 
 					if (m.type == "error") {
 						group.addClass("has-error");
-						$(".form-control-feedback", group).addClass("glyphicon-remove");
+
+						if (!focused) {
+							console.log("Focusing", $("#" + id))
+							$("#" + id).focus();
+							focused = true;
+						}
 					}
 				});
 			}
