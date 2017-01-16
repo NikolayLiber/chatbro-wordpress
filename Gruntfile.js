@@ -140,6 +140,18 @@ module.exports = function(grunt) {
 				filter: 'isFile',
 				flatten: true
 			}
+		},
+
+		concat: {
+			devjs: {
+				src: ['_build/js/chatbro.js', 'src/js/*.js'],
+				dest: 'js/chatbro.min.js'
+			},
+
+			devcss: {
+				src: ['_build/css/chatbro.css', 'src/css/*'],
+				dest: 'css/chatbro.min.css'
+			}
 		}
 	});
 
@@ -154,6 +166,7 @@ module.exports = function(grunt) {
 	grunt.loadNpmTasks('grunt-contrib-cssmin');
 	grunt.loadNpmTasks('grunt-contrib-clean');
 	grunt.loadNpmTasks('grunt-contrib-copy');
+	grunt.loadNpmTasks('grunt-contrib-concat');
 
 	grunt.registerTask('default', ['bower', 'bower_concat', 'uglify', 'cssmin', 'copy:fonts']);
 	grunt.registerTask('compact', ["cssmin", "uglify"]);
