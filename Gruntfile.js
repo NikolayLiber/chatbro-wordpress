@@ -9,17 +9,39 @@ module.exports = function(grunt) {
 		},
 
 		bower_concat: {
-			all: {
+			css: {
 				dest: {
-					js: '_build/js/chatbro.js',
-					css: '_build/css/chatbro.css'
+					css: '_build/css/lib.css'
 				},
 
 				mainFiles: {
-					bootstrap: ['dist/js/bootstrap.js', 'dist/css/bootstrap.css'],
-					'font-awesome': ['css/font-awesome.css']
+					bootstrap: 'dist/css/bootstrap.css',
+					'font-awesome': 'css/font-awesome.css'
+				}
+
+			},
+
+			js: {
+				dest: {
+					js: '_build/js/chatbro.js',
+				},
+
+				mainFiles: {
+					bootstrap: 'dist/js/bootstrap.js'
 				}
 			}
+
+			// all: {
+			// 	dest: {
+			// 		js: '_build/js/chatbro.js',
+			// 		css: '_build/css/lib.css'
+			// 	},
+
+			// 	mainFiles: {
+			// 		bootstrap: ['dist/js/bootstrap.js', 'dist/css/bootstrap.css'],
+			// 		'font-awesome': ['css/font-awesome.css']
+			// 	}
+			// }
 		},
 
 		uglify: {
@@ -33,7 +55,7 @@ module.exports = function(grunt) {
 		cssmin: {
 			all: {
 				files: {
-					'css/chatbro.min.css': ['_build/css/chatbro.css', 'src/css/*']
+					'css/chatbro.min.css': '_build/css/*.css'
 				}
 			}
 		},
@@ -149,8 +171,16 @@ module.exports = function(grunt) {
 			},
 
 			devcss: {
-				src: ['_build/css/chatbro.css', 'src/css/*'],
+				src: '_build/css/*.css',
 				dest: 'css/chatbro.min.css'
+			}
+		},
+
+		sass: {
+			dist: {
+				files: {
+					'_build/css/chatbro.css' : 'src/scss/chatbro.scss'
+				}
 			}
 		}
 	});
@@ -167,7 +197,10 @@ module.exports = function(grunt) {
 	grunt.loadNpmTasks('grunt-contrib-clean');
 	grunt.loadNpmTasks('grunt-contrib-copy');
 	grunt.loadNpmTasks('grunt-contrib-concat');
+	grunt.loadNpmTasks('grunt-sass');
 
-	grunt.registerTask('default', ['bower', 'bower_concat', 'uglify', 'cssmin', 'copy:fonts']);
+	grunt.registerTask('default', ['bower', 'bower_concat:js', 'bower_concat:css', 'uglify', 'sass', 'cssmin', 'copy:fonts']);
 	grunt.registerTask('compact', ["cssmin", "uglify"]);
+	grunt.registerTask('build:css:prod', ['bower_concat:css', 'sass', 'cssmin']);
+	grunt.registerTask('build:css:dev', ['bower_concat:css', 'sass', 'concat:devcss']);
 }
