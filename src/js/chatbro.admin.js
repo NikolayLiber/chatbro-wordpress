@@ -20,6 +20,15 @@ jQuery(document).ready(function($) {
 		type: 'POST',
 
 		beforeSubmit: function() {
+			var oldGuid = $("#chb-sec-key").val();
+			var newGuid = $("#chatbro_chat_guid").val();
+
+			if (oldGuid != newGuid) {
+				$("#chb-confirm-guid-modal div.modal-body p span").html(oldGuid);
+				$("#chb-confirm-guid-modal").modal();
+				return false;
+			}
+
 			disableSubmit();
 			return true;
 		},
@@ -82,4 +91,9 @@ jQuery(document).ready(function($) {
 	function enableSubmit() {
 		$("#chatbro-save").button('reset').removeClass('disabled');
 	}
+
+	// Modal div must not be inside any element with relative or fixed postition
+	// or it will be shown behind it's backdrop. Let's move it to the top level of the body.
+	var modal = $("#chb-confirm-guid-modal");
+	$('body').append(modal);
 });

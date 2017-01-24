@@ -198,15 +198,44 @@ if (!class_exists("ChatBroPlugin")) {
         function render_settings_tab($guid) {
             ?>
             <div role="tabpanel" class="tab-pane fade in container-fluid" id="plugin-settings">
-                <script>
-                    var chatbro_secret_key = '<?php echo $guid ?>';
-                </script>
+                <?php $this->render_guid_confirmation_modal(); ?>
+
                 <div class="row">
                     <div class="col-lg-8" style="margin-top: 1.5rem;">
                         <div id="chatbro-message" style="margin-bottom: 1.5rem;" role="alert"></div>
-                        <?php $this->render_settings_form($guid); ?>
+                        <?php
+                            $this->render_settings_form($guid);
+                        ?>
                     </div>
                     <?php $this->render_help_block(); ?>
+                </div>
+            </div>
+            <?php
+        }
+
+        function render_guid_confirmation_modal() {
+            ?>
+            <div class="modal fade" id="chb-confirm-guid-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="myModalLabel"><?php _e("You are about to change the secret key", "chatbro-plugin"); ?></h4>
+                      </div>
+                      <div class="modal-body">
+                        Please be noticed that your current chat configuration and content are identified by your secret key and if you lose your
+                        secret key there will be no way to restore access to you current chat unless you have registered an account at
+                        <a href="https://chatbro.com">Chatbro.com</a>. Please make sure that you have saved your old secret key and fully understand
+                        what are you going to do.
+                        <p>
+                            Your old secret key: <span></span>
+                        </p>
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal"><?php _e("Cancel", "chatbro-plugin"); ?></button>
+                        <button type="button" class="btn btn-primary"><?php _e("Change Secret Key", "chatbro-plugin"); ?></button>
+                      </div>
+                    </div>
                 </div>
             </div>
             <?php
