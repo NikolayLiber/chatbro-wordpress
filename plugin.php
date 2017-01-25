@@ -222,15 +222,17 @@ if (!class_exists("ChatBroPlugin")) {
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                         <h4 class="modal-title" id="myModalLabel"><?php _e("You are about to change the secret key", "chatbro-plugin"); ?></h4>
                       </div>
-                      <div class="modal-body">
-                        Please be noticed that your current chat configuration and content are identified by your secret key and if you lose your
-                        secret key there will be no way to restore access to you current chat unless you have registered an account at
+                      <p class="modal-body">
+                        <?php
+                        _e('Please be noticed that your current chat configuration and content are identified by your secret key and if you lose it there
+                        will be no way to restore access to you current chat unless you have registered an account at
                         <a href="https://chatbro.com">Chatbro.com</a>. Please make sure that you have saved your old secret key and fully understand
-                        what are you going to do.
-                        <p>
-                            Your old secret key: <span></span>
+                        what are you going to do.', 'chatbro-plugin');
+                        ?>
+                        <p id="chb-old-key">
+                            <?php _e("Your old secret key: <span></span>", "chatbro-plugin"); ?>
                         </p>
-                      </div>
+                      </p>
                       <div class="modal-footer">
                         <button type="button" class="btn btn-default" data-dismiss="modal"><?php _e("Cancel", "chatbro-plugin"); ?></button>
                         <button type="button" class="btn btn-primary"><?php _e("Change Secret Key", "chatbro-plugin"); ?></button>
@@ -255,7 +257,7 @@ if (!class_exists("ChatBroPlugin")) {
                 ?>
                 <div class="form-group">
                     <div class="col-sm-offset-2 col-sm-10" style="padding-top: 1.5rem">
-                        <button id="chatbro-save" type="submit" class="btn btn-primary" data-saving-text="<i class='fa fa-circle-o-notch fa-spin'></i> Saving Changes"><?php _e('Save Changes', 'chatbro-plugin'); ?></button>
+                        <button id="chatbro-save" type="button" class="btn btn-primary" data-saving-text="<i class='fa fa-circle-o-notch fa-spin'></i> Saving Changes"><?php _e('Save Changes', 'chatbro-plugin'); ?></button>
                    </div>
                 </div>
             </form>

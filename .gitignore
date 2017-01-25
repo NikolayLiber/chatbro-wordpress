@@ -4,6 +4,6 @@ svn
 _build
 bower_components
 css/**
-js
+js/**
 fonts/**
 .sublime-grunt.cache

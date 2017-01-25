@@ -23,31 +23,19 @@ module.exports = function(grunt) {
 
 			js: {
 				dest: {
-					js: '_build/js/chatbro.js',
+					js: '_build/js/lib.js',
 				},
 
 				mainFiles: {
 					bootstrap: 'dist/js/bootstrap.js'
 				}
 			}
-
-			// all: {
-			// 	dest: {
-			// 		js: '_build/js/chatbro.js',
-			// 		css: '_build/css/lib.css'
-			// 	},
-
-			// 	mainFiles: {
-			// 		bootstrap: ['dist/js/bootstrap.js', 'dist/css/bootstrap.css'],
-			// 		'font-awesome': ['css/font-awesome.css']
-			// 	}
-			// }
 		},
 
 		uglify: {
 			all: {
 				files: {
-					'js/chatbro.min.js': ['_build/js/chatbro.js', 'src/js/chatbro.admin.js']
+					'js/chatbro.min.js': ['_build/js/lib.js', 'src/js/chatbro.admin.js']
 				}
 			}
 		},
@@ -166,7 +154,7 @@ module.exports = function(grunt) {
 
 		concat: {
 			devjs: {
-				src: ['_build/js/chatbro.js', 'src/js/*.js'],
+				src: ['_build/js/lib.js', 'src/js/*.js'],
 				dest: 'js/chatbro.min.js'
 			},
 
@@ -182,6 +170,10 @@ module.exports = function(grunt) {
 					'_build/css/chatbro.css' : 'src/scss/chatbro.scss'
 				}
 			}
+		},
+
+		eslint: {
+			target: 'src/js/**.js'
 		}
 	});
 
@@ -198,9 +190,14 @@ module.exports = function(grunt) {
 	grunt.loadNpmTasks('grunt-contrib-copy');
 	grunt.loadNpmTasks('grunt-contrib-concat');
 	grunt.loadNpmTasks('grunt-sass');
+	grunt.loadNpmTasks('grunt-eslint');
 
 	grunt.registerTask('default', ['bower', 'bower_concat:js', 'bower_concat:css', 'uglify', 'sass', 'cssmin', 'copy:fonts']);
 	grunt.registerTask('compact', ["cssmin", "uglify"]);
 	grunt.registerTask('build:css:prod', ['bower_concat:css', 'sass', 'cssmin']);
 	grunt.registerTask('build:css:dev', ['bower_concat:css', 'sass', 'concat:devcss']);
+	grunt.registerTask('build:js:prod', ['bower_concat:js', 'eslint', 'uglify']);
+	grunt.registerTask('build:js:dev', ['bower_concat:js', 'eslint', 'concat:devjs']);
+	grunt.registerTask('build:prod', ['build:js:prod', 'build:css:prod']);
+	grunt.registerTask('build:dev', ['build:js:dev', 'build:css:dev']);
 }

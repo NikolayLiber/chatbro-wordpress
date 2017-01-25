@@ -16,6 +16,7 @@
     "grunt-contrib-concat": "^1.0.1",
     "grunt-contrib-copy": "^1.0.0",
     "grunt-contrib-cssmin": "^1.0.2",
+    "grunt-eslint": "^19.0.0",
     "grunt-po2mo": "^0.1.2",
     "grunt-pot": "^0.3.0",
     "grunt-sass": "^2.0.0",
