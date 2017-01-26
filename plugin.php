@@ -30,6 +30,7 @@ if (!class_exists("ChatBroPlugin")) {
         const settings = "chatbro_plugin_settings";
         const cap_delete = "chatbro_delete_message";
         const cap_ban = "chatbro_ban_user";
+        const cap_view = "chatbro_view_chat";
 
 
         const guid_setting = "chatbro_chat_guid";
@@ -252,8 +253,10 @@ if (!class_exists("ChatBroPlugin")) {
                 <input id="chb-sec-key" name="chb-sec-key" type="hidden" value = "<?php echo $guid ?>">
                 <?php
                     foreach(self::$options as $name => $args) {
-                        self::render_field($args);
+                        $this->render_field($args);
                     }
+
+                    $this->render_permissions();
                 ?>
                 <div class="form-group">
                     <div class="col-sm-offset-2 col-sm-10" style="padding-top: 1.5rem">
@@ -389,6 +392,45 @@ if (!class_exists("ChatBroPlugin")) {
                     <?php
                     break;
             }
+        }
+
+        function render_permissions() {
+            ?>
+            <div id="permissions-group" class="form-group">
+                <label class="control-label col-sm-2"><?php _e("Permissions", "chatbro-plugin"); ?></label>
+                <div class="col-sm-10">
+                    <table class="table table-active">
+                        <tr>
+                            <th><?php _e("Role", "chatbro-plugin"); ?></th>
+                            <th><?php _e("View", "chatbro-plugin"); ?></th>
+                            <th><?php _e("Ban", "chatbro-plugin"); ?></th>
+                            <th><?php _e("Delete", "chatbro-plugin"); ?></th>
+                        </tr>
+                        <?php
+                        foreach(get_editable_roles() as $name => $info) {
+                            $ctrlViewId = "chatbro_" . $name . "_view";
+                            $ctrlBanId = "chatbro_" . $name . "_ban";
+                            $ctrlDeleteId = "chatbro_" . $name . "_delete";
+
+                            $role = get_role($name);
+
+                            $chkView = $role->has_cap(self::cap_view) ? "checked" : "";
+                            $chkBan = $role->has_cap(self::cap_ban) ? "checked" : "";
+                            $chkDelete = $role->has_cap(self::cap_delete) ? "checked" : "";
+                            ?>
+                            <tr>
+                                <td><?php echo $info["name"] ?></td>
+                                <td><input id="<?php _e($ctrlViewId); ?>" name="<?php _e($ctrlViewId); ?>" type="checkbox" <?php echo $chkView; ?>></td>
+                                <td><input id="<?php _e($ctrlBanId); ?>" name="<?php _e($ctrlBanId); ?>" <?php echo $chkBan; ?> type="checkbox"></td>
+                                <td><input id="<?php _e($ctrlDeleteId); ?>" name="<?php _e($ctrlDeleteId); ?>"type="checkbox" <?php echo $chkDelete; ?>></td>
+                            </tr>
+                            <?php
+                        }
+                        ?>
+                    </table>
+                </div>
+            </div>
+            <?php
         }
 
         function init_settings() {
