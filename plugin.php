@@ -2,6 +2,10 @@
 
 defined( 'ABSPATH' ) or die( 'No script kiddies please!' );
 
+if (!function_exists('get_editable_roles')) {
+   require_once(ABSPATH . '/wp-admin/includes/user.php');
+}
+
 if (!class_exists("ChatBroPlugin")) {
     __('Chat secret key', 'chatbro-plugin');
     __('Display chat to guests', 'chatbro-plugin');
@@ -32,7 +36,6 @@ if (!class_exists("ChatBroPlugin")) {
         const cap_ban = "chatbro_ban_user";
         const cap_view = "chatbro_view_chat";
 
-
         const guid_setting = "chatbro_chat_guid";
         const display_to_guests_setting = "chatbro_chat_display_to_guests";
         const display_setting = "chatbro_chat_display";
@@ -41,6 +44,7 @@ if (!class_exists("ChatBroPlugin")) {
         const enable_shortcodes_setting = 'chatbro_enable_shortcodes';
         const old_options = 'chatbro_options';
         const default_profile_path = '/authors/{$username}';
+        const caps_initialized = 'chatbro_caps_initializedƒ';
 
         public static $options;
         private function __construct() {
@@ -110,13 +114,19 @@ if (!class_exists("ChatBroPlugin")) {
             add_action('wp_footer', array(&$this, 'chat'));
             add_action('wp_ajax_chatbro_save_settings', array('ChatBroPlugin', 'ajax_save_settings'));
 
-            $adm = get_role('administrator');
-
-            if (!$adm->has_cap(self::cap_delete))
+            if (!ChatBroUtils::get_option(self::caps_initialized)) {
+                // Initializing capabilities with default values
+                $adm = get_role('administrator');
                 $adm->add_cap(self::cap_delete);
-
-            if (!$adm->has_cap(self::cap_ban))
                 $adm->add_cap(self::cap_ban);
+
+                foreach(get_editable_roles() as $name => $info) {
+                    $role = get_role($name);
+                    $role->add_cap(self::cap_view);
+                }
+
+                ChatBroUtils::add_option(self::caps_initialized, true);
+            }
         }
 
         private static $instance;
@@ -133,7 +143,8 @@ if (!class_exists("ChatBroPlugin")) {
             if (!$guid)
                 $guid = self::get_instance()->set_default_settings();
 
-            if (!ChatBroUtils::call_constructor($guid)) {
+            $messages = array('fields' => array());
+            if (!ChatBroUtils::call_constructor($guid, $messages)) {
                 deactivate_plugins(plugin_basename( __FILE__ ));
                 wp_die(__("Failed to connect to chat server", "chatbro-plugin"));
             }
@@ -259,7 +270,7 @@ if (!class_exists("ChatBroPlugin")) {
                     $this->render_permissions();
                 ?>
                 <div class="form-group">
-                    <div class="col-sm-offset-2 col-sm-10" style="padding-top: 1.5rem">
+                    <div class="col-sm-offset-2 col-sm-10">
                         <button id="chatbro-save" type="button" class="btn btn-primary" data-saving-text="<i class='fa fa-circle-o-notch fa-spin'></i> Saving Changes"><?php _e('Save Changes', 'chatbro-plugin'); ?></button>
                    </div>
                 </div>
@@ -399,7 +410,7 @@ if (!class_exists("ChatBroPlugin")) {
             <div id="permissions-group" class="form-group">
                 <label class="control-label col-sm-2"><?php _e("Permissions", "chatbro-plugin"); ?></label>
                 <div class="col-sm-10">
-                    <table class="table table-active">
+                    <table id="chatbro-permissions" class="table table-active">
                         <tr>
                             <th><?php _e("Role", "chatbro-plugin"); ?></th>
                             <th><?php _e("View", "chatbro-plugin"); ?></th>
@@ -444,12 +455,17 @@ if (!class_exists("ChatBroPlugin")) {
                 if (ChatBroUtils::get_option($name) === false)
                     continue;
 
-                delete_option($name);
+                ChatBroUtils::delete_option($name);
             }
 
-            $adm = get_role('administrator');
-            $adm->remove_cap(self::delete);
-            $adm->remove_cap(self::ban);
+            foreach(get_editable_roles() as $name => $info) {
+                $role = get_role($name);
+                $role->remove_cap(self::cap_view);
+                $role->remove_cap(self::cap_ban);
+                $role->remove_cap(self::cap_delete);
+            }
+
+            ChatBroUtils::delete_option(self::caps_initialized);
         }
 
         function set_default_settings() {
@@ -470,6 +486,9 @@ if (!class_exists("ChatBroPlugin")) {
         }
 
         function chat() {
+            if (!current_user_can(self::cap_view))
+                return;
+
             $guid = ChatBroUtils::get_option(self::guid_setting);
 
             if (!$guid) {
@@ -550,6 +569,30 @@ if (!class_exists("ChatBroPlugin")) {
                         $reply['success'] = false;
                         break;
                     }
+                }
+
+                // Saving permissions
+                foreach(get_editable_roles() as $name => $info) {
+                    $viewCap = $_POST['chatbro_' . $name . '_view'] == 'on' ? true : false;
+                    $banCap = $_POST['chatbro_' . $name . '_ban'] == 'on' ? true : false;
+                    $deleteCap = $_POST['chatbro_' . $name . '_delete'] == 'on' ? true : false;
+
+                    $role = get_role($name);
+
+                    if ($viewCap)
+                        $role->add_cap(self::cap_view);
+                    else
+                        $role->remove_cap(self::cap_view);
+
+                    if ($banCap)
+                        $role->add_cap(self::cap_ban);
+                    else
+                        $role->remove_cap(self::cap_ban);
+
+                    if ($deleteCap)
+                        $role->add_cap(self::cap_delete);
+                    else
+                        $role->remove_cap(self::cap_delete);
                 }
             }
 

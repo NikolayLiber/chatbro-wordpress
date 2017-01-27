@@ -70,6 +70,14 @@ if (!class_exists("ChatBroUtils")) {
         		self::update_option($name, $value);
         }
 
+        public static function delete_option($name) {
+            if (is_multisite() && is_plugin_active_for_network(plugin_basename(__FILE__))) {
+                return delete_site_option($name);
+            } else {
+                return delete_option($name);
+            }
+        }
+
         public static function call_constructor($guid, &$messages) {
             $response = wp_safe_remote_get("http://www.chatbro.com/constructor/{$guid}");
 
