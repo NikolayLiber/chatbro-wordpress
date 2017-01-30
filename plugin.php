@@ -287,10 +287,16 @@ if (!class_exists("ChatBroPlugin")) {
                     <h4><?php _e('Supported shortcode attributes:', 'chatbro-plugin'); ?></h4>
                     <ul>
                         <li>
-                            <?php _e('<em><b>static</b></em> &ndash; static not movable chat widget (default <em>true</em>).', 'chatbro-plugin'); ?>
+                            <?php
+                              // Translators: Attribute name "static" and attribut value "true" shouldn't be translated
+                              _e('<em><b>static</b></em> &ndash; static not movable chat widget (default <em>true</em>).', 'chatbro-plugin');
+                            ?>
                         </li>
                         <li>
-                            <?php _e('<em><b>registered_only</b></em> &ndash; display chat widget to logged in users only (default <em>false</em>). If this attribute is explicitly set it precedes the global <em>"Display chat to guests"</em> setting value.', 'chatbro-plugin'); ?>
+                            <?php
+                              // Translators: Attribute name "egistered_only" and attribut value "false" shouldn't be translated
+                              _e('<em><b>registered_only</b></em> &ndash; display chat widget to logged in users only (default <em>false</em>). If this attribute is explicitly set it precedes the global <em>"Display chat to guests"</em> setting value.', 'chatbro-plugin');
+                            ?>
                         </li>
                     </ul>
                 </div>

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: chatbro-wordpress 1.0.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-01-30 14:59+0500\n"
+"POT-Creation-Date: 2017-01-30 17:32+0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -147,44 +147,46 @@ msgstr ""
 msgid "Supported shortcode attributes:"
 msgstr ""
 
-#: plugin.php:290
+#. Translators: Attribute name "static" and attribut value "true" shouldn't be translated
+#: plugin.php:292
 msgid ""
 "<em><b>static</b></em> &ndash; static not movable chat widget (default "
 "<em>true</em>)."
 msgstr ""
 
-#: plugin.php:293
+#. Translators: Attribute name "egistered_only" and attribut value "false" shouldn't be translated
+#: plugin.php:298
 msgid ""
 "<em><b>registered_only</b></em> &ndash; display chat widget to logged in "
 "users only (default <em>false</em>). If this attribute is explicitly set it "
 "precedes the global <em>\"Display chat to guests\"</em> setting value."
 msgstr ""
 
-#: plugin.php:411
+#: plugin.php:417
 msgid "Permissions"
 msgstr ""
 
-#: plugin.php:415
+#: plugin.php:421
 msgid "Role"
 msgstr ""
 
-#: plugin.php:416
+#: plugin.php:422
 msgid "View"
 msgstr ""
 
-#: plugin.php:417
+#: plugin.php:423
 msgid "Ban"
 msgstr ""
 
-#: plugin.php:418
+#: plugin.php:424
 msgid "Delete"
 msgstr ""
 
-#: plugin.php:540
+#: plugin.php:546
 msgid "You are not allowed to modify settings"
 msgstr ""
 
-#: plugin.php:603
+#: plugin.php:609
 msgid "Settings was successfuly saved"
 msgstr ""
 

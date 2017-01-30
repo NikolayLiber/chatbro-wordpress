@@ -77,6 +77,8 @@ module.exports = function(grunt) {
 					'_n_noop:1,2',
 					'_nx_noop:1,2,3c'
 				],
+				msgmerge: true,
+				comment_tag: "Translators:"
 			},
 			files:{
 				src:  [ '**/*.php',
