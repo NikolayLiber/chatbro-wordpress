@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: chatbro-wordpress-plugin\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-11-17 16:57+0000\n"
-"PO-Revision-Date: 2017-01-30 17:37+0500\n"
+"PO-Revision-Date: 2017-01-30 17:47+0500\n"
 "Last-Translator: Nikolay Liber\n"
 "Language-Team: Russian\n"
 "Language: ru\n"
@@ -114,7 +114,7 @@ msgstr "Разрешить шорткоды"
 
 #: plugin.php:21 loco:588b99b852e1a159538b4568
 msgid "Invalid chat key"
-msgstr "Неправильный ключ чата"
+msgstr "Неправильный ключ беседы"
 
 #: plugin.php:149 loco:588b99b852e1a159538b4569
 msgid "Failed to connect to chat server"
@@ -198,7 +198,7 @@ msgstr "Просмотр"
 
 #: plugin.php:417 loco:588b99b852e1a159538b4576
 msgid "Ban"
-msgstr "Баг"
+msgstr "Бан"
 
 #: plugin.php:418 loco:588b99b852e1a159538b4577
 msgid "Delete"
