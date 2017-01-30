@@ -43,7 +43,7 @@ if (!class_exists("ChatBroPlugin")) {
         const user_profile_path_setting = 'chatbro_chat_user_profile_url';
         const enable_shortcodes_setting = 'chatbro_enable_shortcodes';
         const old_options = 'chatbro_options';
-        const default_profile_path = '/authors/{$username}';
+        const default_profile_path = 'authors/{$username}';
         const caps_initialized = 'chatbro_caps_initializedƒ';
 
         public static $options;
@@ -88,7 +88,7 @@ if (!class_exists("ChatBroPlugin")) {
                     'id' => self::user_profile_path_setting,
                     'type' => InputType::text,
                     'label' => 'User profile path',
-                    'default' => '/authors/{$username}',
+                    'default' => self::default_profile_path,
                     'addon' => get_home_url() . '/',
                     'required' => false
                 ),
@@ -280,10 +280,10 @@ if (!class_exists("ChatBroPlugin")) {
 
         function render_help_block() {
             ?>
-            <div class="col-lg-4" style="margin-top: 1.5rem;">
+            <div id="chatbro-shortcode-tip" class="col-lg-4">
                 <div class="bs-callout bs-callout-info">
-                    <h3><span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span><span style="padding-left: 0.7rem">Shortcode</span></h3>
-                    <?php _e('Use shortcode <em><b>[chatbro]</b></em> to add the chat widget to the desired place of your page or post.', 'chatbro-plugin'); ?>
+                    <h3><span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span><span style="padding-left: 0.7rem"><?php _e("Useful Tip", "chatbro-plugin"); ?></span></h3>
+                    <?php _e('Use shortcode <span>[chatbro]</span> to add the chat widget to the desired place of your page or post.', 'chatbro-plugin'); ?>
                     <h4><?php _e('Supported shortcode attributes:', 'chatbro-plugin'); ?></h4>
                     <ul>
                         <li>

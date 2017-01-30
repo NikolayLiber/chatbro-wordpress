@@ -1,14 +1,14 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the chatbro2 package.
+# This file is distributed under the same license as the chatbro-wordpress package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: chatbro2 1.0.0\n"
+"Project-Id-Version: chatbro-wordpress 1.0.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-12-13 15:23+0500\n"
+"POT-Creation-Date: 2017-01-30 14:59+0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,55 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: plugin.php:6
-msgid "Chat secret key"
-msgstr ""
-
-#: plugin.php:7
-msgid "Display chat to guests"
-msgstr ""
-
-#: plugin.php:8
-msgid "Show popup chat"
-msgstr ""
-
-#: plugin.php:9
-msgid "Everywhere"
-msgstr ""
-
-#: plugin.php:10
-msgid "Front page only"
-msgstr ""
-
-#: plugin.php:11
-msgid "Everywhere except those listed"
-msgstr ""
-
-#: plugin.php:12
-msgid "Only the listed pages"
-msgstr ""
-
-#: plugin.php:13
-msgid "Disable"
-msgstr ""
-
-#: plugin.php:14
-msgid ""
-"Specify pages by using their paths. Enter one path per line. The '*' "
-"character is a wildcard. Example paths are /2012/10/my-post for a single "
-"post and /2012/* for a group of posts. The path should always start with a "
-"forward slash(/)."
-msgstr ""
-
-#: plugin.php:15
-msgid "User profile path"
-msgstr ""
-
-#: plugin.php:16
-msgid "Enable shortcodes"
-msgstr ""
-
-#: plugin.php:121
+#: deprecated.php:13 svn/chatbro.php:260
 msgid ""
 "To manage chat settings in the new version of the plugin, you should submit "
 "a chat secret key. Please, log in to your account at <a href=\"https://www."
@@ -73,61 +25,177 @@ msgid ""
 "chat secret key and insert it into the respective field."
 msgstr ""
 
-#: plugin.php:139
+#: deprecated.php:31 svn/chatbro.php:278
 msgid "Save secret key"
 msgstr ""
 
-#: plugin.php:160 plugin.php:165
-msgid "Plugin Settings"
+#: deprecated.php:123 svn/chatbro.php:495
+msgid "Only for registered members! "
 msgstr ""
 
-#: plugin.php:163
+#: deprecated.php:125 svn/chatbro.php:497
+msgid "Register"
+msgstr ""
+
+#: plugin.php:10 svn/chatbro.php:22
+msgid "Chat secret key"
+msgstr ""
+
+#: plugin.php:11 svn/chatbro.php:23
+msgid "Display chat to guests"
+msgstr ""
+
+#: plugin.php:12 svn/chatbro.php:24
+msgid "Show popup chat"
+msgstr ""
+
+#: plugin.php:13 svn/chatbro.php:25
+msgid "Everywhere"
+msgstr ""
+
+#: plugin.php:14 svn/chatbro.php:26
+msgid "Front page only"
+msgstr ""
+
+#: plugin.php:15 svn/chatbro.php:27
+msgid "Everywhere except those listed"
+msgstr ""
+
+#: plugin.php:16 svn/chatbro.php:28
+msgid "Only the listed pages"
+msgstr ""
+
+#: plugin.php:17 svn/chatbro.php:29
+msgid "Disable"
+msgstr ""
+
+#: plugin.php:18 svn/chatbro.php:30
+msgid ""
+"Specify pages by using their paths. Enter one path per line. The '*' "
+"character is a wildcard. Example paths are /2012/10/my-post for a single "
+"post and /2012/* for a group of posts. The path should always start with a "
+"forward slash(/)."
+msgstr ""
+
+#: plugin.php:19 svn/chatbro.php:31
+msgid "User profile path"
+msgstr ""
+
+#: plugin.php:20
+msgid "Enable shortcodes"
+msgstr ""
+
+#: plugin.php:21
+msgid "Invalid chat key"
+msgstr ""
+
+#: plugin.php:149
+msgid "Failed to connect to chat server"
+msgstr ""
+
+#: plugin.php:184 svn/chatbro.php:302
 msgid "Chat Constructor"
 msgstr ""
 
-#: plugin.php:181
+#: plugin.php:187 svn/chatbro.php:299 svn/chatbro.php:304
+msgid "Plugin Settings"
+msgstr ""
+
+#: plugin.php:235
+msgid "You are about to change the secret key"
+msgstr ""
+
+#: plugin.php:239
+msgid ""
+"Please be noticed that your current chat configuration and content are "
+"identified by your secret key and if you lose it there\n"
+"                        will be no way to restore access to you current chat "
+"unless you have registered an account at\n"
+"                        <a href=\"https://chatbro.com\">Chatbro.com</a>. "
+"Please make sure that you have saved your old secret key and fully "
+"understand\n"
+"                        what are you going to do."
+msgstr ""
+
+#: plugin.php:245
+msgid "Your old secret key: <span></span>"
+msgstr ""
+
+#: plugin.php:249
+msgid "Cancel"
+msgstr ""
+
+#: plugin.php:250
+msgid "Change Secret Key"
+msgstr ""
+
+#: plugin.php:274 svn/chatbro.php:319
 msgid "Save Changes"
 msgstr ""
 
-#: plugin.php:186
+#: plugin.php:285
+msgid "Useful Tip"
+msgstr ""
+
+#: plugin.php:286
 msgid ""
-"Use shortcode <em><b>[chatbro]</b></em> to add the chat widget to the "
-"desired place of your page or post."
+"Use shortcode <span>[chatbro]</span> to add the chat widget to the desired "
+"place of your page or post."
 msgstr ""
 
-#: plugin.php:187
-msgid "Supported shortcode attribtes:"
+#: plugin.php:287
+msgid "Supported shortcode attributes:"
 msgstr ""
 
-#: plugin.php:190
+#: plugin.php:290
 msgid ""
 "<em><b>static</b></em> &ndash; static not movable chat widget (default "
 "<em>true</em>)."
 msgstr ""
 
-#: plugin.php:193
+#: plugin.php:293
 msgid ""
 "<em><b>registered_only</b></em> &ndash; display chat widget to logged in "
 "users only (default <em>false</em>). If this attribute is explicitly set it "
 "precedes the global <em>\"Display chat to guests\"</em> setting value."
 msgstr ""
 
-#: plugin.php:370
-msgid "Only for registered members! "
+#: plugin.php:411
+msgid "Permissions"
 msgstr ""
 
-#: plugin.php:372
-msgid "Register"
+#: plugin.php:415
+msgid "Role"
 msgstr ""
 
-#: util.php:79
+#: plugin.php:416
+msgid "View"
+msgstr ""
+
+#: plugin.php:417
+msgid "Ban"
+msgstr ""
+
+#: plugin.php:418
+msgid "Delete"
+msgstr ""
+
+#: plugin.php:540
+msgid "You are not allowed to modify settings"
+msgstr ""
+
+#: plugin.php:603
+msgid "Settings was successfuly saved"
+msgstr ""
+
+#: svn/chatbro.php:182 util.php:85
 msgid "Failed to call chat constructor"
 msgstr ""
 
-#: util.php:90
+#: svn/chatbro.php:193 util.php:97
 msgid "Invalid chat secret key"
 msgstr ""
 
-#: util.php:102
+#: svn/chatbro.php:205 util.php:112
 msgid "Invalid show popup chat option value"
 msgstr ""
