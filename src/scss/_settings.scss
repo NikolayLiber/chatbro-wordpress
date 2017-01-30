@@ -7,3 +7,13 @@
       color: #d9534f;
     }
 }
+
+@media screen and (max-width: 782px) {
+  .tab-content .checkbox label {
+      padding-left: 35px;
+
+      input[type="checkbox"] {
+        margin-left: -35px;
+    }
+  }
+}

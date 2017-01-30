@@ -43,7 +43,7 @@ module.exports = function(grunt) {
 		cssmin: {
 			all: {
 				files: {
-					'css/chatbro.min.css': '_build/css/*.css'
+					'css/chatbro.min.css': ['_build/css/lib.css', '_build/css/chatbro.css']
 				}
 			}
 		},
@@ -161,7 +161,7 @@ module.exports = function(grunt) {
 			},
 
 			devcss: {
-				src: '_build/css/*.css',
+				src: ['_build/css/lib.css', '_build/css/chatbro.css'],
 				dest: 'css/chatbro.min.css'
 			}
 		},

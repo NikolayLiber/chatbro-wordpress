@@ -17,8 +17,8 @@ if (!class_exists("ChatBroPlugin")) {
     __('Disable', 'chatbro-plugin');
     __("Specify pages by using their paths. Enter one path per line. The '*' character is a wildcard. Example paths are /2012/10/my-post for a single post and /2012/* for a group of posts. The path should always start with a forward slash(/).", 'chatbro-plugin');
     __('User profile path', 'chatbro-plugin');
-    __('Enable shortcodes', 'chatbro_plugin');
-    __('Invalid chat key', 'chatbro_plugin');
+    __('Enable shortcodes', 'chatbro-plugin');
+    __('Invalid chat key', 'chatbro-plugin');
 
 
     class InputType {
@@ -380,7 +380,7 @@ if (!class_exists("ChatBroPlugin")) {
             switch($args['type']) {
                 case InputType::text:
                     $pattern = array_key_exists('pattern', $args) ? "pattern=\"{$args['pattern']}\" " : "";
-                    $pattern_error = (array_key_exists('pattern_error', $args) ? ('data-pattern-error="' . __($args['pattern_error'], 'chatbro_plugin') . '" ') : "");
+                    $pattern_error = (array_key_exists('pattern_error', $args) ? ('data-pattern-error="' . __($args['pattern_error'], 'chatbro-plugin') . '" ') : "");
                     ?>
                     <input id="<?php echo $id; ?>" name="<?php echo $id; ?>" type="text" class="form-control" value="<?php echo $value; ?>" <?php echo "{$required}{$pattern}{$pattern_error}"; ?>>
                     <span class="field-icon form-control-feedback glyphicon" aria-hidden="true"></span>
