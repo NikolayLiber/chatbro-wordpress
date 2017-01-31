@@ -68,8 +68,8 @@ You can choose color theme, size, initial state, etc.
 
 = 2.0.0 =
 * Redesigned UI
-* Shortcode [chatbro]
-* Per role permissions configuration
+* Shortcode [chatbro] added
+* Per role permissions configuration added
 
 = 1.1.11 =
 * Fixed issue when chat wasn't being created after plugin installation until user has gone to the chat constructor.
