@@ -140,14 +140,14 @@ module.exports = function (grunt) {
             'languages/**/*.mo',
             'favicon_small.png',
             'fonts/**/*',
+            'readme.txt',
             '!LICENSE.txt',
             '!node_modules/**',
             '!dist/**',
             '!src/**',
             '!bower_components/**',
             '!_build/**',
-            '!.svn/**',
-            '!readme.txt'
+            '!.svn/**'
           ],
           dest: 'dist/'
         }],
