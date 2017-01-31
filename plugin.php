@@ -44,7 +44,8 @@ if (!class_exists("ChatBroPlugin")) {
         const enable_shortcodes_setting = 'chatbro_enable_shortcodes';
         const old_options = 'chatbro_options';
         const default_profile_path = 'authors/{$username}';
-        const caps_initialized = 'chatbro_caps_initializedƒ';
+        const caps_initialized = 'chatbro_caps_initialized';
+        const plugin_version_setting = 'chatbro_plugin_version';
 
         public static $options;
         private function __construct() {
@@ -148,6 +149,9 @@ if (!class_exists("ChatBroPlugin")) {
                 deactivate_plugins(plugin_basename( __FILE__ ));
                 wp_die(__("Failed to connect to chat server", "chatbro-plugin"));
             }
+
+            if (ChatBroUtils::get_option(self::plugin_version_setting) != self::version)
+              ChatBroUtils::add_or_update_option(self::plugin_version_setting, self::version);
         }
 
         function constructor_page() {
