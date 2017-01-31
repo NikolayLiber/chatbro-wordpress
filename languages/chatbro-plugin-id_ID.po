@@ -8,8 +8,7 @@ msgstr ""
 "Project-Id-Version: chatbro2 1.0.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-01-30 17:32+0500\n"
-"PO-Revision-Date: 2016-11-19 11:12+0700\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"PO-Revision-Date: 2017-01-31 15:58+0700\n"
 "Language-Team: \n"
 "Language: id_ID\n"
 "MIME-Version: 1.0\n"
@@ -17,6 +16,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Poedit 1.8.1\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+"Last-Translator: \n"
 
 #: deprecated.php:13 svn/chatbro.php:260
 msgid ""
@@ -92,16 +92,15 @@ msgstr "Gunakan jalur profil"
 
 #: plugin.php:20
 msgid "Enable shortcodes"
-msgstr ""
+msgstr "Aktifkan shortcode"
 
 #: plugin.php:21
-#, fuzzy
 msgid "Invalid chat key"
-msgstr "Kunci rahasia chat tidak valid"
+msgstr "Kunci chat tidak valid"
 
 #: plugin.php:149
 msgid "Failed to connect to chat server"
-msgstr ""
+msgstr "Gagal terhubung ke server chat"
 
 #: plugin.php:184 svn/chatbro.php:302
 msgid "Chat Constructor"
@@ -113,7 +112,7 @@ msgstr "Pengaturan Plugin"
 
 #: plugin.php:235
 msgid "You are about to change the secret key"
-msgstr ""
+msgstr "Anda akan mengganti kunci rahasia"
 
 #: plugin.php:239
 msgid ""
@@ -126,19 +125,26 @@ msgid ""
 "understand\n"
 "                        what are you going to do."
 msgstr ""
+"Mohon diperhatikan bahwa konfigurasi chat dan konten Anda saat ini diakses "
+"dengan kunci rahasia dan jika Anda kehilangan kunci itu,\n"
+"                        tidak ada cara untuk memulihkan akses Anda ke chat "
+"saat, kecuali Anda sudah mendaftarkan akun di\n"
+"                        <a href=\"https://chatbro.com\">Chatbro.com</a>. "
+"Pastikan Anda sudah menyimpan kunci rahasia lama Anda dan sepenuhnya "
+"memahami\n"
+"                        apa yang akan Anda lakukan."
 
 #: plugin.php:245
 msgid "Your old secret key: <span></span>"
-msgstr ""
+msgstr "Kunci rahasia lama Anda: <span></span>"
 
 #: plugin.php:249
 msgid "Cancel"
-msgstr ""
+msgstr "Batalkan"
 
 #: plugin.php:250
-#, fuzzy
 msgid "Change Secret Key"
-msgstr "Kunci rahasia chat"
+msgstr "Ubah Kunci Rahasia"
 
 #: plugin.php:274 svn/chatbro.php:319
 msgid "Save Changes"
@@ -146,17 +152,19 @@ msgstr "Simpan Perubahan"
 
 #: plugin.php:285
 msgid "Useful Tip"
-msgstr ""
+msgstr "Tips Bermanfaat"
 
 #: plugin.php:286
 msgid ""
 "Use shortcode <span>[chatbro]</span> to add the chat widget to the desired "
 "place of your page or post."
 msgstr ""
+"Gunakan shortcode <span>[chatbro]</span> untuk menambahkan widget chat ke "
+"lokasi halaman atau tulisan yang diinginkan."
 
 #: plugin.php:287
 msgid "Supported shortcode attributes:"
-msgstr ""
+msgstr "Atribut shortcode yang dapat digunakan:"
 
 #. Translators: Attribute name "static" and attribut value "true" shouldn't be translated
 #: plugin.php:292
@@ -164,6 +172,8 @@ msgid ""
 "<em><b>static</b></em> &ndash; static not movable chat widget (default "
 "<em>true</em>)."
 msgstr ""
+"<em><b>static</b></em> &ndash; widget chat yang tidak dapat dipindahkan "
+"(default <em>true</em>)."
 
 #. Translators: Attribute name "egistered_only" and attribut value "false" shouldn't be translated
 #: plugin.php:298
@@ -172,38 +182,42 @@ msgid ""
 "users only (default <em>false</em>). If this attribute is explicitly set it "
 "precedes the global <em>\"Display chat to guests\"</em> setting value."
 msgstr ""
+"<em><b>registered_only</b></em> &ndash; menampilkan widget chat hanya untuk "
+"pengguna yang masuk (default <em>false</em>). Jika atribut ini diatur dengan "
+"jelas, atribut ini menangguhkan nilai pengaturan global <em>\"Tampilkan chat "
+"pada tamu\"</em>."
 
 #: plugin.php:417
 msgid "Permissions"
-msgstr ""
+msgstr "Izin"
 
 #: plugin.php:421
 msgid "Role"
-msgstr ""
+msgstr "Peran"
 
 #: plugin.php:422
 msgid "View"
-msgstr ""
+msgstr "Lihat"
 
 #: plugin.php:423
 msgid "Ban"
-msgstr ""
+msgstr "Blokir"
 
 #: plugin.php:424
 msgid "Delete"
-msgstr ""
+msgstr "Hapus"
 
 #: plugin.php:546
 msgid "You are not allowed to modify settings"
-msgstr ""
+msgstr "Anda tidak diperbolehkan untuk mengubah pengaturan"
 
 #: plugin.php:609
 msgid "Settings was successfuly saved"
-msgstr ""
+msgstr "Pengaturan berhasil tersimpan"
 
 #: svn/chatbro.php:182 util.php:85
 msgid "Failed to call chat constructor"
-msgstr ""
+msgstr "Gagal menelepon pembuat chat"
 
 #: svn/chatbro.php:193 util.php:97
 msgid "Invalid chat secret key"
