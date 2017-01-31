@@ -7,3 +7,4 @@ css/**
 js/**
 fonts/**
 .sublime-grunt.cache
+dist
