@@ -40,7 +40,13 @@ if (!class_exists("ChatBroUtils")) {
         }
 
         public static function get_option($name) {
-            $default = array_key_exists($name, ChatBroPlugin::$options) && array_key_exists('default', ChatBroPlugin::$options[$name]) ? ChatBroPlugin::$options[$name]['default'] : null;
+            $is_setting = array_key_exists($name, ChatBroPlugin::$options) && array_key_exists('default', ChatBroPlugin::$options[$name]);
+            $option_desc = null;
+
+            if ($is_setting)
+              $option_desc = ChatBroPlugin::$options[$name];
+
+            $default = ($is_setting && array_key_exists('default', $option_desc)) ? ChatBroPlugin::$options[$name]['default'] : null;
 
             if (is_multisite() && is_plugin_active_for_network(plugin_basename(__FILE__))) {
                 return get_site_option($name, $default);
@@ -120,7 +126,7 @@ if (!class_exists("ChatBroUtils")) {
         }
 
         public static function sanitize_checkbox($val, &$messages) {
-            return $val == "on";
+            return ($val == "on");
         }
 
         static function match_path($path, $patterns)

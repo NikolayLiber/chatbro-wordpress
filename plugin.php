@@ -106,6 +106,7 @@ if (!class_exists("ChatBroPlugin")) {
                     'id' => self::enable_shortcodes_setting,
                     'type' => InputType::checkbox,
                     'label' => 'Enable shortcodes',
+                    'sanitize_callback' => array('ChatBroUtils', 'sanitize_checkbox'),
                     'default' => true
                 )
             );
@@ -184,10 +185,10 @@ if (!class_exists("ChatBroPlugin")) {
         function render_tabs() {
             ?>
             <ul id="settings-tabs" class="nav nav-tabs" role="tablist" style="margin-top: 1.5rem;">
-                <li role="presentation" <?php if ($_GET['tab'] != 'plugin_settings') echo 'class="active"'; ?> >
+                <li role="presentation" <?php if (isset($_GET['tab']) && $_GET['tab'] != 'plugin_settings') echo 'class="active"'; ?> >
                     <a href="#constructor" aria-controls="constructor" role="tab" data-toggle="tab"><?php _e("Chat Constructor", 'chatbro-plugin'); ?></a>
                 </li>
-                <li role="presentation" <?php if ($_GET['tab'] == 'plugin_settings') echo 'class="active"'; ?>>
+                <li role="presentation" <?php if (isset($_GET['tab']  ) && $_GET['tab'] == 'plugin_settings') echo 'class="active"'; ?>>
                     <a href="#plugin-settings" aria-controls="plugin-settings" role="tab" data-toggle="tab"><?php _e("Plugin Settings", 'chatbro-plugin'); ?></a>
                 </li>
             </ul>
@@ -317,7 +318,7 @@ if (!class_exists("ChatBroPlugin")) {
             <div id="<?php echo $id; ?>-group" class="form-group">
                 <?php
                 if($type == InputType::checkbox)
-                    $this->render_checkbox($id, $label, $value);
+                    $this->render_checkbox($id, $label);
                 else
                     $this->render_other($id, $label, $args);
                 ?>
@@ -393,9 +394,7 @@ if (!class_exists("ChatBroPlugin")) {
 
                 case InputType::textarea:
                     ?>
-                    <textarea id="<?php echo $id; ?>" name="<?php echo $id; ?>" class="form-control" cols="80" rows="6" <?php echo $required; ?>>
-                        <?php echo $value; ?>
-                    </textarea>
+                    <textarea id="<?php echo $id; ?>" name="<?php echo $id; ?>" class="form-control" cols="80" rows="6" <?php echo $required; ?>><?php echo $value; ?></textarea>
                     <?php
                     break;
 
@@ -496,19 +495,23 @@ if (!class_exists("ChatBroPlugin")) {
         }
 
         function chat() {
-            if (!current_user_can(self::cap_view))
-                return;
+          $guid = ChatBroUtils::get_option(self::guid_setting);
 
-            $guid = ChatBroUtils::get_option(self::guid_setting);
+          if (!$guid) {
+              $opts = ChatBroUtils::get_option(self::old_options);
 
-            if (!$guid) {
-                $opts = ChatBroUtils::get_option(self::old_options);
+              if ($opts != false)
+                  ChatBroDeprecated::chat_old($opts);
 
-                if ($opts != false)
-                    ChatBro::chat_old($opts);
+              return;
+          }
 
-                return;
-            }
+          $display_to_guests = ChatBroUtils::get_option(self::display_to_guests_setting);
+          $logged_in = is_user_logged_in();
+          $can_view = current_user_can(self::cap_view);
+
+          if ((!$display_to_guests && !$logged_in) || ($logged_in && !$can_view))
+            return;
 
             $display_to_guests = ChatBroUtils::get_option(self::display_to_guests_setting);
 
@@ -551,19 +554,15 @@ if (!class_exists("ChatBroPlugin")) {
 
             $messages = array('fields' => array());
             $new_vals = array();
-            foreach($_POST as $option => $value) {
-                // We are interested only in settings parameters
-                if (!array_key_exists($option, self::$options))
-                    continue;
+            foreach(self::$options as $op_name => $op_desc) {
+              $value = isset($_POST[$op_name]) ? trim(wp_unslash($_POST[$op_name])) : false;
 
-                if (!is_array($value))
-                    $value = trim($value);
-
-                $value = wp_unslash($value);
-
-                if (array_key_exists($option, self::$options) && array_key_exists('sanitize_callback', self::$options[$option])) {
-                    $new_vals[$option] = trim(call_user_func_array(self::$options[$option]['sanitize_callback'], array($value, &$messages)));
-                }
+              if (array_key_exists('sanitize_callback', $op_desc)) {
+                  $new_vals[$op_name] = call_user_func_array($op_desc['sanitize_callback'], array($value, &$messages));
+              }
+              else {
+                $new_vals[$op_name] = $value;
+              }
             }
 
             $reply = array('success' => true);
@@ -580,6 +579,11 @@ if (!class_exists("ChatBroPlugin")) {
                         break;
                     }
                 }
+            }
+
+            if ($reply['success']) {
+                foreach($new_vals as $option => $value)
+                    ChatBroUtils::update_option($option, $value);
 
                 // Saving permissions
                 foreach(get_editable_roles() as $name => $info) {
@@ -604,11 +608,6 @@ if (!class_exists("ChatBroPlugin")) {
                     else
                         $role->remove_cap(self::cap_delete);
                 }
-            }
-
-            if ($reply['success']) {
-                foreach($new_vals as $option => $value)
-                    ChatBroUtils::update_option($option, $value);
 
                 $reply['message'] = "<strong>" . __("Settings was successfuly saved", "chatbro-plugin") . "</strong>";
                 $reply['msg_type'] = "info";

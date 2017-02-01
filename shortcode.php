@@ -11,10 +11,10 @@ if (!class_exists("ChatBroShortCode")) {
         }
 
         public static function get_instance() {
-        	if (!self::$instance)
-        		self::$instance = new ChatBroShortCode();
+          if (!self::$instance)
+            self::$instance = new ChatBroShortCode();
 
-        	return self::$instance;
+          return self::$instance;
         }
 
         public static function render($atts, $content = null) {
@@ -30,8 +30,9 @@ if (!class_exists("ChatBroShortCode")) {
             // If "registered_only" attribute is explicitly set in shortcode then it will be used or global display_to_guests_setting will be used
             $registered_only = $atts && array_key_exists('registered_only', $atts) ? (strtolower($a['registered_only']) == 'true' || $a['registered_only'] == '1') : !ChatBroUtils::get_option(ChatBroPlugin::display_to_guests_setting);
             $static = strtolower($a['static']) == 'true' || $a['static'] == '1';
+            $logged_in = is_user_logged_in();
 
-            if ($registered_only && !is_user_logged_in())
+            if ((!$logged_in && $registered_only) || ($logged_in && !current_user_can(ChatBroPlugin::cap_view)))
                 return "";
 
             $guid = strtolower(ChatBroUtils::get_option(ChatBroPlugin::guid_setting));
