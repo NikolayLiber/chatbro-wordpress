@@ -3,7 +3,7 @@
 defined( 'ABSPATH' ) or die( 'No script kiddies please!' );
 
 if (!class_exists("ChatBroUtils")) {
-	class ChatBroUtils {
+  class ChatBroUtils {
         public static function load_my_textdomain() {
             $mo_file_path = dirname(__FILE__) . '/languages/chatbro-plugin-'. get_locale() . '.mo';
             load_textdomain('chatbro-plugin', $mo_file_path);
@@ -66,8 +66,8 @@ if (!class_exists("ChatBroUtils")) {
         }
 
         public static function add_or_update_option($name, $value) {
-        	if (!self::add_option($name, $value))
-        		self::update_option($name, $value);
+          if (!self::add_option($name, $value))
+            self::update_option($name, $value);
         }
 
         public static function delete_option($name) {
@@ -79,10 +79,11 @@ if (!class_exists("ChatBroUtils")) {
         }
 
         public static function call_constructor($guid, &$messages) {
-            $response = wp_safe_remote_get("http://www.chatbro.com/constructor/{$guid}");
+            $url = "https://www.chatbro.com/constructor/{$guid}";
+            $response = wp_safe_remote_get($url);
 
             if (is_wp_error($response)) {
-                $messages['fatal'] = __('Failed to call chat constructor', 'chatbro-plugin') . " " . $response->get_error_message();
+                $messages['fatal'] = __('Failed to call chat constructor', 'chatbro-plugin') . ": " . $response->get_error_message();
                 return false;
             }
 
@@ -256,6 +257,6 @@ if (!class_exists("ChatBroUtils")) {
 
             return $code;
         }
-	}
+  }
 }
 ?>

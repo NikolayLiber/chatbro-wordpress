@@ -147,7 +147,7 @@ if (!class_exists("ChatBroPlugin")) {
             $messages = array('fields' => array());
             if (!ChatBroUtils::call_constructor($guid, $messages)) {
                 deactivate_plugins(plugin_basename( __FILE__ ));
-                wp_die(__("Failed to connect to chat server", "chatbro-plugin"));
+                wp_die($messages["fatal"]);
             }
 
             if (ChatBroUtils::get_option(self::plugin_version_setting) != self::version)
