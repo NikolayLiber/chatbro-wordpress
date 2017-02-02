@@ -66,6 +66,9 @@ You can choose color theme, size, initial state, etc.
 
 == ChangeLog ==
 
+= 2.0.3 =
+* Fixed an issue where login via facebook and other social networks fails with error "Incorrect CSRF token".
+
 = 2.0.2 =
 * Fixed issue when chat wasn't shown to unregistered user
 * Many minor bug fixes
