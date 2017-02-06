@@ -115,6 +115,7 @@ if (!class_exists("ChatBroPlugin")) {
             add_action('admin_menu', array(&$this, 'add_menu_option'));
             add_action('wp_footer', array(&$this, 'chat'));
             add_action('wp_ajax_chatbro_save_settings', array('ChatBroPlugin', 'ajax_save_settings'));
+            add_action('wp_ajax_chatbro_get_faq', array('ChatBroPlugin', 'ajax_get_faq'));
 
             if (!ChatBroUtils::get_option(self::caps_initialized)) {
                 // Initializing capabilities with default values
@@ -176,6 +177,7 @@ if (!class_exists("ChatBroPlugin")) {
                     <?php
                     $this->render_constructor_tab($guid);
                     $this->render_settings_tab($guid);
+                    $this->render_contact_us_tab();
                     ?>
                 </div>
             </div>
@@ -185,11 +187,14 @@ if (!class_exists("ChatBroPlugin")) {
         function render_tabs() {
             ?>
             <ul id="settings-tabs" class="nav nav-tabs" role="tablist" style="margin-top: 1.5rem;">
-                <li role="presentation" <?php if (isset($_GET['tab']) && $_GET['tab'] != 'plugin_settings') echo 'class="active"'; ?> >
+                <li role="presentation" class="active">
                     <a href="#constructor" aria-controls="constructor" role="tab" data-toggle="tab"><?php _e("Chat Constructor", 'chatbro-plugin'); ?></a>
                 </li>
-                <li role="presentation" <?php if (isset($_GET['tab']  ) && $_GET['tab'] == 'plugin_settings') echo 'class="active"'; ?>>
+                <li role="presentation">
                     <a href="#plugin-settings" aria-controls="plugin-settings" role="tab" data-toggle="tab"><?php _e("Plugin Settings", 'chatbro-plugin'); ?></a>
+                </li>
+                <li role="presentation">
+                    <a href="#contact-us" aria-controls="contact-us" role="tab" data-toggle="tab"><?php _e("Help", "chatbro-plugin"); ?></a>
                 </li>
             </ul>
             <?php
@@ -228,6 +233,23 @@ if (!class_exists("ChatBroPlugin")) {
                 </div>
             </div>
             <?php
+        }
+
+        function render_contact_us_tab() {
+          ?>
+          <div id="contact-us" role="tabpanel" class="tab-pane fade in container-fluid" >
+            <div class="row">
+              <div class="col-lg-6 col-lg-push-6">
+                <div id="support-chat" data-spy="affix" data-offset-top="53"></div>
+              </div>
+              <div id="chbr-faq" class="col-lg-6 col-lg-pull-6">
+                <h1><?php _e("Frequently Asked Questions", "chatbro-plugin"); ?></h1>
+                <p id="chatbro-faq"></p>
+              </div>
+            </div>
+            <script id="chatBroEmbedCode">/* Chatbro Widget Embed Code Start */function ChatbroLoader(chats,async) {async=async!==false;var params={embedChatsParameters:chats instanceof Array?chats:[chats],needLoadCode:typeof Chatbro==='undefined'};var xhr=new XMLHttpRequest();xhr.withCredentials = true;xhr.onload=function(){eval(xhr.responseText)};xhr.onerror=function(){console.error('Chatbro loading error')};xhr.open('POST','//www.chatbro.com/embed_chats/',async);xhr.setRequestHeader('Content-Type','application/x-www-form-urlencoded');xhr.send('parameters='+encodeURIComponent(JSON.stringify(params)))}/* Chatbro Widget Embed Code End */ChatbroLoader({encodedChatId: '47cs'});</script>
+          </div>
+          <?php
         }
 
         function render_guid_confirmation_modal() {
@@ -617,6 +639,16 @@ if (!class_exists("ChatBroPlugin")) {
                 $reply['field_messages'] = $messages['fields'];
 
             die(json_encode($reply));
+        }
+
+        function ajax_get_faq() {
+          $url = 'https://www.chatbro.com/faq.html';
+          $response = wp_safe_remote_get($url);
+
+          if (is_wp_error($response))
+            die("");
+
+          die($response['body']);
         }
     }
 }

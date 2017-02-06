@@ -12,11 +12,6 @@ jQuery(document).ready(function ($) {
 
   $('#chatbro_chat_display').change()
 
-  $('#settings-tabs a').click(function (e) {
-    e.preventDefault()
-    $(this).tab('show')
-  })
-
   $('#chatbro-settings-form').ajaxForm({
     url: ajaxurl,
     type: 'POST',
@@ -111,4 +106,30 @@ jQuery(document).ready(function ($) {
   // or it will be shown behind it's backdrop. Let's move it to the top level of the body.
   var modal = $('#chb-confirm-guid-modal')
   $('body').append(modal)
+
+  function adjustChatWidth () {
+    if (window.innerWidth >= 1200) {
+      var chat = $('#support-chat')
+      var left = chat[0].getBoundingClientRect().left
+      chat.width(window.innerWidth - left - 35 + 'px')
+    }
+  }
+
+  $(window).resize(function () {
+    if ($('#support-chat').hasClass('affix')) {
+      adjustChatWidth()
+    }
+  })
+
+  $('#support-chat')
+  .on('affixed.bs.affix', adjustChatWidth)
+  .on('affix-top.bs.affix', function () {
+    $(this).width('')
+  })
+
+  console.log('Loading faq')
+  $.post(ajaxurl, {action: 'chatbro_get_faq'}, function (response) {
+    console.log('Got response:', response)
+    $('#chatbro-faq').html(response)
+  })
 })
