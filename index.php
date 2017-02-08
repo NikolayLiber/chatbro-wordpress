@@ -11,7 +11,7 @@ Version: 2.1.0
 Author: ChatBro
 Author URI: http://chatbro.com
 License: GPL3
-Text Domain: chatbro-plugin
+Text Domain: chatbro
 Domain Path: /languages
 */
 

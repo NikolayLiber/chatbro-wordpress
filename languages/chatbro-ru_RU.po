@@ -2,26 +2,22 @@ msgid ""
 msgstr ""
 "Project-Id-Version: chatbro-wordpress-plugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-11-17 16:57+0000\n"
+"POT-Creation-Date: 2017-02-08 23:18+0500\n"
 "PO-Revision-Date: 2017-01-30 17:47+0500\n"
 "Last-Translator: Nikolay Liber\n"
 "Language-Team: Russian\n"
 "Language: ru\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10 >= 2 && n"
-"%10<=4 &&(n%100<10||n%100 >= 20)? 1 : 2);\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10 >= 2 && n"
+"%10<=4 &&(n%100<10||n%100 >= 20)? 1 : 2);\n"
 "X-Generator: Poedit 1.8.11\n"
 "X-Loco-Source-Locale: en\n"
 "X-Loco-Project-Id: 19129\n"
 "X-Loco-Api-Version: 1.0.15 20170125-2\n"
 
-#: svn/chatbro.php:205 util.php:112 loco:582de1a852e1a133258b4568
-msgid "Invalid show popup chat option value"
-msgstr "Неверное значение параметра \"Показывать чат\""
-
-#: deprecated.php:13 svn/chatbro.php:260 loco:582de1a852e1a133258b4569
+#: deprecated.php:13
 msgid ""
 "To manage chat settings in the new version of the plugin, you should submit "
 "a chat secret key. Please, log in to your account at <a href=\"https://www."
@@ -32,60 +28,51 @@ msgstr ""
 "ключ беседы. Пожалуйста войдите в свой аккаунт на chatbro.com, скопируйте "
 "секретный ключ беседы и вставьте в соответсвующее поле."
 
-#: deprecated.php:31 svn/chatbro.php:278 loco:582de1a852e1a133258b456a
+#: deprecated.php:31
 msgid "Save secret key"
 msgstr "Сохранить секретный ключ"
 
-#: plugin.php:187 svn/chatbro.php:299 svn/chatbro.php:304
-#: loco:582de1a852e1a133258b456b
-msgid "Plugin Settings"
-msgstr "Настройки плагина"
-
-#: plugin.php:184 svn/chatbro.php:302 loco:582de1a852e1a133258b456c
-msgid "Chat Constructor"
-msgstr "Конструктор чата"
-
-#: plugin.php:274 svn/chatbro.php:319 loco:582de1a852e1a133258b456d
-msgid "Save Changes"
-msgstr "Сохранить изменения"
-
-#: deprecated.php:123 svn/chatbro.php:495 loco:582de1a852e1a133258b456e
+#: deprecated.php:123
 msgid "Only for registered members! "
 msgstr "Только для зарегистрированных пользователей!"
 
-#: deprecated.php:125 svn/chatbro.php:497 loco:582de1a852e1a133258b456f
+#: deprecated.php:125
 msgid "Register"
 msgstr "Зарегистрироваться"
 
-#: plugin.php:10 svn/chatbro.php:22 loco:582f22cf52e1a1fb598b4567
+#: plugin.php:10
 msgid "Chat secret key"
 msgstr "Секретный ключ беседы"
 
-#: plugin.php:11 svn/chatbro.php:23 loco:582f22cf52e1a1fb598b4568
+#: plugin.php:11
 msgid "Display chat to guests"
 msgstr "Показывать чат незарегистрированым пользовтелям"
 
-#: plugin.php:12 svn/chatbro.php:24 loco:582f22cf52e1a1fb598b4569
+#: plugin.php:12
 msgid "Show popup chat"
 msgstr "Показывать чат"
 
-#: plugin.php:13 svn/chatbro.php:25 loco:582f22cf52e1a1fb598b456a
+#: plugin.php:13
 msgid "Everywhere"
 msgstr "Везде"
 
-#: plugin.php:14 svn/chatbro.php:26 loco:582f22cf52e1a1fb598b456b
+#: plugin.php:14
 msgid "Front page only"
 msgstr "Только на главной"
 
-#: plugin.php:15 svn/chatbro.php:27 loco:582f22cf52e1a1fb598b456c
+#: plugin.php:15
 msgid "Everywhere except those listed"
 msgstr "Везде кроме перечисленных страниц"
 
-#: plugin.php:17 svn/chatbro.php:29 loco:582f22cf52e1a1fb598b456d
+#: plugin.php:16
+msgid "Only the listed pages"
+msgstr "Только на перечисленных страницах"
+
+#: plugin.php:17
 msgid "Disable"
 msgstr "Не показывать"
 
-#: plugin.php:18 svn/chatbro.php:30 loco:582f22cf52e1a1fb598b456e
+#: plugin.php:18
 msgid ""
 "Specify pages by using their paths. Enter one path per line. The '*' "
 "character is a wildcard. Example paths are /2012/10/my-post for a single "
@@ -96,35 +83,39 @@ msgstr ""
 "подстановочный. Например /2012/10/my-post - один пост, /2012/* - группа "
 "постов. Путь всегда должен начинаться с прямого слэша (/)."
 
-#: plugin.php:19 svn/chatbro.php:31 loco:582f22cf52e1a1fb598b456f
+#: plugin.php:19
 msgid "User profile path"
 msgstr "Путь до профиля пользователя"
 
-#: svn/chatbro.php:193 util.php:97 loco:582f2bb552e1a11b5b8b4567
-msgid "Invalid chat secret key"
-msgstr "Неверный секретный ключ беседы"
-
-#: plugin.php:16 svn/chatbro.php:28 loco:582f337952e1a10e5f8b4567
-msgid "Only the listed pages"
-msgstr "Только на перечисленных страницах"
-
-#: plugin.php:20 loco:588b99b852e1a159538b4567
+#: plugin.php:20
 msgid "Enable shortcodes"
 msgstr "Разрешить шорткоды"
 
-#: plugin.php:21 loco:588b99b852e1a159538b4568
+#: plugin.php:21
 msgid "Invalid chat key"
 msgstr "Неправильный ключ беседы"
 
-#: plugin.php:149 loco:588b99b852e1a159538b4569
-msgid "Failed to connect to chat server"
-msgstr "Не смог соединиться с сервером чатов"
+#: plugin.php:192
+msgid "Chat Constructor"
+msgstr "Конструктор чата"
 
-#: plugin.php:235 loco:588b99b852e1a159538b456a
+#: plugin.php:195
+msgid "Plugin Settings"
+msgstr "Настройки плагина"
+
+#: plugin.php:198
+msgid "Help"
+msgstr ""
+
+#: plugin.php:247
+msgid "Frequently Asked Questions"
+msgstr ""
+
+#: plugin.php:263
 msgid "You are about to change the secret key"
 msgstr "Вы собираетесь изменить секретный ключ"
 
-#: plugin.php:239 loco:588b99b852e1a159538b456b
+#: plugin.php:267
 msgid ""
 "Please be noticed that your current chat configuration and content are "
 "identified by your secret key and if you lose it there\n"
@@ -141,31 +132,40 @@ msgstr ""
 "невозможно. Пожалуйста убедитесь в том, что вы сохранили старый секретный "
 "ключ и полностью осознаёте возможные последствия ваших действий."
 
-#: plugin.php:245 loco:588b99b852e1a159538b456c
+#: plugin.php:273
 msgid "Your old secret key: <span></span>"
 msgstr "Ваш старый секретный ключ:"
 
-#: plugin.php:249 loco:588b99b852e1a159538b456d
+#: plugin.php:277
 msgid "Cancel"
 msgstr "Отмена"
 
-#: plugin.php:250 loco:588b99b852e1a159538b456e
+#: plugin.php:278
 msgid "Change Secret Key"
 msgstr "Изменить секретный ключ"
 
-#: plugin.php:286 loco:588b99b852e1a159538b456f
-msgid ""
-"Use shortcode <em><b>[chatbro]</b></em> to add the chat widget to the "
-"desired place of your page or post."
-msgstr ""
-"Используйте шорткод <em><b>[chatbro]</b></em> чтобы добавить чат в нужное "
-"место вашей страницы или поста. "
+#: plugin.php:302
+msgid "Save Changes"
+msgstr "Сохранить изменения"
 
-#: plugin.php:287 loco:588b99b852e1a159538b4570
+#: plugin.php:313
+msgid "Useful Tip"
+msgstr "Совет"
+
+#: plugin.php:314
+msgid ""
+"Use shortcode <span>[chatbro]</span> to add the chat widget to the desired "
+"place of your page or post."
+msgstr ""
+"Для того, чтобы поместить чат в нужное место на вашей странице (в посте) "
+"используйте шорткод <span>[chatbro]</span>."
+
+#: plugin.php:315
 msgid "Supported shortcode attributes:"
 msgstr "Поддерживаемые атрибуты шорткода"
 
-#: plugin.php:290 loco:588b99b852e1a159538b4571
+#. Translators: Attribute name "static" and attribut value "true" shouldn't be translated
+#: plugin.php:320
 msgid ""
 "<em><b>static</b></em> &ndash; static not movable chat widget (default "
 "<em>true</em>)."
@@ -173,7 +173,8 @@ msgstr ""
 "<em><b>static</b></em> &ndash; статичный (неподвижный) виджет чата по "
 "умолчанию <em>true</em>."
 
-#: plugin.php:293 loco:588b99b852e1a159538b4572
+#. Translators: Attribute name "egistered_only" and attribut value "false" shouldn't be translated
+#: plugin.php:326
 msgid ""
 "<em><b>registered_only</b></em> &ndash; display chat widget to logged in "
 "users only (default <em>false</em>). If this attribute is explicitly set it "
@@ -184,46 +185,52 @@ msgstr ""
 "атрибут задан, то он «перекрывает» значение параметра «Показывать чат "
 "незарегистрированным пользователям»."
 
-#: plugin.php:411 loco:588b99b852e1a159538b4573
+#: plugin.php:443
 msgid "Permissions"
 msgstr "Права"
 
-#: plugin.php:415 loco:588b99b852e1a159538b4574
+#: plugin.php:447
 msgid "Role"
 msgstr "Роль"
 
-#: plugin.php:416 loco:588b99b852e1a159538b4575
+#: plugin.php:448
 msgid "View"
 msgstr "Просмотр"
 
-#: plugin.php:417 loco:588b99b852e1a159538b4576
+#: plugin.php:449
 msgid "Ban"
 msgstr "Бан"
 
-#: plugin.php:418 loco:588b99b852e1a159538b4577
+#: plugin.php:450
 msgid "Delete"
 msgstr "Удаление"
 
-#: plugin.php:540 loco:588b99b852e1a159538b4578
+#: plugin.php:576
 msgid "You are not allowed to modify settings"
 msgstr "У вас нет прав на изменение настроек"
 
-#: plugin.php:603 loco:588b99b852e1a159538b4579
+#: plugin.php:635
 msgid "Settings was successfuly saved"
 msgstr "Настройки были успешно сохранены"
 
-#: svn/chatbro.php:182 util.php:85 loco:588b99b852e1a159538b457a
+#: util.php:91
 msgid "Failed to call chat constructor"
 msgstr "Не смог вызывать конструктор чата"
 
-#: plugin.php:285 loco:588f1bb252e1a154018b4567
-msgid "Useful Tip"
-msgstr "Совет"
+#: util.php:103
+msgid "Invalid chat secret key"
+msgstr "Неверный секретный ключ беседы"
 
-#: plugin.php:286 loco:588f1bb252e1a154018b4568
-msgid ""
-"Use shortcode <span>[chatbro]</span> to add the chat widget to the desired "
-"place of your page or post."
-msgstr ""
-"Для того, чтобы поместить чат в нужное место на вашей странице (в посте) "
-"используйте шорткод <span>[chatbro]</span>."
+#: util.php:118
+msgid "Invalid show popup chat option value"
+msgstr "Неверное значение параметра \"Показывать чат\""
+
+#~ msgid "Failed to connect to chat server"
+#~ msgstr "Не смог соединиться с сервером чатов"
+
+#~ msgid ""
+#~ "Use shortcode <em><b>[chatbro]</b></em> to add the chat widget to the "
+#~ "desired place of your page or post."
+#~ msgstr ""
+#~ "Используйте шорткод <em><b>[chatbro]</b></em> чтобы добавить чат в нужное "
+#~ "место вашей страницы или поста. "

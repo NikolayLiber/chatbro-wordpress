@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: chatbro-wordpress 1.0.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-01-30 17:32+0500\n"
+"POT-Creation-Date: 2017-02-08 23:18+0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: deprecated.php:13 svn/chatbro.php:260
+#: deprecated.php:13
 msgid ""
 "To manage chat settings in the new version of the plugin, you should submit "
 "a chat secret key. Please, log in to your account at <a href=\"https://www."
@@ -25,51 +25,51 @@ msgid ""
 "chat secret key and insert it into the respective field."
 msgstr ""
 
-#: deprecated.php:31 svn/chatbro.php:278
+#: deprecated.php:31
 msgid "Save secret key"
 msgstr ""
 
-#: deprecated.php:123 svn/chatbro.php:495
+#: deprecated.php:123
 msgid "Only for registered members! "
 msgstr ""
 
-#: deprecated.php:125 svn/chatbro.php:497
+#: deprecated.php:125
 msgid "Register"
 msgstr ""
 
-#: plugin.php:10 svn/chatbro.php:22
+#: plugin.php:10
 msgid "Chat secret key"
 msgstr ""
 
-#: plugin.php:11 svn/chatbro.php:23
+#: plugin.php:11
 msgid "Display chat to guests"
 msgstr ""
 
-#: plugin.php:12 svn/chatbro.php:24
+#: plugin.php:12
 msgid "Show popup chat"
 msgstr ""
 
-#: plugin.php:13 svn/chatbro.php:25
+#: plugin.php:13
 msgid "Everywhere"
 msgstr ""
 
-#: plugin.php:14 svn/chatbro.php:26
+#: plugin.php:14
 msgid "Front page only"
 msgstr ""
 
-#: plugin.php:15 svn/chatbro.php:27
+#: plugin.php:15
 msgid "Everywhere except those listed"
 msgstr ""
 
-#: plugin.php:16 svn/chatbro.php:28
+#: plugin.php:16
 msgid "Only the listed pages"
 msgstr ""
 
-#: plugin.php:17 svn/chatbro.php:29
+#: plugin.php:17
 msgid "Disable"
 msgstr ""
 
-#: plugin.php:18 svn/chatbro.php:30
+#: plugin.php:18
 msgid ""
 "Specify pages by using their paths. Enter one path per line. The '*' "
 "character is a wildcard. Example paths are /2012/10/my-post for a single "
@@ -77,7 +77,7 @@ msgid ""
 "forward slash(/)."
 msgstr ""
 
-#: plugin.php:19 svn/chatbro.php:31
+#: plugin.php:19
 msgid "User profile path"
 msgstr ""
 
@@ -89,23 +89,27 @@ msgstr ""
 msgid "Invalid chat key"
 msgstr ""
 
-#: plugin.php:149
-msgid "Failed to connect to chat server"
-msgstr ""
-
-#: plugin.php:184 svn/chatbro.php:302
+#: plugin.php:192
 msgid "Chat Constructor"
 msgstr ""
 
-#: plugin.php:187 svn/chatbro.php:299 svn/chatbro.php:304
+#: plugin.php:195
 msgid "Plugin Settings"
 msgstr ""
 
-#: plugin.php:235
+#: plugin.php:198
+msgid "Help"
+msgstr ""
+
+#: plugin.php:247
+msgid "Frequently Asked Questions"
+msgstr ""
+
+#: plugin.php:263
 msgid "You are about to change the secret key"
 msgstr ""
 
-#: plugin.php:239
+#: plugin.php:267
 msgid ""
 "Please be noticed that your current chat configuration and content are "
 "identified by your secret key and if you lose it there\n"
@@ -117,87 +121,87 @@ msgid ""
 "                        what are you going to do."
 msgstr ""
 
-#: plugin.php:245
+#: plugin.php:273
 msgid "Your old secret key: <span></span>"
 msgstr ""
 
-#: plugin.php:249
+#: plugin.php:277
 msgid "Cancel"
 msgstr ""
 
-#: plugin.php:250
+#: plugin.php:278
 msgid "Change Secret Key"
 msgstr ""
 
-#: plugin.php:274 svn/chatbro.php:319
+#: plugin.php:302
 msgid "Save Changes"
 msgstr ""
 
-#: plugin.php:285
+#: plugin.php:313
 msgid "Useful Tip"
 msgstr ""
 
-#: plugin.php:286
+#: plugin.php:314
 msgid ""
 "Use shortcode <span>[chatbro]</span> to add the chat widget to the desired "
 "place of your page or post."
 msgstr ""
 
-#: plugin.php:287
+#: plugin.php:315
 msgid "Supported shortcode attributes:"
 msgstr ""
 
 #. Translators: Attribute name "static" and attribut value "true" shouldn't be translated
-#: plugin.php:292
+#: plugin.php:320
 msgid ""
 "<em><b>static</b></em> &ndash; static not movable chat widget (default "
 "<em>true</em>)."
 msgstr ""
 
 #. Translators: Attribute name "egistered_only" and attribut value "false" shouldn't be translated
-#: plugin.php:298
+#: plugin.php:326
 msgid ""
 "<em><b>registered_only</b></em> &ndash; display chat widget to logged in "
 "users only (default <em>false</em>). If this attribute is explicitly set it "
 "precedes the global <em>\"Display chat to guests\"</em> setting value."
 msgstr ""
 
-#: plugin.php:417
+#: plugin.php:443
 msgid "Permissions"
 msgstr ""
 
-#: plugin.php:421
+#: plugin.php:447
 msgid "Role"
 msgstr ""
 
-#: plugin.php:422
+#: plugin.php:448
 msgid "View"
 msgstr ""
 
-#: plugin.php:423
+#: plugin.php:449
 msgid "Ban"
 msgstr ""
 
-#: plugin.php:424
+#: plugin.php:450
 msgid "Delete"
 msgstr ""
 
-#: plugin.php:546
+#: plugin.php:576
 msgid "You are not allowed to modify settings"
 msgstr ""
 
-#: plugin.php:609
+#: plugin.php:635
 msgid "Settings was successfuly saved"
 msgstr ""
 
-#: svn/chatbro.php:182 util.php:85
+#: util.php:91
 msgid "Failed to call chat constructor"
 msgstr ""
 
-#: svn/chatbro.php:193 util.php:97
+#: util.php:103
 msgid "Invalid chat secret key"
 msgstr ""
 
-#: svn/chatbro.php:205 util.php:112
+#: util.php:118
 msgid "Invalid show popup chat option value"
 msgstr ""

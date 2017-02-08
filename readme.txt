@@ -65,6 +65,8 @@ You can choose color theme, size, initial state, etc.
 5. How to enable indexing of the chat
 
 == ChangeLog ==
+= 2.1.0 =
+* Help tab added with FAQ that will be updating and live chat with developers
 
 = 2.0.3 =
 * Fixed an issue where login via facebook and other social networks fails with error "Incorrect CSRF token".

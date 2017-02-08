@@ -60,7 +60,7 @@ module.exports = function (grunt) {
 
     pot: {
       options: {
-        text_domain: 'chatbro-plugin', // Your text domain. Produces my-text-domain.pot
+        text_domain: 'chatbro', // Your text domain. Produces my-text-domain.pot
         dest: 'languages/', // directory to place the pot file
         keywords: [ // WordPress localisation functions
           '__:1',
@@ -84,7 +84,8 @@ module.exports = function (grunt) {
       files: {
         src: [
           '**/*.php',
-          '!node_modules/**'
+          '!node_modules/**',
+          '!dist/**'
         ], // Parse all php files
         expand: true
       }

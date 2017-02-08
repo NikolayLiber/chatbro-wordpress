@@ -7,18 +7,18 @@ if (!function_exists('get_editable_roles')) {
 }
 
 if (!class_exists("ChatBroPlugin")) {
-    __('Chat secret key', 'chatbro-plugin');
-    __('Display chat to guests', 'chatbro-plugin');
-    __('Show popup chat', 'chatbro-plugin');
-    __('Everywhere', 'chatbro-plugin');
-    __('Front page only', 'chatbro-plugin');
-    __('Everywhere except those listed', 'chatbro-plugin');
-    __('Only the listed pages', 'chatbro-plugin');
-    __('Disable', 'chatbro-plugin');
-    __("Specify pages by using their paths. Enter one path per line. The '*' character is a wildcard. Example paths are /2012/10/my-post for a single post and /2012/* for a group of posts. The path should always start with a forward slash(/).", 'chatbro-plugin');
-    __('User profile path', 'chatbro-plugin');
-    __('Enable shortcodes', 'chatbro-plugin');
-    __('Invalid chat key', 'chatbro-plugin');
+    __('Chat secret key', 'chatbro');
+    __('Display chat to guests', 'chatbro');
+    __('Show popup chat', 'chatbro');
+    __('Everywhere', 'chatbro');
+    __('Front page only', 'chatbro');
+    __('Everywhere except those listed', 'chatbro');
+    __('Only the listed pages', 'chatbro');
+    __('Disable', 'chatbro');
+    __("Specify pages by using their paths. Enter one path per line. The '*' character is a wildcard. Example paths are /2012/10/my-post for a single post and /2012/* for a group of posts. The path should always start with a forward slash(/).", 'chatbro');
+    __('User profile path', 'chatbro');
+    __('Enable shortcodes', 'chatbro');
+    __('Invalid chat key', 'chatbro');
 
 
     class InputType {
@@ -189,13 +189,13 @@ if (!class_exists("ChatBroPlugin")) {
             </style>
             <ul id="settings-tabs" class="nav nav-tabs" role="tablist" style="margin-top: 1.5rem;">
                 <li role="presentation" class="active">
-                    <a href="#constructor" aria-controls="constructor" role="tab" data-toggle="tab"><span class="glyphicon glyphicon-wrench"></span>&nbsp;<span class="hidden-xs"><?php _e("Chat Constructor", 'chatbro-plugin'); ?></span></a>
+                    <a href="#constructor" aria-controls="constructor" role="tab" data-toggle="tab"><span class="glyphicon glyphicon-wrench"></span>&nbsp;<span class="hidden-xs"><?php _e("Chat Constructor", 'chatbro'); ?></span></a>
                 </li>
                 <li role="presentation">
-                    <a href="#plugin-settings" aria-controls="plugin-settings" role="tab" data-toggle="tab"><span class="glyphicon glyphicon-cog"></span>&nbsp;<span class="hidden-xs"><?php _e("Plugin Settings", 'chatbro-plugin'); ?></span></a>
+                    <a href="#plugin-settings" aria-controls="plugin-settings" role="tab" data-toggle="tab"><span class="glyphicon glyphicon-cog"></span>&nbsp;<span class="hidden-xs"><?php _e("Plugin Settings", 'chatbro'); ?></span></a>
                 </li>
                 <li role="presentation">
-                    <a href="#contact-us" aria-controls="contact-us" role="tab" data-toggle="tab"><span class="glyphicon glyphicon-question-sign"></span>&nbsp;<span class="hidden-xs"><?php _e("Help", "chatbro-plugin"); ?></span></a>
+                    <a href="#contact-us" aria-controls="contact-us" role="tab" data-toggle="tab"><span class="glyphicon glyphicon-question-sign"></span>&nbsp;<span class="hidden-xs"><?php _e("Help", "chatbro"); ?></span></a>
                 </li>
             </ul>
             <?php
@@ -244,7 +244,7 @@ if (!class_exists("ChatBroPlugin")) {
                 <div id="support-chat" data-spy="affix" data-offset-top="53"></div>
               </div>
               <div id="chatbro-faq-panel" class="col-lg-6 col-lg-pull-6">
-                <h2><?php _e("Frequently Asked Questions", "chatbro-plugin"); ?></h2>
+                <h2><?php _e("Frequently Asked Questions", "chatbro"); ?></h2>
                 <p id="chatbro-faq"></p>
               </div>
             </div>
@@ -260,22 +260,22 @@ if (!class_exists("ChatBroPlugin")) {
                     <div class="modal-content">
                       <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                        <h4 class="modal-title" id="myModalLabel"><?php _e("You are about to change the secret key", "chatbro-plugin"); ?></h4>
+                        <h4 class="modal-title" id="myModalLabel"><?php _e("You are about to change the secret key", "chatbro"); ?></h4>
                       </div>
                       <p class="modal-body">
                         <?php
                         _e('Please be noticed that your current chat configuration and content are identified by your secret key and if you lose it there
                         will be no way to restore access to you current chat unless you have registered an account at
                         <a href="https://chatbro.com">Chatbro.com</a>. Please make sure that you have saved your old secret key and fully understand
-                        what are you going to do.', 'chatbro-plugin');
+                        what are you going to do.', 'chatbro');
                         ?>
                         <p id="chb-old-key">
-                            <?php _e("Your old secret key: <span></span>", "chatbro-plugin"); ?>
+                            <?php _e("Your old secret key: <span></span>", "chatbro"); ?>
                         </p>
                       </p>
                       <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal"><?php _e("Cancel", "chatbro-plugin"); ?></button>
-                        <button type="button" class="btn btn-primary"><?php _e("Change Secret Key", "chatbro-plugin"); ?></button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal"><?php _e("Cancel", "chatbro"); ?></button>
+                        <button type="button" class="btn btn-primary"><?php _e("Change Secret Key", "chatbro"); ?></button>
                       </div>
                     </div>
                 </div>
@@ -299,7 +299,7 @@ if (!class_exists("ChatBroPlugin")) {
                 ?>
                 <div class="form-group">
                     <div class="col-sm-offset-2 col-sm-10">
-                        <button id="chatbro-save" type="button" class="btn btn-primary" data-saving-text="<i class='fa fa-circle-o-notch fa-spin'></i> Saving Changes"><?php _e('Save Changes', 'chatbro-plugin'); ?></button>
+                        <button id="chatbro-save" type="button" class="btn btn-primary" data-saving-text="<i class='fa fa-circle-o-notch fa-spin'></i> Saving Changes"><?php _e('Save Changes', 'chatbro'); ?></button>
                    </div>
                 </div>
             </form>
@@ -310,20 +310,20 @@ if (!class_exists("ChatBroPlugin")) {
             ?>
             <div id="chatbro-shortcode-tip" class="col-lg-4">
                 <div class="bs-callout bs-callout-info">
-                    <h3><span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span><span style="padding-left: 0.7rem"><?php _e("Useful Tip", "chatbro-plugin"); ?></span></h3>
-                    <?php _e('Use shortcode <span>[chatbro]</span> to add the chat widget to the desired place of your page or post.', 'chatbro-plugin'); ?>
-                    <h4><?php _e('Supported shortcode attributes:', 'chatbro-plugin'); ?></h4>
+                    <h3><span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span><span style="padding-left: 0.7rem"><?php _e("Useful Tip", "chatbro"); ?></span></h3>
+                    <?php _e('Use shortcode <span>[chatbro]</span> to add the chat widget to the desired place of your page or post.', 'chatbro'); ?>
+                    <h4><?php _e('Supported shortcode attributes:', 'chatbro'); ?></h4>
                     <ul>
                         <li>
                             <?php
                               // Translators: Attribute name "static" and attribut value "true" shouldn't be translated
-                              _e('<em><b>static</b></em> &ndash; static not movable chat widget (default <em>true</em>).', 'chatbro-plugin');
+                              _e('<em><b>static</b></em> &ndash; static not movable chat widget (default <em>true</em>).', 'chatbro');
                             ?>
                         </li>
                         <li>
                             <?php
                               // Translators: Attribute name "egistered_only" and attribut value "false" shouldn't be translated
-                              _e('<em><b>registered_only</b></em> &ndash; display chat widget to logged in users only (default <em>false</em>). If this attribute is explicitly set it precedes the global <em>"Display chat to guests"</em> setting value.', 'chatbro-plugin');
+                              _e('<em><b>registered_only</b></em> &ndash; display chat widget to logged in users only (default <em>false</em>). If this attribute is explicitly set it precedes the global <em>"Display chat to guests"</em> setting value.', 'chatbro');
                             ?>
                         </li>
                     </ul>
@@ -357,7 +357,7 @@ if (!class_exists("ChatBroPlugin")) {
                 <div class="checkbox">
                     <label>
                         <input id="<?php echo $id; ?>" type="checkbox" name="<?php echo $id; ?>" <?php echo $checked; ?> >
-                        <?php _e($label, 'chatbro-plugin'); ?>
+                        <?php _e($label, 'chatbro'); ?>
                     </label>
                 </div>
             </div>
@@ -366,7 +366,7 @@ if (!class_exists("ChatBroPlugin")) {
 
         function render_other($id, $label, $args) {
             ?>
-            <label for="<?php echo $id; ?>" class="col-sm-2 control-label"><?php _e($label, 'chatbro-plugin'); ?></label>
+            <label for="<?php echo $id; ?>" class="col-sm-2 control-label"><?php _e($label, 'chatbro'); ?></label>
             <div class="col-sm-10">
                 <?php
                     if (array_key_exists('addon', $args))
@@ -382,7 +382,7 @@ if (!class_exists("ChatBroPlugin")) {
                         $help_block = $args['help_block'];
                         ?>
                         <div class="input-group">
-                            <span class="help-block"><?php _e($help_block, 'chatbro-plugin'); ?></span>
+                            <span class="help-block"><?php _e($help_block, 'chatbro'); ?></span>
                         </div>
                         <?php
                     }
@@ -408,7 +408,7 @@ if (!class_exists("ChatBroPlugin")) {
             switch($args['type']) {
                 case InputType::text:
                     $pattern = array_key_exists('pattern', $args) ? "pattern=\"{$args['pattern']}\" " : "";
-                    $pattern_error = (array_key_exists('pattern_error', $args) ? ('data-pattern-error="' . __($args['pattern_error'], 'chatbro-plugin') . '" ') : "");
+                    $pattern_error = (array_key_exists('pattern_error', $args) ? ('data-pattern-error="' . __($args['pattern_error'], 'chatbro') . '" ') : "");
                     ?>
                     <input id="<?php echo $id; ?>" name="<?php echo $id; ?>" type="text" class="form-control" value="<?php echo $value; ?>" <?php echo "{$required}{$pattern}{$pattern_error}"; ?>>
                     <span class="field-icon form-control-feedback glyphicon" aria-hidden="true"></span>
@@ -426,7 +426,7 @@ if (!class_exists("ChatBroPlugin")) {
                     <select id="<?php echo $id; ?>" name="<?php echo $id; ?>" class="form-control" <?php echo $required; ?>>
                         <?php
                         foreach($args['options'] as $val => $desc) {
-                            $desc = __($desc, 'chatbro-plugin');
+                            $desc = __($desc, 'chatbro');
                             $selected = $val == $value ? 'selected="selected"' : '';
                             echo "<option {$selected} name=\"$id\" value=\"{$val}\">{$desc}</option>";
                         }
@@ -440,14 +440,14 @@ if (!class_exists("ChatBroPlugin")) {
         function render_permissions() {
             ?>
             <div id="permissions-group" class="form-group">
-                <label class="control-label col-sm-2"><?php _e("Permissions", "chatbro-plugin"); ?></label>
+                <label class="control-label col-sm-2"><?php _e("Permissions", "chatbro"); ?></label>
                 <div class="col-sm-10">
                     <table id="chatbro-permissions" class="table table-active">
                         <tr>
-                            <th><?php _e("Role", "chatbro-plugin"); ?></th>
-                            <th><?php _e("View", "chatbro-plugin"); ?></th>
-                            <th><?php _e("Ban", "chatbro-plugin"); ?></th>
-                            <th><?php _e("Delete", "chatbro-plugin"); ?></th>
+                            <th><?php _e("Role", "chatbro"); ?></th>
+                            <th><?php _e("View", "chatbro"); ?></th>
+                            <th><?php _e("Ban", "chatbro"); ?></th>
+                            <th><?php _e("Delete", "chatbro"); ?></th>
                         </tr>
                         <?php
                         foreach(get_editable_roles() as $name => $info) {
@@ -573,7 +573,7 @@ if (!class_exists("ChatBroPlugin")) {
         function ajax_save_settings() {
             global $_POST;
             if (!current_user_can('manage_options'))
-                die('{"success":false,"message":"' . __("You are not allowed to modify settings","chatbro-plugin") . '","msg_type":"error"}');
+                die('{"success":false,"message":"' . __("You are not allowed to modify settings","chatbro") . '","msg_type":"error"}');
 
             $messages = array('fields' => array());
             $new_vals = array();
@@ -632,7 +632,7 @@ if (!class_exists("ChatBroPlugin")) {
                         $role->remove_cap(self::cap_delete);
                 }
 
-                $reply['message'] = "<strong>" . __("Settings was successfuly saved", "chatbro-plugin") . "</strong>";
+                $reply['message'] = "<strong>" . __("Settings was successfuly saved", "chatbro") . "</strong>";
                 $reply['msg_type'] = "info";
             }
 

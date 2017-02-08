@@ -5,8 +5,7 @@ defined( 'ABSPATH' ) or die( 'No script kiddies please!' );
 if (!class_exists("ChatBroUtils")) {
   class ChatBroUtils {
         public static function load_my_textdomain() {
-            $mo_file_path = dirname(__FILE__) . '/languages/chatbro-plugin-'. get_locale() . '.mo';
-            load_textdomain('chatbro-plugin', $mo_file_path);
+            load_plugin_textdomain('chatbro', false, dirname(plugin_basename(__FILE__)) . '/languages');
         }
 
         public static function gen_uuid() {
@@ -89,7 +88,7 @@ if (!class_exists("ChatBroUtils")) {
             $response = wp_safe_remote_get($url);
 
             if (is_wp_error($response)) {
-                $messages['fatal'] = __('Failed to call chat constructor', 'chatbro-plugin') . ": " . $response->get_error_message();
+                $messages['fatal'] = __('Failed to call chat constructor', 'chatbro') . ": " . $response->get_error_message();
                 return false;
             }
 
@@ -101,7 +100,7 @@ if (!class_exists("ChatBroUtils")) {
 
             if (!preg_match('/^[\da-f]{8}-[\da-f]{4}-[\da-f]{4}-[\da-f]{4}-[\da-f]{12}$/', $guid)) {
                 $messages['fields'][ChatBroPlugin::guid_setting] = array(
-                    "message" => __("Invalid chat secret key", 'chatbro-plugin'),
+                    "message" => __("Invalid chat secret key", 'chatbro'),
                     "type" => "error"
                 );
                 return self::get_option(ChatBroPlugin::guid_setting);
@@ -116,7 +115,7 @@ if (!class_exists("ChatBroUtils")) {
         public static function sanitize_display($val, &$messages) {
             if (!in_array($val, array_keys($options['display_setting']['options']))) {
                 $messages['fields'][ChatBroPlugin::display_setting] = array(
-                    "message" => __("Invalid show popup chat option value", 'chatbro-plugin'),
+                    "message" => __("Invalid show popup chat option value", 'chatbro'),
                     "type" => "error"
                 );
                 return ChatBroPlugin::get_option(ChatBroPlugin::display_setting);
