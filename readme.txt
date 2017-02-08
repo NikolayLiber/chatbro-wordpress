@@ -1,9 +1,9 @@
 === Chat Bro - Free Live Group Chat ===
 Contributors: ChatBro
-Tags: Chat, Chat Tool, Chat Widget, Free Live Chat, Group Chat, Live Chat, Online Live Chat, Plugin Chat, Web Chat, live chat widget, online support, wordpress live chat, chat software, chat services, live help, live chat help, chat widget, live support plugin, live chat support plugin
+Tags: Chat, Telegram, Telegram chat, Chat Tool, Chat Widget, Free Live Chat, Group Chat, Live Chat, Online Live Chat, Plugin Chat, Web Chat, live chat widget, online support, wordpress live chat, chat software, chat services, live help, live chat help, chat widget, live support plugin, live chat support plugin
 Requires at least: 3.5
 Tested up to: 4.7.2
-Stable tag: 2.0.2
+Stable tag: 2.1.0
 License: GPLv2
 
 Chat for your community with social networks integration. Syncronizes chat conversation with Telegram messenger. Allows your visitors to chat online in live group chat with you and each other. Skyrocket user engagement and overall time spent on your website.

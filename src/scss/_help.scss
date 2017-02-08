@@ -7,14 +7,11 @@
     width: 100%;
     top: 45px;
     padding-right: 54px;
-    height: 90vh;
+    // height: 90vh;
   }
 }
 
 #contact-us .row {
-  // padding-top: 15px;
-  // padding-bottom: 15px;
-  // padding-right: 20px;
   padding: 15px 0;
 
   @media screen and (max-width: 1199px) {
@@ -32,11 +29,16 @@
 }
 
 #support-chat {
-  @media screen and (max-width: 1199px) {
-    height: 70vh;
-  }
+  height: 100%;
+  // @media screen and (max-width: 1199px) {
+  //   height: 70vh;
+  // }
+  //
+  // @media screen and (min-width: 1200px) {
+  //   height: 90vh;
+  // }
+}
 
-  @media screen and (min-width: 1200px) {
-    height: 90vh;
-  }
+#chatbro-faq-panel h2 {
+  padding-bottom: 1.5rem;
 }

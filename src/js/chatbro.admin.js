@@ -115,10 +115,17 @@ jQuery(document).ready(function ($) {
     }
   }
 
+  function adjustChatHeight () {
+    var c = $(window).outerWidth >= 1200 ? 0.9 : 0.7
+    var h = $(window).outerHeight() * c
+    $('#chatbro-chat-panel').height(h)
+  }
+
   $(window).resize(function () {
     if ($('#support-chat').hasClass('affix')) {
       adjustChatWidth()
     }
+    adjustChatHeight()
   })
 
   $('#support-chat')
@@ -127,9 +134,9 @@ jQuery(document).ready(function ($) {
     $(this).width('')
   })
 
-  console.log('Loading faq')
   $.post(ajaxurl, {action: 'chatbro_get_faq'}, function (response) {
-    console.log('Got response:', response)
     $('#chatbro-faq').html(response)
   })
+
+  adjustChatHeight()
 })

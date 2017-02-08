@@ -186,15 +186,16 @@ if (!class_exists("ChatBroPlugin")) {
 
         function render_tabs() {
             ?>
+            </style>
             <ul id="settings-tabs" class="nav nav-tabs" role="tablist" style="margin-top: 1.5rem;">
                 <li role="presentation" class="active">
-                    <a href="#constructor" aria-controls="constructor" role="tab" data-toggle="tab"><?php _e("Chat Constructor", 'chatbro-plugin'); ?></a>
+                    <a href="#constructor" aria-controls="constructor" role="tab" data-toggle="tab"><span class="glyphicon glyphicon-wrench"></span>&nbsp;<span class="hidden-xs"><?php _e("Chat Constructor", 'chatbro-plugin'); ?></span></a>
                 </li>
                 <li role="presentation">
-                    <a href="#plugin-settings" aria-controls="plugin-settings" role="tab" data-toggle="tab"><?php _e("Plugin Settings", 'chatbro-plugin'); ?></a>
+                    <a href="#plugin-settings" aria-controls="plugin-settings" role="tab" data-toggle="tab"><span class="glyphicon glyphicon-cog"></span>&nbsp;<span class="hidden-xs"><?php _e("Plugin Settings", 'chatbro-plugin'); ?></span></a>
                 </li>
                 <li role="presentation">
-                    <a href="#contact-us" aria-controls="contact-us" role="tab" data-toggle="tab"><?php _e("Help", "chatbro-plugin"); ?></a>
+                    <a href="#contact-us" aria-controls="contact-us" role="tab" data-toggle="tab"><span class="glyphicon glyphicon-question-sign"></span>&nbsp;<span class="hidden-xs"><?php _e("Help", "chatbro-plugin"); ?></span></a>
                 </li>
             </ul>
             <?php
@@ -239,11 +240,11 @@ if (!class_exists("ChatBroPlugin")) {
           ?>
           <div id="contact-us" role="tabpanel" class="tab-pane fade in container-fluid" >
             <div class="row">
-              <div class="col-lg-6 col-lg-push-6">
+              <div id="chatbro-chat-panel" class="col-lg-6 col-lg-push-6">
                 <div id="support-chat" data-spy="affix" data-offset-top="53"></div>
               </div>
-              <div id="chbr-faq" class="col-lg-6 col-lg-pull-6">
-                <h1><?php _e("Frequently Asked Questions", "chatbro-plugin"); ?></h1>
+              <div id="chatbro-faq-panel" class="col-lg-6 col-lg-pull-6">
+                <h2><?php _e("Frequently Asked Questions", "chatbro-plugin"); ?></h2>
                 <p id="chatbro-faq"></p>
               </div>
             </div>
