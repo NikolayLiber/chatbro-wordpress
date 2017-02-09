@@ -189,13 +189,13 @@ if (!class_exists("ChatBroPlugin")) {
             </style>
             <ul id="settings-tabs" class="nav nav-tabs" role="tablist" style="margin-top: 1.5rem;">
                 <li role="presentation" class="active">
-                    <a href="#constructor" aria-controls="constructor" role="tab" data-toggle="tab"><span class="glyphicon glyphicon-wrench"></span>&nbsp;<span class="hidden-xs"><?php _e("Chat Constructor", 'chatbro'); ?></span></a>
+                    <a href="#constructor" aria-controls="constructor" role="tab" data-toggle="tab"><span class="glyphicon glyphicon-wrench"></span><span class="tab-title hidden-xs"><?php _e("Chat Constructor", 'chatbro'); ?></span></a>
                 </li>
                 <li role="presentation">
-                    <a href="#plugin-settings" aria-controls="plugin-settings" role="tab" data-toggle="tab"><span class="glyphicon glyphicon-cog"></span>&nbsp;<span class="hidden-xs"><?php _e("Plugin Settings", 'chatbro'); ?></span></a>
+                    <a href="#plugin-settings" aria-controls="plugin-settings" role="tab" data-toggle="tab"><span class="glyphicon glyphicon-cog"></span><span class="tab-title hidden-xs"><?php _e("Plugin Settings", 'chatbro'); ?></span></a>
                 </li>
                 <li role="presentation">
-                    <a href="#contact-us" aria-controls="contact-us" role="tab" data-toggle="tab"><span class="glyphicon glyphicon-question-sign"></span>&nbsp;<span class="hidden-xs"><?php _e("Help", "chatbro"); ?></span></a>
+                    <a href="#contact-us" aria-controls="contact-us" role="tab" data-toggle="tab"><span class="glyphicon glyphicon-question-sign"></span><span class="tab-title hidden-xs"><?php _e("Help", "chatbro"); ?></span></a>
                 </li>
             </ul>
             <?php
