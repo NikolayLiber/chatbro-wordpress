@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: chatbro-wordpress-plugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-02-08 23:18+0500\n"
-"PO-Revision-Date: 2017-02-09 16:38+0500\n"
+"POT-Creation-Date: 2017-02-09 22:02+0500\n"
+"PO-Revision-Date: 2017-02-09 20:35+0500\n"
 "Last-Translator: Nikolay Liber\n"
 "Language-Team: Russian\n"
 "Language: ru\n"
@@ -45,9 +45,9 @@ msgstr "Зарегистрироваться"
 msgid "Chat secret key"
 msgstr "Секретный ключ беседы"
 
-#: plugin.php:11
+#: plugin.php:11 widget.php:53
 msgid "Display chat to guests"
-msgstr "Показывать чат незарегистрированым пользовтелям"
+msgstr "Показывать чат незарегистрированным пользователям"
 
 #: plugin.php:12
 msgid "Show popup chat"
@@ -206,11 +206,11 @@ msgstr "Бан"
 msgid "Delete"
 msgstr "Удаление"
 
-#: plugin.php:576
+#: plugin.php:566
 msgid "You are not allowed to modify settings"
 msgstr "У вас нет прав на изменение настроек"
 
-#: plugin.php:635
+#: plugin.php:625
 msgid "Settings was successfuly saved"
 msgstr "Настройки были успешно сохранены"
 
@@ -225,6 +225,14 @@ msgstr "Неверный секретный ключ беседы"
 #: util.php:118
 msgid "Invalid show popup chat option value"
 msgstr "Неверное значение параметра \"Показывать чат\""
+
+#: widget.php:13
+msgid "ChatBro"
+msgstr "ChatBro"
+
+#: widget.php:14
+msgid "ChatBro group chat"
+msgstr "ChatBro чат между пользователями"
 
 #~ msgid "Failed to connect to chat server"
 #~ msgstr "Не смог соединиться с сервером чатов"

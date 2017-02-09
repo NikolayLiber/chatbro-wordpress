@@ -262,6 +262,20 @@ if (!class_exists("ChatBroUtils")) {
 
             return $code;
         }
-  }
+
+        public static function user_can_view($display_to_guests) {
+            $logged_in = is_user_logged_in();
+            $can_view = current_user_can(ChatBroPlugin::cap_view);
+
+            if ((!$display_to_guests && !$logged_in) || ($logged_in && !$can_view))
+                return false;
+
+            if (!$display_to_guests && !$logged_in)
+                // Don't show the chat to unregistered users
+                return false;
+
+            return true;
+        }
+    }
 }
 ?>

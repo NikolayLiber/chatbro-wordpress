@@ -529,42 +529,32 @@ if (!class_exists("ChatBroPlugin")) {
               return;
           }
 
-          $display_to_guests = ChatBroUtils::get_option(self::display_to_guests_setting);
-          $logged_in = is_user_logged_in();
-          $can_view = current_user_can(self::cap_view);
-
-          if ((!$display_to_guests && !$logged_in) || ($logged_in && !$can_view))
+          if (!ChatBroUtils::user_can_view(self::display_to_guests_setting))
             return;
 
-            $display_to_guests = ChatBroUtils::get_option(self::display_to_guests_setting);
+          $where_to_display = ChatBroUtils::get_option(self::display_setting);
 
-            if (!$display_to_guests && !is_user_logged_in())
-                // Don't show the chat to unregistered users
-                return;
+          switch($where_to_display) {
+              case '':
+              case 'everywhere':
+                  break;
 
-            $where_to_display = ChatBroUtils::get_option(self::display_setting);
+              case 'frontpage_only':
+                  if (!is_front_page())
+                      return;
+                  break;
 
-            switch($where_to_display) {
-                case '':
-                case 'everywhere':
-                    break;
+              case 'except_listed':
+              case 'only_listed':
+                  if (!ChatBroUtils::check_path())
+                      return;
+                  break;
 
-                case 'frontpage_only':
-                    if (!is_front_page())
-                        return;
-                    break;
+              default:
+                  return;
+          }
 
-                case 'except_listed':
-                case 'only_listed':
-                    if (!ChatBroUtils::check_path())
-                        return;
-                    break;
-
-                default:
-                    return;
-            }
-
-            echo ChatBroUtils::generate_chat_code($guid);
+          echo ChatBroUtils::generate_chat_code($guid);
         }
 
         /**

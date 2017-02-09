@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: chatbro2 1.0.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-02-08 23:18+0500\n"
+"POT-Creation-Date: 2017-02-09 22:02+0500\n"
 "PO-Revision-Date: 2017-01-31 15:58+0700\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -46,7 +46,7 @@ msgstr "Daftar"
 msgid "Chat secret key"
 msgstr "Kunci rahasia chat"
 
-#: plugin.php:11
+#: plugin.php:11 widget.php:53
 msgid "Display chat to guests"
 msgstr "Tampilkan chat pada tamu"
 
@@ -211,11 +211,11 @@ msgstr "Blokir"
 msgid "Delete"
 msgstr "Hapus"
 
-#: plugin.php:576
+#: plugin.php:566
 msgid "You are not allowed to modify settings"
 msgstr "Anda tidak diperbolehkan untuk mengubah pengaturan"
 
-#: plugin.php:635
+#: plugin.php:625
 msgid "Settings was successfuly saved"
 msgstr "Pengaturan berhasil tersimpan"
 
@@ -230,6 +230,15 @@ msgstr "Kunci rahasia chat tidak valid"
 #: util.php:118
 msgid "Invalid show popup chat option value"
 msgstr "Pemunculan nilai pilihan pop up chat tidak valid"
+
+#: widget.php:13
+msgid "ChatBro"
+msgstr ""
+
+#: widget.php:14
+#, fuzzy
+msgid "ChatBro group chat"
+msgstr "Tampilkan pop up chat"
 
 #~ msgid "Failed to connect to chat server"
 #~ msgstr "Gagal terhubung ke server chat"

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: chatbro-wordpress 1.0.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-02-09 00:00+0500\n"
+"POT-Creation-Date: 2017-02-09 22:02+0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -41,7 +41,7 @@ msgstr ""
 msgid "Chat secret key"
 msgstr ""
 
-#: plugin.php:11
+#: plugin.php:11 widget.php:53
 msgid "Display chat to guests"
 msgstr ""
 
@@ -186,11 +186,11 @@ msgstr ""
 msgid "Delete"
 msgstr ""
 
-#: plugin.php:576
+#: plugin.php:566
 msgid "You are not allowed to modify settings"
 msgstr ""
 
-#: plugin.php:635
+#: plugin.php:625
 msgid "Settings was successfuly saved"
 msgstr ""
 
@@ -204,4 +204,12 @@ msgstr ""
 
 #: util.php:118
 msgid "Invalid show popup chat option value"
+msgstr ""
+
+#: widget.php:13
+msgid "ChatBro"
+msgstr ""
+
+#: widget.php:14
+msgid "ChatBro group chat"
 msgstr ""
