@@ -236,6 +236,26 @@ if (!class_exists("ChatBroPlugin")) {
             <?php
         }
 
+        static function get_support_chat_id() {
+          $chats = array (
+            'en' => '083y',
+            'ru' => '47cs'
+          );
+
+          $locale = get_locale();
+
+          if (isset($chats[$locale]))
+            return $chats[$locale];
+
+          $t = explode('_', $locale);
+          $lang = $t[0];
+
+          if (isset($chats[$lang]))
+            return $chats[$lang];
+
+          return $chats['en'];
+        }
+
         function render_contact_us_tab() {
           ?>
           <div id="contact-us" role="tabpanel" class="tab-pane fade in container-fluid" >
@@ -248,7 +268,10 @@ if (!class_exists("ChatBroPlugin")) {
                 <p id="chatbro-faq"></p>
               </div>
             </div>
-            <script id="chatBroEmbedCode">/* Chatbro Widget Embed Code Start */function ChatbroLoader(chats,async) {async=async!==false;var params={embedChatsParameters:chats instanceof Array?chats:[chats],needLoadCode:typeof Chatbro==='undefined'};var xhr=new XMLHttpRequest();xhr.withCredentials = true;xhr.onload=function(){eval(xhr.responseText)};xhr.onerror=function(){console.error('Chatbro loading error')};xhr.open('POST','//www.chatbro.com/embed_chats/',async);xhr.setRequestHeader('Content-Type','application/x-www-form-urlencoded');xhr.send('parameters='+encodeURIComponent(JSON.stringify(params)))}/* Chatbro Widget Embed Code End */ChatbroLoader({encodedChatId: '47cs'});</script>
+            <script id="chatBroEmbedCode">
+              /* Chatbro Widget Embed Code Start */function ChatbroLoader(chats,async) {async=async!==false;var params={embedChatsParameters:chats instanceof Array?chats:[chats],needLoadCode:typeof Chatbro==='undefined'};var xhr=new XMLHttpRequest();xhr.withCredentials = true;xhr.onload=function(){eval(xhr.responseText)};xhr.onerror=function(){console.error('Chatbro loading error')};xhr.open('POST','//www.chatbro.com/embed_chats/',async);xhr.setRequestHeader('Content-Type','application/x-www-form-urlencoded');xhr.send('parameters='+encodeURIComponent(JSON.stringify(params)))}/* Chatbro Widget Embed Code End */
+              ChatbroLoader({encodedChatId: '<?php echo self::get_support_chat_id(); ?>'});
+            </script>
           </div>
           <?php
         }
