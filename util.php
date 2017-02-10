@@ -2,6 +2,8 @@
 
 defined( 'ABSPATH' ) or die( 'No script kiddies please!' );
 
+require_once(plugin_dir_path(__FILE__) . 'includes/avatar/avatar.php');
+
 if (!class_exists("ChatBroUtils")) {
   class ChatBroUtils {
         public static function load_my_textdomain() {
@@ -204,7 +206,7 @@ if (!class_exists("ChatBroUtils")) {
             $user = wp_get_current_user();
             $siteurl = self::get_option('siteurl');
             $site_domain = self::get_site_domain();
-            $site_user_avatar_url = self::get_avatar_url();
+            $site_user_avatar_url = ChatBroAvatar::get_url();
             $profile_url = self::get_profile_url();
 
             $permissions = array();

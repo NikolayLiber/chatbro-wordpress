@@ -142,6 +142,7 @@ module.exports = function (grunt) {
             'favicon_small.png',
             'fonts/**/*',
             'readme.txt',
+            'index.html',
             '!LICENSE.txt',
             '!node_modules/**',
             '!dist/**',

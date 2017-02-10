@@ -2,9 +2,8 @@
 
 defined( 'ABSPATH' ) or die( 'No script kiddies please!' );
 
-if (!function_exists('get_editable_roles')) {
-   require_once(ABSPATH . '/wp-admin/includes/user.php');
-}
+require_once(ABSPATH . '/wp-admin/includes/user.php');
+require_once(plugin_dir_path(__FILE__) . 'includes/avatar/avatar.php');
 
 if (!class_exists("ChatBroPlugin")) {
     __('Chat secret key', 'chatbro');
@@ -207,7 +206,7 @@ if (!class_exists("ChatBroPlugin")) {
                 <iframe name="chatbro-constructor" style="width: 100%; height: 85vh"></iframe>
                 <form id="load-constructor" target="chatbro-constructor" action="https://www.chatbro.com/constructor/<?php echo $guid; ?>/" method="GET">
                     <input type="hidden" name="guid" value="<?php echo $guid; ?>">
-                    <input type="hidden" name="avatarUrl" value="<?php echo ChatBroUtils::get_avatar_url(); ?>">
+                    <input type="hidden" name="avatarUrl" value="<?php echo ChatBroAvatar::get_url(); ?>">
                     <input type="hidden" name="userFullName" value="<?php echo wp_get_current_user()->display_name; ?>">
                     <input type="hidden" name="userProfileUrl" value="<?php echo ChatBroUtils::get_profile_url(); ?>">
                 </form>
