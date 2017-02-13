@@ -2,8 +2,6 @@
 
 defined( 'ABSPATH' ) or die( 'No script kiddies please!' );
 
-require_once(plugin_dir_path(__FILE__) . 'includes/avatar/avatar.php');
-
 if (!class_exists("ChatBroUtils")) {
   class ChatBroUtils {
         public static function load_my_textdomain() {
@@ -169,6 +167,21 @@ if (!class_exists("ChatBroUtils")) {
             return $page_match;
         }
 
+        public static function get_avatar_url() {
+          $user_id = get_current_user_id();
+          $site_user_avatar_url = "";
+
+          preg_match("/src=['\"]([^'\"]+)['\"]/i", get_avatar($user_id), $avatar_path);
+
+          if(count($avatar_path)!=0)
+            $site_user_avatar_url = $avatar_path[1];
+
+          if($site_user_avatar_url == "")
+              $site_user_avatar_url = get_avatar_url($user_id);
+
+          return $site_user_avatar_url;
+        }
+
         public static function get_profile_url()
         {
             $user = wp_get_current_user();
@@ -189,7 +202,7 @@ if (!class_exists("ChatBroUtils")) {
             $user = wp_get_current_user();
             $siteurl = self::get_option('siteurl');
             $site_domain = self::get_site_domain();
-            $site_user_avatar_url = ChatBroAvatar::get_url();
+            $site_user_avatar_url = self::get_avatar_url();
             $profile_url = self::get_profile_url();
 
             $permissions = array();
