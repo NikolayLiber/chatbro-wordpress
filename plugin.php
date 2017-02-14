@@ -550,7 +550,7 @@ if (!class_exists("ChatBroPlugin")) {
               return;
           }
 
-          if (!ChatBroUtils::user_can_view(self::display_to_guests_setting))
+          if (!ChatBroUtils::user_can_view(ChatBroUtils::get_option(self::display_to_guests_setting)))
             return;
 
           $where_to_display = ChatBroUtils::get_option(self::display_setting);

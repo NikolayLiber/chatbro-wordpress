@@ -263,7 +263,10 @@ if (!class_exists("ChatBroUtils")) {
 
         public static function user_can_view($display_to_guests) {
             $logged_in = is_user_logged_in();
-            $can_view = current_user_can(ChatBroPlugin::cap_view);
+            $can_view = $logged_in ? current_user_can(ChatBroPlugin::cap_view) : false;
+
+            var_dump($logged_in);
+            var_dump($can_view);
 
             if ((!$display_to_guests && !$logged_in) || ($logged_in && !$can_view))
                 return false;
