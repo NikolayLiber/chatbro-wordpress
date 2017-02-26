@@ -1,0 +1,231 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the chatbro-wordpress package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: chatbro-wordpress 1.0.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2017-02-16 16:40+0100\n"
+"PO-Revision-Date: 2017-02-16 16:53+0100\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.8.11\n"
+"Last-Translator: \n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Language: it_IT\n"
+
+#: deprecated.php:13 dist/deprecated.php:13
+msgid ""
+"To manage chat settings in the new version of the plugin, you should submit "
+"a chat secret key. Please, log in to your account at <a href=\"https://www."
+"chatbro.com/account\">chatbro.com</a> (use login button below), copy the "
+"chat secret key and insert it into the respective field."
+msgstr ""
+"Per modificare le impostazioni della chat nella nuova versione del plugin è "
+"necessario inviare una chiave segreta. Fai il login nel tuo account <a href="
+"\"https://www.chatbro.com/account\">chatbro.com</a> (usa il pulsante "
+"sottostante), copia la chiave segreta ed inseriscila nel rispettivo campo."
+
+#: deprecated.php:31 dist/deprecated.php:31
+msgid "Save secret key"
+msgstr "Salva chiave segreta"
+
+#: deprecated.php:123 dist/deprecated.php:123
+msgid "Only for registered members! "
+msgstr "Solo per utenti registrati!"
+
+#: deprecated.php:125 dist/deprecated.php:125
+msgid "Register"
+msgstr "Registra"
+
+#: dist/plugin.php:10 plugin.php:10
+msgid "Chat secret key"
+msgstr "Chiave segreta"
+
+#: dist/plugin.php:11 plugin.php:11
+msgid "Display chat to guests"
+msgstr "Visualizza la chat agli ospiti"
+
+#: dist/plugin.php:12 plugin.php:12
+msgid "Show popup chat"
+msgstr "Visualizza la chat in popup"
+
+#: dist/plugin.php:13 plugin.php:13
+msgid "Everywhere"
+msgstr "Ovunque"
+
+#: dist/plugin.php:14 plugin.php:14
+msgid "Front page only"
+msgstr "Solo nella front page"
+
+#: dist/plugin.php:15 plugin.php:15
+msgid "Everywhere except those listed"
+msgstr "Ovunque eccetto quelle elencate"
+
+#: dist/plugin.php:16 plugin.php:16
+msgid "Only the listed pages"
+msgstr "Solo le pagine elencate"
+
+#: dist/plugin.php:17 plugin.php:17
+msgid "Disable"
+msgstr "Disabilita"
+
+#: dist/plugin.php:18 plugin.php:18
+msgid ""
+"Specify pages by using their paths. Enter one path per line. The '*' "
+"character is a wildcard. Example paths are /2012/10/my-post for a single "
+"post and /2012/* for a group of posts. The path should always start with a "
+"forward slash(/)."
+msgstr ""
+"Specificare le pagine utilizzando i loro percorsi. Inserire un percorso per "
+"riga. Il carattere '*' è un carattere jolly. Percorsi di esempio: / 2012/10 /"
+"mio-post per un singolo post e /2012/ * per un gruppo di messaggi. Il "
+"percorso dovrebbe sempre iniziare con una barra (/)."
+
+#: dist/plugin.php:19 plugin.php:19
+msgid "User profile path"
+msgstr "Percorso del profilo utente"
+
+#: dist/plugin.php:20 plugin.php:20
+msgid "Enable shortcodes"
+msgstr "Abilita shortcodes"
+
+#: dist/plugin.php:21 plugin.php:21
+msgid "Invalid chat key"
+msgstr "Chiave non valida"
+
+#: dist/plugin.php:192 plugin.php:192
+msgid "Chat Constructor"
+msgstr "Chat Constructor"
+
+#: dist/plugin.php:195 plugin.php:195
+msgid "Plugin Settings"
+msgstr "Impostazioni plugin"
+
+#: dist/plugin.php:198 plugin.php:198
+msgid "Help"
+msgstr "Aiuto"
+
+#: dist/plugin.php:247 plugin.php:247
+msgid "Frequently Asked Questions"
+msgstr "Domande frequenti"
+
+#: dist/plugin.php:263 plugin.php:263
+msgid "You are about to change the secret key"
+msgstr "Stai per cambiare la chiave segreta"
+
+#: dist/plugin.php:267 plugin.php:267
+msgid ""
+"Please be noticed that your current chat configuration and content are "
+"identified by your secret key and if you lose it there\n"
+"                        will be no way to restore access to you current chat "
+"unless you have registered an account at\n"
+"                        <a href=\"https://chatbro.com\">Chatbro.com</a>. "
+"Please make sure that you have saved your old secret key and fully "
+"understand\n"
+"                        what are you going to do."
+msgstr ""
+"Si prega di notare che la configurazione della chat corrente e i relativi "
+"contenuti sono identificati con una chiave segreta che se smarrita\n"
+"                         non potrà essere ripristinata in alcun modo se non "
+"hai registrato un account su\n"
+"                         <a href=\"https://chatbro.com\">Chatbro.com</a>. Si "
+"prega di assicurarsi di aver salvato la vecchia chiave segreta e essere "
+"molto cauti\n"
+"                         prima di compiere quest'azione."
+
+#: dist/plugin.php:273 plugin.php:273
+msgid "Your old secret key: <span></span>"
+msgstr "La tua vecchia chiave segreta: <span></span>"
+
+#: dist/plugin.php:277 plugin.php:277
+msgid "Cancel"
+msgstr "Elimina"
+
+#: dist/plugin.php:278 plugin.php:278
+msgid "Change Secret Key"
+msgstr "Cambia la chiave segreta"
+
+#: dist/plugin.php:302 plugin.php:302
+msgid "Save Changes"
+msgstr "Salva cambiamenti"
+
+#: dist/plugin.php:313 plugin.php:313
+msgid "Useful Tip"
+msgstr "Consigli utili"
+
+#: dist/plugin.php:314 plugin.php:314
+msgid ""
+"Use shortcode <span>[chatbro]</span> to add the chat widget to the desired "
+"place of your page or post."
+msgstr ""
+"Usa lo shortcode <span>[chatbro]</span> per aggiungere la chat nelle tue "
+"pagine o post."
+
+#: dist/plugin.php:315 plugin.php:315
+msgid "Supported shortcode attributes:"
+msgstr "Attributi supportati dallo shortcode:"
+
+#. Translators: Attribute name "static" and attribut value "true" shouldn't be translated
+#: dist/plugin.php:320 plugin.php:320
+msgid ""
+"<em><b>static</b></em> &ndash; static not movable chat widget (default "
+"<em>true</em>)."
+msgstr ""
+"<em><b>statica</b></em> &ndash; Widget non posizionabile (default <em>true</"
+"em>)."
+
+#. Translators: Attribute name "egistered_only" and attribut value "false" shouldn't be translated
+#: dist/plugin.php:326 plugin.php:326
+msgid ""
+"<em><b>registered_only</b></em> &ndash; display chat widget to logged in "
+"users only (default <em>false</em>). If this attribute is explicitly set it "
+"precedes the global <em>\"Display chat to guests\"</em> setting value."
+msgstr ""
+"<em><b>solo registrati</b></em> &ndash; Visualizza la chat solo agli utenti "
+"loggati. (default <em>false</em>). If this attribute is explicitly set it "
+"precedes the global <em>\"Display chat to guests\"</em> setting value."
+
+#: dist/plugin.php:443 plugin.php:443
+msgid "Permissions"
+msgstr "Permessi"
+
+#: dist/plugin.php:447 plugin.php:447
+msgid "Role"
+msgstr "Ruolo"
+
+#: dist/plugin.php:448 plugin.php:448
+msgid "View"
+msgstr "Visualizza"
+
+#: dist/plugin.php:449 plugin.php:449
+msgid "Ban"
+msgstr "Banna"
+
+#: dist/plugin.php:450 plugin.php:450
+msgid "Delete"
+msgstr "Elimina"
+
+#: dist/plugin.php:576 plugin.php:576
+msgid "You are not allowed to modify settings"
+msgstr "Non sei autorizzato a modificare le impostazioni"
+
+#: dist/plugin.php:635 plugin.php:635
+msgid "Settings was successfuly saved"
+msgstr "Impostazioni salvate con successo"
+
+#: dist/util.php:92 util.php:92
+msgid "Failed to call chat constructor"
+msgstr "Impossibile dialogare con il chat contructor"
+
+#: dist/util.php:104 util.php:104
+msgid "Invalid chat secret key"
+msgstr "Chiave segreta non valida"
+
+#: dist/util.php:119 util.php:119
+msgid "Invalid show popup chat option value"
+msgstr "Valore per la visualizzazione dei popup della chat non valido"

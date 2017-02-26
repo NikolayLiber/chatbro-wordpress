@@ -1,22 +1,22 @@
 <?php
 /**
  * @package ChatBro
- * @version 2.2.5
+ * @version 2.2.6
  */
 /*
 Plugin Name: ChatBro
 Plugin URI: http://chatbro.com
 Description: Live group chat for your community with social networks integration. Chat conversation is being syncronized with popular messengers. Love ChatBro? Spread the word! <a href="https://wordpress.org/support/view/plugin-reviews/chatbro">Click here to review the plugin!</a>.
-Version: 2.2.5
+Version: 2.2.6
 Author: ChatBro
 Author URI: http://chatbro.com
 License: GPL3
 Text Domain: chatbro
-Domain Path: /languages
+Domain Path: /languages/
 */
 
 defined( 'ABSPATH' ) or die( 'No script kiddies please!' );
-define('CHATBRO_PLUGIN_VERSION', '2.2.5', true);
+define('CHATBRO_PLUGIN_VERSION', '2.2.6', true);
 
 require_once('util.php');
 require_once('deprecated.php');
