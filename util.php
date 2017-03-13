@@ -238,6 +238,7 @@ if (!class_exists("ChatBroUtils")) {
                 $params .= ", isStatic: true";
 
             $params .= ", signature: '{$signature}'";
+            $params .= ", sig_source: '{$sig_source}'";
             $params .= ", wpPluginVersion: '" . ChatBroPlugin::version . "'";
 
             if (!empty($permissions))

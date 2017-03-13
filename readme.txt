@@ -1,70 +1,39 @@
-=== Chat Bro - Free Live Group Chat ===
+=== Chat Bro - Chat linked with Telegram or VK chat ===
 Contributors: ChatBro
 Tags: Chat, Telegram, Telegram chat, Chat Tool, Chat Widget, Free Live Chat, Group Chat, Live Chat, Online Live Chat, Plugin Chat, Web Chat, live chat widget, online support, wordpress live chat, chat software, chat services, live help, live chat help, chat widget, live support plugin, live chat support plugin
 Requires at least: 3.5
 Tested up to: 4.7.2
-Stable tag: 2.2.6
+Stable tag: 2.2.7
 License: GPLv2
 
-Chat for your community with social networks integration. Syncronizes chat conversation with Telegram messenger. Allows your visitors to chat online in live group chat with you and each other. Skyrocket user engagement and overall time spent on your website.
+Chat Bro - live Chat for your website. Turns your Telegram Chat or VK Chat into Live Chat on your website. Allows your visitors to Chat in live group Chat with you and each other. Add chat to your blog. Live chat assistance. Chat with customers on your website. Website chat live chat group chat telegram chat wordpress chat. Chat tool chat widget.
 
 == Description ==
 
-Live group chat for your website.
+[ChatBro](https://www.chatbro.com) - live group chat for your website.
 
-Chat conversation is being syncronized with conversation in VK/Telegram messengers. Join it via chat menu and talk to your website visitors from VK/Telegram messenger. Conversation history is saved and can be added to your website for further indexing by search robots. Add our robot to an existing VK/Telegram conversation to get it's history on your website for search engine indexing.
+= Why ChatBro? =
 
-Admins find it convenient to answer users questions by mobile phone using a VK/Telegram application.
+* Support [Telegram](https://telegram.org/), [VK](https://vk.com) chats and channels
+* Audio, photo and video previews
+* Web chat constructor
+* Mobile ready
+* Very fast
+* Indexed by search robots
 
-= Features =
+= Easy Installation =
+After installing the plugin just name your chat. Chat can be easily configured with visual chat constructor tool. You can change color scheme, size, initial state, etc.
 
-* chat history is indexed by search robots
-* reveals photo and video
-* asynchronous loading - no influence exerted on your website
-* mobile ready
-* authentication via your website, Vkontakte or Telegram
-* moderation by chat owner
-* website chat synchronized with Vkontakte or Telegram chat
+= Link with Telegram =
+Add [@chatbrobot](https://telegram.me/chatbrobot?startgroup=chat) to your Telegram chat or channel. Send /sync command in case of channel. You'll receive sync url from bot.
 
-= Live group chat is better than chat with operators =
-
-Unlike private chat with consultants, live group chat between all website users and the administration appears to be more trustworthy. People communicate and see admin's reaction and realize that the website is functional and adequate.
-
-You still can chat with client in private if needed.
-
-= Increases search traffic, user engagement and overall time spent on the website =
-
-The chat history is unique content on your subject. Search engines index it and provide targeted traffic. If you was the first one who submited unique content to the search engine, and the content matched a rare user query, you will hold the first position on this query.
-
-= Easy installation =
-
-After installing the plugin just name your conversation and choose messenger to syncronize with (VK or Telegram).
-[Create conversation link in My Account section >>](http://www.chatbro.com/account/)
-
-= Customization =
-
-Chat could be easily configured with plugin extended parameters.
-You can choose color theme, size, initial state, etc.
-
-[Download lastest version >>](http://www.chatbro.com/en/documentation/#wordpress)
-
-
-== Installation ==
-
-1. Download the plugin package and install it from admin panel of your site.
-2. Activate plugin.
-3. Go to plugin settings from the side menu 'ChatBro plugin'.
-4. Set chat path. You can create chat path in chatbro My Account page. [Create Conversation >>](http://www.chatbro.com/en/documentation/#chatpath)
-
-== Screenshots ==
-
-1. Сhat on the website
-2. Synchronization with Telegram
-3. Synchronization with VK
-4. Plugin Settings
-5. How to enable indexing of the chat
+= Group chat is better than privates with operators =
+Most people just read chat and see admin's reactions to realize that the website is functional and adequate. You can chat with visitor in private if needed.
 
 == ChangeLog ==
+
+= 2.2.7 =
+* Some debug info added
 
 = 2.2.6 =
 * Italian translation added
