@@ -198,6 +198,8 @@ if (!class_exists("ChatBroUtils")) {
         }
 
         public static function generate_chat_code($guid, $container_id = null, $static = false) {
+            $internal_encoding = mb_internal_encoding();
+            mb_internal_encoding('UTF-8');
             $hash = md5($guid);
             $user = wp_get_current_user();
             $siteurl = self::get_option('siteurl');
@@ -239,6 +241,8 @@ if (!class_exists("ChatBroUtils")) {
 
             $params .= ", signature: '{$signature}'";
             $params .= ", sig_source: '{$sig_source}'";
+            $params .= ", mb_internal_encoding: '{$internal_encoding}'";
+            $params .= ", mb_http_output: '" . mb_http_output() . "'";
             $params .= ", wpPluginVersion: '" . ChatBroPlugin::version . "'";
 
             if (!empty($permissions))
@@ -258,6 +262,8 @@ if (!class_exists("ChatBroUtils")) {
 
             $code = ob_get_contents();
             ob_end_clean();
+
+            mb_internal_encoding($internal_encoding);
 
             return $code;
         }
