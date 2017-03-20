@@ -19,6 +19,7 @@
     "jquery-form": "^3.46.0",
     "bootstrap": "^3.3.7",
     "font-awesome": "^4.7.0",
-    "bootstrap-validator": "https://github.com/1000hz/bootstrap-validator.git#^0.11.9"
+    "bootstrap-validator": "https://github.com/1000hz/bootstrap-validator.git#^0.11.9",
+    "base64": "^1.0.0"
   }
 }

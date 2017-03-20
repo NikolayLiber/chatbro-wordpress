@@ -2,6 +2,8 @@
 
 defined( 'ABSPATH' ) or die( 'No script kiddies please!' );
 
+require_once(ABSPATH . '/wp-admin/includes/plugin.php');
+
 if (!class_exists("ChatBroUtils")) {
   class ChatBroUtils {
         public static function load_my_textdomain() {
@@ -215,7 +217,7 @@ if (!class_exists("ChatBroUtils")) {
             if (current_user_can(ChatBroPlugin::cap_ban))
                 array_push($permissions, 'ban');
 
-            $params = "encodedChatGuid: '{$hash}', siteDomain: '{$site_domain}'";
+            $params = "encodedChatGuid: '{$hash}', siteDomain: '" . base64_encode($site_domain) . "'";
             $sig_source = "";
 
             if (is_user_logged_in()) {
@@ -223,10 +225,10 @@ if (!class_exists("ChatBroUtils")) {
                 $params .= ", siteUserFullName: '{$user->display_name}', siteUserExternalId: '{$user->ID}'";
 
                 if ($site_user_avatar_url != "")
-                    $params .= ", siteUserAvatarUrl: '{$site_user_avatar_url}'";
+                    $params .= ", siteUserAvatarUrl: '" . base64_encode($site_user_avatar_url) . "'";
 
                 if ($profile_url != '')
-                    $params .= ", siteUserProfileUrl: '{$profile_url}'";
+                    $params .= ", siteUserProfileUrl: '" . base64_encode($profile_url) . "'";
             }
             else
                 $sig_source = $site_domain;
@@ -240,9 +242,6 @@ if (!class_exists("ChatBroUtils")) {
                 $params .= ", isStatic: true";
 
             $params .= ", signature: '{$signature}'";
-            $params .= ", sig_source: '{$sig_source}'";
-            $params .= ", mb_internal_encoding: '{$internal_encoding}'";
-            $params .= ", mb_http_output: '" . mb_http_output() . "'";
             $params .= ", wpPluginVersion: '" . ChatBroPlugin::version . "'";
 
             if (!empty($permissions))
@@ -253,7 +252,9 @@ if (!class_exists("ChatBroUtils")) {
             ?>
             <script id="chatBroEmbedCode">
             /* Chatbro Widget Embed Code Start */
-            function ChatbroLoader(chats,async) {async=async!==false;var params={embedChatsParameters:chats instanceof Array?chats:[chats],needLoadCode:typeof Chatbro==='undefined'};var xhr=new XMLHttpRequest();xhr.withCredentials = true;xhr.onload=function(){eval(xhr.responseText)};xhr.onerror=function(){console.error('Chatbro loading error')};xhr.open('POST','//www.chatbro.com/embed_chats/',async);xhr.setRequestHeader('Content-Type','application/x-www-form-urlencoded');xhr.send('parameters='+encodeURIComponent(JSON.stringify(params)))}
+            function ChatbroLoader(chats,async) {
+              function decodeProp(prop){if (chats.hasOwnProperty(prop)) chats[prop] = atob(chats[prop]);};decodeProp('siteDomain');decodeProp('siteUserAvatarUrl');decodeProp('siteUserProfileUrl');
+              async=async!==false;var params={embedChatsParameters:chats instanceof Array?chats:[chats],needLoadCode:typeof Chatbro==='undefined'};var xhr=new XMLHttpRequest();xhr.withCredentials = true;xhr.onload=function(){eval(xhr.responseText)};xhr.onerror=function(){console.error('Chatbro loading error')};xhr.open('POST','//www.chatbro.com/embed_chats/',async);xhr.setRequestHeader('Content-Type','application/x-www-form-urlencoded');xhr.send('parameters='+encodeURIComponent(JSON.stringify(params)))}
             /* Chatbro Widget Embed Code End */
             if (typeof chatBroHistoryPage === 'undefined' || !chatBroHistoryPage)
                 ChatbroLoader({<?php echo $params; ?>});

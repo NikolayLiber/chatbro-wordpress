@@ -3,7 +3,7 @@ Contributors: ChatBro
 Tags: Chat, Telegram, Telegram chat, Chat Tool, Chat Widget, Free Live Chat, Group Chat, Live Chat, Online Live Chat, Plugin Chat, Web Chat, live chat widget, online support, wordpress live chat, chat software, chat services, live help, live chat help, chat widget, live support plugin, live chat support plugin
 Requires at least: 3.5
 Tested up to: 4.7.2
-Stable tag: 2.2.8
+Stable tag: 2.2.10
 License: GPLv2
 
 Chat Bro - live Chat for your website. Turns your Telegram Chat or VK Chat into Live Chat on your website. Allows your visitors to Chat in live group Chat with you and each other. Add chat to your blog. Live chat assistance. Chat with customers on your website. Website chat live chat group chat telegram chat wordpress chat. Chat tool chat widget.
@@ -31,6 +31,12 @@ Add [@chatbrobot](https://telegram.me/chatbrobot?startgroup=chat) to your Telegr
 Most people just read chat and see admin's reactions to realize that the website is functional and adequate. You can chat with visitor in private if needed.
 
 == ChangeLog ==
+
+= 2.2.10 =
+* Encoding chat parameters containing urls to prevent chat parameters substitution by some plugins doing page post processing and replacing urls.
+
+= 2.2.9 =
+* Minor bug fix
 
 = 2.2.8 =
 * More debug info added
