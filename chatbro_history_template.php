@@ -31,22 +31,25 @@ function get_opt() {
 /* Chatbro Widget Embed Code Start*/
 var chatBroHistoryPage = true;
 function ChatbroLoader(chats, async) {
-    async = async !== false;
+    async = !1 !== async;
     var params = {
         embedChatsParameters: chats instanceof Array ? chats : [chats],
-        needLoadCode: typeof Chatbro === 'undefined'
-    };
-    var xhr = new XMLHttpRequest();
-    xhr.withCredentials = true;
-    xhr.onload = function () {
+        lang: navigator.language || navigator.userLanguage,
+        needLoadCode: "undefined" == typeof Chatbro,
+        embedParamsVersion: localStorage.embedParamsVersion,
+        chatbroScriptVersion: localStorage.chatbroScriptVersion
+    },
+    xhr = new XMLHttpRequest;
+    xhr.withCredentials = !0;
+    xhr.onload = function() {
         eval(xhr.responseText);
     };
-    xhr.onerror = function () {
-        console.error('Chatbro loading error');
+    xhr.onerror = function() {
+        console.error("Chatbro loading error");
     };
-    xhr.open('POST', '//www.chatbro.com/embed_chats/', async);
-    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-    xhr.send('parameters=' + encodeURIComponent(JSON.stringify(params)));
+    xhr.open("GET", "//www.chatbro.com/embed.js?" +
+        btoa(unescape(encodeURIComponent(JSON.stringify(params)))), async);
+    xhr.send();
 }
 /* Chatbro Widget Embed Code End*/
 

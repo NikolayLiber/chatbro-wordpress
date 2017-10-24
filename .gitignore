@@ -8,3 +8,4 @@ js/**
 fonts/**
 .sublime-grunt.cache
 dist
+/nbproject/private/
